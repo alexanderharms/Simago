@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Generate probabilities for a person to be of a certain age, sex or race.
 
 import pandas as pd
 import numpy as np
