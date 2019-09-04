@@ -3,24 +3,29 @@
 
 import pandas as pd
 import numpy as np
-from scipy.stats import bernoulli
-from scipy import stats
-import matplotlib.pyplot as plt
+#from scipy.stats import bernoulli
+#from scipy import stats
+#import matplotlib.pyplot as plt
 
 # Filter dataset -------------------------------------------------------------
 # Read in census data on sex, age and race
-censusdata = pd.read_csv('./Data/ACS_17_5YR_DP05/ACS_17_5YR_DP05.csv').transpose()
+censusdata = pd.read_csv('./data/ACS_17_5YR_DP05.csv').transpose()
 censusdata = censusdata[censusdata.iloc[:, 0].str.contains('Estimate')]
 censusdata.iloc[:, 1] = censusdata.iloc[:, 1].apply(pd.to_numeric)
 
-# Sex ------------------------------------------------------------------------
 total_pop = censusdata.loc['HC01_VC03', 1]
+# Sex ------------------------------------------------------------------------
 male_female = censusdata.loc[['HC01_VC04', 'HC01_VC05'], :]
 # Male is 0, Female is 1
 prob_sex = male_female.iloc[:, 1].values / total_pop
-sim_pop = bernoulli.rvs(prob_sex[1], size=int(total_pop))
+prob_sex = pd.DataFrame({"property" : "sex",
+                         "conditional" : None,
+                         "option" : ["male", "female"],
+                         "prob" : prob_sex})
 
-# Age -------------------------------------------------------------------------
+#sim_pop = bernoulli.rvs(prob_sex[1], size=int(total_pop))
+
+## Age -------------------------------------------------------------------------
 age_rows = ['HC01_VC09'] \
         + ['HC01_VC' + str(x) for x in range(10, 22)] \
         + ['HC01_VC' + str(x) for x in range(28, 33)]
@@ -42,23 +47,42 @@ for i in range(0, age_df.shape[0]):
   age_system[i, age_df.min_age[i]:(age_df.max_age[i] + 1)] = 1
 
 age_solution = np.rint(np.linalg.lstsq(age_system, pop_vector)[0])
-age = pd.DataFrame(data = {"age": range(0, 100),
-                           "population": age_solution})
+prob_age = pd.DataFrame(data = {"property": "age",
+                                "conditional" : None,
+                                "option" : range(0, 100),
+                                "prob": age_solution / total_pop})
 
-prob_age = age.iloc[:, 1].values / total_pop
-
-xk = np.arange(0, 100)
-pk = prob_age
-
-age_rv = stats.rv_discrete(name='age_rv', values=(xk, pk))
-sim_pop = age_rv.rvs(size=int(total_pop))
-
-tot_sim_pop = 0
-for k in range(0, 5):
-  tot_sim_pop += sum(sim_pop == k)
+#xk = np.arange(0, 100)
+#pk = prob_age.iloc[:, 2].values
+#
+#age_rv = stats.rv_discrete(name='age_rv', values=(xk, pk))
+#sim_pop = age_rv.rvs(size=int(total_pop))
+#
+#tot_sim_pop = 0
+#for k in range(0, 5):
+#  tot_sim_pop += sum(sim_pop == k)
 #print(tot_sim_pop)
 
-plt.plot(xk, pk * total_pop)
+#plt.plot(xk, pk * total_pop)
 
 # Race -----------------------------------------------------------------------
+race_codes = ["HC01_VC54", "HC01_VC55", "HC01_VC56", "HC01_VC61",
+              "HC01_VC69", "HC01_VC74", "HC01_VC75"]
+race_list = ["white", "african_american", "american_indian",
+             "asian", "native_hawaiian", "some_other_race",
+             "two_or_more_races"]
 
+prob_race = pd.DataFrame(data = {"property" : "race",
+                                 "conditional" : None,
+                                 "option" : race_list,
+                                 "prob" : censusdata.loc[race_codes, 1] \
+                                     / total_pop})
+
+# Concatenate probability dataframes -----------------------------------------
+prob_df = pd.concat([prob_sex,
+                     prob_age,
+                     prob_race])
+
+print(prob_df)
+
+                     
