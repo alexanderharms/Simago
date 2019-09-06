@@ -79,10 +79,11 @@ prob_race = pd.DataFrame(data = {"property" : "race",
                                      / total_pop})
 
 # Concatenate probability dataframes -----------------------------------------
-prob_df = pd.concat([prob_sex,
+agesexrace_prob_df = pd.concat([prob_sex,
                      prob_age,
                      prob_race])
 
-print(prob_df)
+print(agesexrace_prob_df)
 
-                     
+agesexrace_prob_df.to_csv(path_or_buf="./data-process/agesexrace_prob.csv", 
+                          index = False)
