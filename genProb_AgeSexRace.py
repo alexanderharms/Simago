@@ -3,8 +3,6 @@
 
 import pandas as pd
 import numpy as np
-#from scipy.stats import bernoulli
-#from scipy import stats
 #import matplotlib.pyplot as plt
 
 # Filter dataset -------------------------------------------------------------
@@ -19,11 +17,10 @@ male_female = censusdata.loc[['HC01_VC04', 'HC01_VC05'], :]
 # Male is 0, Female is 1
 prob_sex = male_female.iloc[:, 1].values / total_pop
 prob_sex = pd.DataFrame({"property" : "sex",
+                         "cond_num" : 0, 
                          "conditional" : None,
                          "option" : ["male", "female"],
                          "prob" : prob_sex})
-
-#sim_pop = bernoulli.rvs(prob_sex[1], size=int(total_pop))
 
 ## Age -------------------------------------------------------------------------
 age_rows = ['HC01_VC09'] \
@@ -48,22 +45,10 @@ for i in range(0, age_df.shape[0]):
 
 age_solution = np.rint(np.linalg.lstsq(age_system, pop_vector)[0])
 prob_age = pd.DataFrame(data = {"property": "age",
+                                "cond_num" : 0, 
                                 "conditional" : None,
                                 "option" : range(0, 100),
                                 "prob": age_solution / total_pop})
-
-#xk = np.arange(0, 100)
-#pk = prob_age.iloc[:, 2].values
-#
-#age_rv = stats.rv_discrete(name='age_rv', values=(xk, pk))
-#sim_pop = age_rv.rvs(size=int(total_pop))
-#
-#tot_sim_pop = 0
-#for k in range(0, 5):
-#  tot_sim_pop += sum(sim_pop == k)
-#print(tot_sim_pop)
-
-#plt.plot(xk, pk * total_pop)
 
 # Race -----------------------------------------------------------------------
 race_codes = ["HC01_VC54", "HC01_VC55", "HC01_VC56", "HC01_VC61",
@@ -73,6 +58,7 @@ race_list = ["white", "african_american", "american_indian",
              "two_or_more_races"]
 
 prob_race = pd.DataFrame(data = {"property" : "race",
+                                 "cond_num" : 0, 
                                  "conditional" : None,
                                  "option" : race_list,
                                  "prob" : censusdata.loc[race_codes, 1] \
@@ -85,5 +71,5 @@ agesexrace_prob_df = pd.concat([prob_sex,
 
 print(agesexrace_prob_df)
 
-agesexrace_prob_df.to_csv(path_or_buf="./data-process/agesexrace_prob.csv", 
+agesexrace_prob_df.to_csv(path_or_buf="./data-process/prob_agesexrace.csv", 
                           index = False)

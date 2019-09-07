@@ -1,10 +1,77 @@
 #!/usr/bin/env python3
+import numpy as np
+import pandas as pd
+from scipy import stats
+
+# Get total population number
+censusdata = pd.read_csv('./data/ACS_17_5YR_DP05.csv').transpose()
+censusdata = censusdata[censusdata.iloc[:, 0].str.contains('Estimate')]
+censusdata.iloc[:, 1] = censusdata.iloc[:, 1].apply(pd.to_numeric)
+
+total_pop = censusdata.loc['HC01_VC03', 1]
+
+# Generate dataframe with a unique id per person
+population_dataframe = pd.DataFrame({"person_id" :
+                                     np.linspace(0, total_pop - 1, total_pop)})
 
 # Load discrete probabilities
+prob_agesexrace = pd.read_csv("./data-process/prob_agesexrace.csv")
+
 # Concatenate into one dataframe
-# Generate population data frame with an index
+prob_df = pd.concat([prob_agesexrace])
+
+# set_properties = set(prob_df.property.values)
+set_properties = ["sex", "age", "race"]
+
+for prop in set_properties:
+    # Add empty column for the property
+    population_dataframe = population_dataframe.assign(**{prop : None})
+    print(population_dataframe)
+    # Select probability dataframe from prob_df
+    prob_selection = prob_df.query("property == @prop")
+    print(prob_selection)
+    
+    for cond_sum_selection in set(prob_selection.cond_num.values):
+        # Select a conditional
+        prob_cond_selection = prob_selection.\
+                query("cond_num == @cond_sum_selection")
+        conditional = prob_cond_selection.conditional.values[0]
+
+        # Make selection of population dataframe based on the conditionals
+        # in the form of indices
+        if np.isnan(conditional):
+            cond_population = population_dataframe.person_id.values
+        else:
+            cond_population = population_dataframe
+            for cond_property, cond_option in conditional:
+                cond_population = cond_population\
+                        .query("property == @cond_property and " +
+                               "option in @cond_option")
+            cond_population = cond_population.person_id.values
+
+        option_numbers = np.linspace(0, 
+                len(prob_cond_selection.option.values) - 1,
+                len(prob_cond_selection.option.values))
+        
+        sample_rv = stats.rv_discrete(name='sample_rv', 
+                values=(option_numbers,
+                        prob_cond_selection.prob.values))
+        sample_num = sample_rv.rvs(size = len(cond_population))
+
+        population_dataframe.loc[cond_population, prop] = \
+                prob_cond_selection.option.values[sample_num]
+
+    # Generate list of outcomes out of the options for the property
+    # for the selection of the dataframe.
+
+print(population_dataframe.head())
+
+
+
+
 # Assign options to properties based on the probabilities given in de prob data frames.
 # How do I handle contradictive/simultaneous conditionals?
+
 # How do I handle discrete vs. continuous random variables?
 
 # Assignment of salary should be performed in tandem with assigning households.
