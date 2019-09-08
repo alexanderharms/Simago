@@ -64,8 +64,11 @@ for prop in set_properties:
     # Generate list of outcomes out of the options for the property
     # for the selection of the dataframe.
 
+# Change numeric quantities to numeric
+population_dataframe['age'] = pd.to_numeric(population_dataframe['age'])
 print(population_dataframe.head())
 
+print(population_dataframe.query("age >= 25 and race == 'white'").shape)
 
 
 
