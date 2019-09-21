@@ -186,20 +186,34 @@ def minimize_func(x, A, b):
     return np.dot(y, y)
 
 init_cond = [2e6 * 0.5 / df_concat.shape[1]] * df_concat.shape[1]
-#cons = {'type' : 'ineq', 'fun' : lambda x: min(x)}
-bnds = tuple((0.0, None) for _ in range(df_concat.shape[1]))
+bnds = tuple((0.0, 1e6) for _ in range(df_concat.shape[1]))
+
 # Solve for Male
-male_solution = np.rint(opt.minimize(fun = minimize_func,
-                                     x0 = init_cond,
-                                     args = (df_concat, male_concat)))
-                                     #bounds = bnds))
-                                     #constraints = cons))
+male_solution = opt.minimize(fun = minimize_func,
+                             x0 = init_cond,
+                             args = (df_concat, male_concat),
+                             bounds = bnds,
+                             options = {'maxfun' : 1e6,
+                                        'maxiter' : 1e6})
+
 print(male_solution)
+male_solution = np.rint(male_solution['x'])
 
 # Solve for Female
 
-#female_solution = np.rint(np.linalg.lstsq(df_concat, female_concat)[0])
-#print(female_solution)
-# Build probability dataframe ------------------------------------------------
+female_solution = opt.minimize(fun = minimize_func,
+                               x0 = init_cond,
+                               args = (df_concat, female_concat),
+                               bounds = bnds,
+                               options = {'maxfun' : 1e6,
+                                          'maxiter' : 1e6})
+
+print(female_solution)
+female_solution = np.rint(female_solution['x'])
+
+print(sum(male_solution))
+print(sum(female_solution))
+
+# Build probability dataframe --------------------------------------------
 
 
