@@ -186,12 +186,14 @@ def minimize_func(x, A, b):
     return np.dot(y, y)
 
 init_cond = [2e6 * 0.5 / df_concat.shape[1]] * df_concat.shape[1]
-cons = {'type' : 'ineq', 'fun' : lambda x: min(x)}
+#cons = {'type' : 'ineq', 'fun' : lambda x: min(x)}
+bnds = tuple((0.0, None) for _ in range(df_concat.shape[1]))
 # Solve for Male
 male_solution = np.rint(opt.minimize(fun = minimize_func,
                                      x0 = init_cond,
-                                     args = (df_concat, male_concat),
-                                     constraints = cons))
+                                     args = (df_concat, male_concat)))
+                                     #bounds = bnds))
+                                     #constraints = cons))
 print(male_solution)
 
 # Solve for Female
