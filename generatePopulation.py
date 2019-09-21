@@ -23,6 +23,10 @@ prob_df = pd.concat([prob_agesexrace])
 # set_properties = set(prob_df.property.values)
 set_properties = ["sex", "age", "race"]
 
+# In the column 'conditional' the condtional should be arranged 
+# as a dictionary of each property and their constraints.
+# So a group of males of 18 and 19 year old should have the 
+# conditional {'sex' : ['male'], 'age' : [18, 19]}.
 for prop in set_properties:
     # Add empty column for the property
     population_dataframe = population_dataframe.assign(**{prop : None})
