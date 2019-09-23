@@ -11,6 +11,10 @@ buildings = buildings[['geometry', 'x_coord', 'y_coord', 'no_stories',
     'shape_area', 'year_built', 'suf_dir1', 'bldg_id', 'cdb_city_i', 
     'stories', 'bldg_name1', 'bldg_name2', 'pre_dir1', 'st_name1', 
     'f_add1', 't_add1', 'no_of_unit', 'shape_len']]
+
+# Calculate the center points of the buildings
+
+# Write data to file
 buildings.to_file("./data-process/Residential buildings.geojson", 
                   driver = "GeoJSON")
 
