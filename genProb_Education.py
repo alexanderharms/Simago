@@ -217,13 +217,15 @@ print(sum(female_solution))
 # Build probability dataframe --------------------------------------------
 column_names = df_concat.columns.values
 cond_num_count = 0
-prob_eduation = pd.DataFrame({})
+prob_education = pd.DataFrame(columns = ["property", "cond_num", "conditional",
+                                         "option", "prob"])
 for age in range(18, 100):
     for race in race_vector:
         # Find all columns with 'age-race' in its name.
         age_race = str(age) + '-' + race
-        age_race_index = np.where(age_race in column_names)
-        age_race_names = column_names[np.where]
+        age_race_index = [i for i, item in enumerate(column_names) if age_race
+                          in item]
+        age_race_names = column_names[age_race_index]
 
         # Using the index of the columns get the corresponding
         # values form the 'solution' vectors.
@@ -237,27 +239,28 @@ for age in range(18, 100):
         # Strip the column names from 'age-race-', the column names
         # should now form an ideal 'option' vector with te corresponding
         # normalized values as the probabilties.
-        option_vec = [x is x.split('-')[2] for x in age_race_names]
+        option_vec = [x.split('-')[2] for x in age_race_names]
         
         new_entry_male = {"property" : "education",
                           "cond_num" : cond_num_count,
-                          "conditional" : {"sex" : "male",
+                          "conditional" : [{"sex" : "male",
                                            "age" : age,
-                                           "race" : race},
-                          "option" : option_vec,
-                          "prob" : male_prob}
+                                           "race" : race}],
+                          "option" : [option_vec],
+                          "prob" : [male_prob.tolist()]}
     
         new_entry_female = {"property" : "education",
                             "cond_num" : cond_num_count + 1,
-                            "conditional" : {"sex" : "female",
+                            "conditional" : [{"sex" : "female",
                                              "age" : age,
-                                             "race" : race},
-                            "option" : option_vec,
-                            "prob" : female_prob}
-
-        prob_eduation = prob_education.assign(**new_entry_male)
-        prob_eduation = prob_education.assign(**new_entry_female)
+                                             "race" : race}],
+                            "option" : [option_vec],
+                            "prob" : [female_prob.tolist()]}
+        new_df_male = pd.DataFrame(data = new_entry_male)
+        new_df_female = pd.DataFrame(data = new_entry_female)
+        prob_education = pd.concat([prob_education, new_df_male, new_df_female],
+                axis = 0)
         cond_num_count += 2
 
-
-print(prob_education)
+prob_education.to_csv(path_or_buf='data-process/prob_education.csv',
+        index = False)
