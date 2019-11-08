@@ -56,14 +56,13 @@ race_codes = ["HC01_VC54", "HC01_VC55", "HC01_VC56", "HC01_VC61",
 race_list = ["white", "african_american", "american_indian",
              "asian", "native_hawaiian", "some_other_race",
              "two_or_more_races"]
+prob_list = censusdata.loc[race_codes, 1].values / total_pop
 
 prob_race = pd.DataFrame(data = {"property" : "race",
                                  "cond_num" : 0, 
                                  "conditional" : None,
                                  "option" : race_list,
-                                 "prob" : censusdata.loc[race_codes, 1] \
-                                     / total_pop})
-
+                                 "prob" : prob_list})
 # Concatenate probability dataframes -----------------------------------------
 agesexrace_prob_df = pd.concat([prob_sex,
                      prob_age,

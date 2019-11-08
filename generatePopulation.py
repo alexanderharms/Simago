@@ -14,14 +14,17 @@ total_pop = censusdata.loc['HC01_VC03', 1]
 population_dataframe = pd.DataFrame({"person_id" :
                                      np.linspace(0, total_pop - 1, total_pop)})
 
+population_dataframe['person_id'] = population_dataframe.person_id.apply(int)
 # Load discrete probabilities
 prob_agesexrace = pd.read_csv("./data-process/prob_agesexrace.csv")
+prob_education = pd.read_csv("./data-process/prob_education.csv")
 
 # Concatenate into one dataframe
-prob_df = pd.concat([prob_agesexrace])
+prob_df = pd.concat([prob_agesexrace, prob_education])
 
 # set_properties = set(prob_df.property.values)
-set_properties = ["sex", "age", "race"]
+set_properties = ["sex", "age", "race", "education"]
+
 
 # In the column 'conditional' the condtional should be arranged 
 # as a dictionary of each property and their constraints.
@@ -30,40 +33,43 @@ set_properties = ["sex", "age", "race"]
 for prop in set_properties:
     # Add empty column for the property
     population_dataframe = population_dataframe.assign(**{prop : None})
-    print(population_dataframe)
     # Select probability dataframe from prob_df
     prob_selection = prob_df.query("property == @prop")
     print(prob_selection)
-    
     for cond_sum_selection in set(prob_selection.cond_num.values):
         # Select a conditional
         prob_cond_selection = prob_selection.\
                 query("cond_num == @cond_sum_selection")
-        conditional = prob_cond_selection.conditional.values[0]
-
+        conditional = str(prob_cond_selection.conditional.values[0])
         # Make selection of population dataframe based on the conditionals
         # in the form of indices
-        if np.isnan(conditional):
+        if conditional == 'nan':
             cond_population = population_dataframe.person_id.values
         else:
             cond_population = population_dataframe
-            for cond_property, cond_option in conditional:
-                cond_population = cond_population\
-                        .query("property == @cond_property and " +
-                               "option in @cond_option")
+            conditional = eval(conditional)
+            for cond_property, cond_option in conditional.items():
+                print(cond_property)
+                print(cond_option)
+                cond_population = cond_population[cond_population[cond_property] 
+                                                  == str(cond_option)]
+            #print(cond_population)
             cond_population = cond_population.person_id.values
 
+        prob_cond_selection_option = prob_cond_selection.option.values
+       
+        prob_cond_selection_prob = prob_cond_selection.prob.values
+
         option_numbers = np.linspace(0, 
-                len(prob_cond_selection.option.values) - 1,
-                len(prob_cond_selection.option.values))
-        
+                len(prob_cond_selection_option) - 1,
+                len(prob_cond_selection_option))
         sample_rv = stats.rv_discrete(name='sample_rv', 
                 values=(option_numbers,
-                        prob_cond_selection.prob.values))
+                        prob_cond_selection_prob))
         sample_num = sample_rv.rvs(size = len(cond_population))
 
         population_dataframe.loc[cond_population, prop] = \
-                prob_cond_selection.option.values[sample_num]
+                prob_cond_selection_option[sample_num]
 
     # Generate list of outcomes out of the options for the property
     # for the selection of the dataframe.
@@ -74,7 +80,8 @@ print(population_dataframe.head())
 
 print(population_dataframe.query("age >= 25 and race == 'white'").shape)
 
-
+population_dataframe.to_csv(path_or_buf="data-process/population.csv",
+        index = False)
 
 # Assign options to properties based on the probabilities given in de prob data frames.
 # How do I handle contradictive/simultaneous conditionals?
