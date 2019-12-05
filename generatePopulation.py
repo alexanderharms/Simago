@@ -3,6 +3,17 @@ import numpy as np
 import pandas as pd
 from scipy import stats
 
+### Generate list of 'empty people'
+# Generate a data frame with only the person id's
+def generateEmptyPeople(total_pop):
+    # Generate dataframe with a unique id per person
+    population_dataframe = pd.DataFrame({"person_id" :
+                                         np.linspace(0, total_pop - 1, 
+                                                     total_pop)})
+
+    population_dataframe['person_id'] = population_dataframe.person_id.apply(int)
+    return population_dataframe
+
 # Get total population number
 censusdata = pd.read_csv('./data/ACS_17_5YR_DP05.csv').transpose()
 censusdata = censusdata[censusdata.iloc[:, 0].str.contains('Estimate')]
@@ -11,10 +22,8 @@ censusdata.iloc[:, 1] = censusdata.iloc[:, 1].apply(pd.to_numeric)
 total_pop = censusdata.loc['HC01_VC03', 1]
 
 # Generate dataframe with a unique id per person
-population_dataframe = pd.DataFrame({"person_id" :
-                                     np.linspace(0, total_pop - 1, total_pop)})
+population_dataframe = generateEmptyPeople(total_pop)
 
-population_dataframe['person_id'] = population_dataframe.person_id.apply(int)
 # Load discrete probabilities
 prob_agesexrace = pd.read_csv("./data-process/prob_agesexrace.csv")
 prob_education = pd.read_csv("./data-process/prob_education.csv")
@@ -24,7 +33,6 @@ prob_df = pd.concat([prob_agesexrace, prob_education])
 
 # set_properties = set(prob_df.property.values)
 set_properties = ["sex", "age", "race", "education"]
-
 
 # In the column 'conditional' the condtional should be arranged 
 # as a dictionary of each property and their constraints.
