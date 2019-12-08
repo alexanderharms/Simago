@@ -3,6 +3,8 @@
 
 import pandas as pd
 import numpy as np
+from scripts.probabilities import genProb_NoCond
+from scripts.probabilities import genProb_NoCond_Range
 #import matplotlib.pyplot as plt
 
 # Filter dataset -------------------------------------------------------------
@@ -10,20 +12,6 @@ import numpy as np
 censusdata = pd.read_csv('./data/ACS_17_5YR_DP05.csv').transpose()
 censusdata = censusdata[censusdata.iloc[:, 0].str.contains('Estimate')]
 censusdata.iloc[:, 1] = censusdata.iloc[:, 1].apply(pd.to_numeric)
-
-total_pop = censusdata.loc['HC01_VC03', 1]
-def genProb_NoCond(data_frame, prop_name):
-    # column 0 option label
-    # column 1 amounts
-    # total population is equal to the sum of the two numbers
-    option_vec = data_frame.iloc[:, 0]
-    prob_vec = data_frame.iloc[:, 1] / data_frame.iloc[:, 1].sum()
-    prob_df = pd.DataFrame({"property" : prop_name,
-                            "cond_num" : 0, 
-                            "conditional" : None,
-                            "option" : option_vec,
-                            "prob" : prob_vec})
-    return prob_df
 
 # Sex ------------------------------------------------------------------------
 # column 0 option label
@@ -34,13 +22,6 @@ male_female = censusdata.loc[['HC01_VC04', 'HC01_VC05'], :]
 prob_data = pd.DataFrame({"option" : ["male", "female"],
                           "value" : male_female.iloc[:, 1].values})
 prob_sex = genProb_NoCond(prob_data, "sex")
-
-#prob_sex = male_female.iloc[:, 1].values / total_pop
-#prob_sex = pd.DataFrame({"property" : "sex",
-#                         "cond_num" : 0, 
-#                         "conditional" : None,
-#                         "option" : ["male", "female"],
-#                         "prob" : prob_sex})
 
 ## Age -------------------------------------------------------------------------
 age_rows = ['HC01_VC09'] \
@@ -55,20 +36,7 @@ age_df = pd.DataFrame(data = {"min_age": [0, 5, 10, 15, 20, 25, 35, 45,
                                          64, 74, 84, 99, 99, 99, 99, 99, 99],
                              "population": age.iloc[:, 1]})
 
-# Construct a system of equations to more closely determine the age 
-# distribution.
-age_system = np.zeros((age_df.shape[0], 100))
-pop_vector = age_df['population']
-
-for i in range(0, age_df.shape[0]):
-  age_system[i, age_df.min_age[i]:(age_df.max_age[i] + 1)] = 1
-
-age_solution = np.rint(np.linalg.lstsq(age_system, pop_vector)[0])
-prob_age = pd.DataFrame(data = {"property": "age",
-                                "cond_num" : 0, 
-                                "conditional" : None,
-                                "option" : range(0, 100),
-                                "prob": age_solution / total_pop})
+prob_age = genProb_NoCond_Range(age_df, "age")
 
 # Race -----------------------------------------------------------------------
 race_codes = ["HC01_VC54", "HC01_VC55", "HC01_VC56", "HC01_VC61",
@@ -76,14 +44,6 @@ race_codes = ["HC01_VC54", "HC01_VC55", "HC01_VC56", "HC01_VC61",
 race_list = ["white", "african_american", "american_indian",
              "asian", "native_hawaiian", "some_other_race",
              "two_or_more_races"]
-#prob_list = censusdata.loc[race_codes, 1].values / total_pop
-#
-#prob_race = pd.DataFrame(data = {"property" : "race",
-#                                 "cond_num" : 0, 
-#                                 "conditional" : None,
-#                                 "option" : race_list,
-#                                 "prob" : prob_list})
-#race_data = censusdata.loc[race_codes, 1].values
 prob_data = pd.DataFrame({"option" : race_list,
                           "value" : censusdata.loc[race_codes, 1].values})
 prob_race = genProb_NoCond(prob_data, "race")
@@ -94,5 +54,6 @@ agesexrace_prob_df = pd.concat([prob_sex,
 
 print(agesexrace_prob_df)
 
-agesexrace_prob_df.to_csv(path_or_buf="./data-process/prob_agesexrace.csv", 
-                          index = False)
+agesexrace_prob_df.to_csv(
+        path_or_buf="./data-process/probabilities/prob_agesexrace.csv", 
+        index = False)

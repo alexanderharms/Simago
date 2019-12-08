@@ -2,10 +2,32 @@
 
 # I assume that the part of 'Race vs educational attainment' is for all 
 # people over 25
+import sys
 import math
 import numpy as np
 import pandas as pd
 import scipy.optimize as opt
+import matplotlib.pyplot as plt
+
+#def genProb_Cond_Range(data_frame, prop_name):
+#    # column 0 is minimum of range
+#    # column 1 is maximum of range
+#    # column 2 is the total population in each range
+#    # total population is equal to the sum of the two numbers
+#    solve_system = np.zeros((data_frame.shape[0],
+#        max(data_frame.iloc[:, 1]) - min(data_frame.iloc[:, 0]) + 1)
+#
+#    for i in range(0, data_frame.shape[0]):
+#        solve_system[i, data_frame.iloc[i, 0]:(data_frame.iloc[i, 1] + 1)] = 1
+#
+#    solution = np.rint(np.linalg.lstsq(solve_system, data_frame.iloc[:, 2]))
+#    prob_df = pd.DataFrame(data = {"property" : prop_name,
+#                                   "cond_num" : 0,
+#                                   "conditional" : None,
+#                                   "option" : range(min(data_frame.iloc[:, 0]),
+#                                       max(data_frame.iloc[:, 1]) + 1),
+#                                   "prob" : solution / sum(solution)})
+#    return prob_df
 
 def construct_group_dataframe(group_degree, grade_conv, group_age,
                               race, race_vector):
@@ -170,12 +192,19 @@ for i, race_num in enumerate(group_race_num):
                            race_num, grade_conv, race_vector,
                            race = race_vector[i])
 
-race_df = pd.concat(group_race_df, sort = False, axis = 0)
+
+
+
+race_df = pd.concat(group_race_df, sort = True, axis = 0)
 race_df.fillna(value = 0.0, inplace = True)
 
 race_male = pd.concat(group_race_male, axis = 0)
 race_female = pd.concat(group_race_female, axis = 0)
+print(race_df) 
 
+print(race_df.columns.values)
+
+print(race_male)
 # Concatenate generated dataframes -------------------------------------------
 df_concat = pd.concat([group_tot_df, group_1_df, group_2_df,
                        group_3_df, group_4_df, group_5_df],
@@ -203,9 +232,9 @@ def minimize_func(x, A, b):
 # Take the maximum value of the group values as the upper bound of one column.
 #bnds_max = np.max([np.max(male_concat.values), np.max(female_concat.values)])
 #bnds = tuple((0.0, bnds_max) for _ in range(df_concat.shape[1]))
-init_cond = [2e6 * 0.5 / df_concat.shape[1]] * df_concat.shape[1]
+init_cond = [2e6 * 0.5 / df_concat.shape[1]] \
+        * df_concat.shape[1]
 bnds = tuple((0.0, 1e6) for _ in range(df_concat.shape[1]))
-
 # Solve for Male
 male_solution = opt.minimize(fun = minimize_func,
                              x0 = init_cond,
@@ -216,7 +245,24 @@ male_solution = opt.minimize(fun = minimize_func,
 
 print(male_solution)
 male_solution = np.rint(male_solution['x'])
+with np.printoptions(threshold=sys.maxsize):
+    print(male_solution)
 print(male_solution)
+
+#init_cond_race = [np.max(race_male) * 0.5 / race_df.shape[1]] \
+#        * race_df.shape[1]
+#bnds_race = tuple((0.0, 1e6) for _ in range(race_df.shape[1]))
+#
+#male_race_solution = opt.minimize(fun = minimize_func,
+#                                  x0 = init_cond_race,
+#                                  args = (race_df, race_male),
+#                                  bounds = bnds_race,
+#                                  options ={'maxfun' : 1e6,
+#                                            'maxiter' : 1e6})
+#male_race_solution = np.rint(male_race_solution['x'])
+#with np.printoptions(threshold=sys.maxsize):
+#    print(male_race_solution)
+#print(male_race_solution)
 # Solve for Female
 
 female_solution = opt.minimize(fun = minimize_func,
@@ -228,6 +274,17 @@ female_solution = opt.minimize(fun = minimize_func,
 
 print(female_solution)
 female_solution = np.rint(female_solution['x'])
+with np.printoptions(threshold=sys.maxsize):
+    print(female_solution)
+#female_race_solution = opt.minimize(fun = minimize_func,
+#                                    x0 = init_cond_race,
+#                                    args = (race_df, race_female),
+#                                    bounds = bnds_race,
+#                                    options ={'maxfun' : 1e6,
+#                                              'maxiter' : 1e6})
+#female_race_solution = np.rint(female_race_solution['x'])
+#with np.printoptions(threshold=sys.maxsize):
+#    print(female_race_solution)
 
 print(sum(male_solution))
 print(sum(female_solution))
@@ -279,5 +336,5 @@ for age in range(18, 100):
                 axis = 0)
         cond_num_count += 2
 print(prob_education)
-prob_education.to_csv(path_or_buf='data-process/prob_education.csv',
+prob_education.to_csv(path_or_buf='data-process/probabilities/prob_education.csv',
         index = False)
