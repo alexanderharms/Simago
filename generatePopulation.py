@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+import argparse
+
 import numpy as np
 import pandas as pd
 from scipy import stats
@@ -36,13 +38,14 @@ if __name__ == '__main__':
     censusdata.iloc[:, 1] = censusdata.iloc[:, 1].apply(pd.to_numeric)
 
     total_pop = censusdata.loc['HC01_VC03', 1]
+    print(total_pop)
 
     # Load discrete probabilities
-    prob_agesexrace = pd.read_csv("./data-process/prob_agesexrace.csv")
-    prob_education = pd.read_csv("./data-process/prob_education.csv")
+    prob_agesexrace = pd.read_csv("./data-process/probabilities/prob_agesexrace.csv")
+    prob_education = pd.read_csv("./data-process/probabilities/prob_education.csv")
 
     # Concatenate into one dataframe
-    prob_df = pd.concat([prob_agesexrace, prob_education])
+    prob_df = pd.concat([prob_agesexrace, prob_education], axis = 0)
 
     # set_properties = set(prob_df.property.values)
     set_properties = ["sex", "age", "race", "education"] 
@@ -51,7 +54,8 @@ if __name__ == '__main__':
     population = addProperties(population, set_properties, 
                                prob_df, num_properties)
 
-    population.to_csv(path_or_buf="data-process/population/population.csv",
+    print(population)
+    population.to_csv(path_or_buf="data-process/population.csv",
             index = False)
     
     
