@@ -50,9 +50,14 @@ def interpolatePrices(coord_house, coord_0, coord_1,
     x_dist = np.abs(x_1 - x_0)
     y_dist = np.abs(y_1 - y_0)
 
+    #def dist_func(pos_house, pos_0, pos_1, epsilon):
+    #    abs_dist = abs((pos_house - pos_0)/(pos_1 - pos_0))
+    #    f = 1 - np.exp(np.log(epsilon) * abs_dist)
+    #    return f
+
     def dist_func(pos_house, pos_0, pos_1, epsilon):
         abs_dist = abs((pos_house - pos_0)/(pos_1 - pos_0))
-        f = 1 - np.exp(np.log(epsilon) * abs_dist)
+        f = 1 + epsilon - epsilon * np.exp(-abs_dist)
         return f
 
     epsilon = 0.1
@@ -144,9 +149,10 @@ def interpolateHousePrice(buildings):
                         row['next_nearest_zip_price']),
                     axis = 1)
     return buildings
+
 # Read in building data
 buildings = gpd.read_file("./data-process/Residential buildings.geojson")
-#buildings = buildings.iloc[0:100, :]
+# buildings = buildings.iloc[0:100, :]
 # Read in the zip code data
 zip_codes = gpd.read_file("./data/Boundaries - ZIP Codes.geojson")
 # Read in the house price data
@@ -191,7 +197,7 @@ buildings.insert(buildings.shape[1], 'next_nearest_zip_geom', None)
 buildings.insert(buildings.shape[1], 'next_nearest_zip_price', None)
 buildings.insert(buildings.shape[1], 'new_multipoint', None)
 buildings.insert(buildings.shape[1], 'price', None)
-buildings.insert(buildings.shape[1], 'monthly_cost', None)
+buildings.insert(buildings.shape[1], 'cost', None)
 
 multipoint = zip_codes.geometry.unary_union
 
@@ -209,6 +215,7 @@ buildings = parallelize_dataframe(buildings, getHousePrice, args = args)
 args = [zip_codes_prices, 'next_nearest_zip', 'buy_price', 'next_nearest_zip_price']
 buildings = parallelize_dataframe(buildings, getHousePrice, args = args)
 # After that we extrapolate the price
+print("Calculate the prices")
 buildings = parallelize_dataframe(buildings, interpolateHousePrice)
 #print(buildings[['geometry', 'nearest_zip_geom', 'next_nearest_zip_geom',
 #    'nearest_zip_price', 'next_nearest_zip_price']].head())
@@ -216,19 +223,36 @@ buildings = parallelize_dataframe(buildings, interpolateHousePrice)
 # After that calculate the morgage payment/monthly costs
 rate = 0.04
 years = 30
-buildings['monthly_cost'] = buildings['price']\
-        .apply(calculateMonthlyPayment, args = (rate, years))
+buildings['cost'] = buildings['price']\
+        .apply(calculateMonthlyPayment, args = (rate, years)) \
+        * 12
 
-print("finished, start writing")
 
 buildings = buildings.drop(['nearest_zip_geom', 'next_nearest_zip_geom',
     'nearest_zip_price', 'next_nearest_zip_price'], axis = 1)
 
+print("Expand units")
+# Make a row per unit in no_of_unit
+buildings['no_of_unit'] = pd.to_numeric(buildings['no_of_unit'])
+if max(buildings['no_of_unit'].values) > 1:
+    one_unit = buildings.query("no_of_unit == 1")
+    more_unit = buildings.query("no_of_unit > 1")
+    buildings = one_unit
+    for i in range(2, max(more_unit['no_of_unit'].values) + 1):
+        buildings.append([more_unit.query("no_of_unit == @i")] * i,
+                ignore_index = True)
+
+buildings = buildings.reset_index(drop = True)
+buildings = buildings.drop('no_of_unit', axis = 1)
+
+buildings['building_id'] = [x for x in range(0, buildings.shape[0])]
+print(buildings.columns.values)
 print(buildings.head())
+
+print("finished, start writing")
 buildings.to_file("./data-process/Buildings_mortgages.geojson", 
                   driver = "GeoJSON")
 
-print(buildings.describe())
 buildings['x'] = buildings['geometry'].apply(lambda point: point.x)
 buildings['y'] = buildings['geometry'].apply(lambda point: point.y)
 

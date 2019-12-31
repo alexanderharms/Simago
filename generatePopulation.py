@@ -26,6 +26,17 @@ from scripts.population import addProperties
 # n kids, n (0.8) or n-1 (0.2) bedrooms
 # Assign each person with a household ID.
 
+def uniform_distribution(values, pop_size):
+    # Draw pop_size amount samples from uniform 
+    # distribution
+    lower_bound = values[0]
+    upper_bound = values[1]
+    samples = np.random.uniform(low = lower_bound,
+            high = upper_bound,
+            size = pop_size)
+
+    return samples
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -43,13 +54,16 @@ if __name__ == '__main__':
     # Load discrete probabilities
     prob_agesexrace = pd.read_csv("./data-process/probabilities/prob_agesexrace.csv")
     prob_education = pd.read_csv("./data-process/probabilities/prob_education.csv")
+    prob_personalincome = pd.read_csv("./data-process/probabilities/" + 
+            "prob_personalincome.csv")
 
     # Concatenate into one dataframe
-    prob_df = pd.concat([prob_agesexrace, prob_education], axis = 0)
+    prob_df = pd.concat([prob_agesexrace, prob_education,
+        prob_personalincome], axis = 0)
 
     # set_properties = set(prob_df.property.values)
-    set_properties = ["sex", "age", "race", "education"] 
-    num_properties = ["age"]
+    set_properties = ["sex", "age", "race", "education", "personal_income"] 
+    num_properties = ["age", "personal_income"]
     population = generateEmptyPeople(args.popsize)
     population = addProperties(population, set_properties, 
                                prob_df, num_properties)

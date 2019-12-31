@@ -24,6 +24,17 @@ def addDiscreteProperties(options, probs, pop_size):
 
     return options[sample_num]
 
+def uniform_distribution(values, pop_size):
+    # Draw pop_size amount samples from uniform 
+    # distribution
+    lower_bound = values[0]
+    upper_bound = values[1]
+    samples = np.random.uniform(low = lower_bound,
+            high = upper_bound,
+            size = pop_size)
+
+    return samples
+
 def addContinuousProperties(values, distribution, pop_size):
     # For the generation of continous properties, 
     # the distribution should be defined as a Python function,
@@ -32,11 +43,11 @@ def addContinuousProperties(values, distribution, pop_size):
     possibles = globals().copy()
     possibles.update(locals())
     distribution_func = possibles.get(distribution)
-    if not method:
+    if not distribution_func:
          raise NotImplementedError("Distribution %s not implemented" %
                  distribution)
-    distribution_func()
-    return
+    samples = distribution_func(values, pop_size)
+    return samples
 
 def addProperties(population_dataframe, set_properties, 
                   prob_df, num_properties):
@@ -69,7 +80,8 @@ def addProperties(population_dataframe, set_properties,
                                     == str(cond_option)]
                 cond_population = cond_population.person_id.values
 
-            if prob_cond_selection['option'].shape[0] > 1:
+            if prob_cond_selection['option'].shape[0] > 1 \
+                    or prob_cond_selection['prob'] is 1:
                 # Discrete distribution
                 population_dataframe.loc[cond_population, prop] = \
                         addDiscreteProperties(
@@ -79,9 +91,9 @@ def addProperties(population_dataframe, set_properties,
             else:
                 # Continuous distribution
                 population_dataframe.loc[cond_population, prop] = \
-                        addContinousProperties(
-                                prob_cond_selection.option.values,
-                                prob_cond_selection.prob.values,
+                        addContinuousProperties(
+                                eval(prob_cond_selection.option.values[0]),
+                                prob_cond_selection.prob.values[0],
                                 len(cond_population))
 
         # Generate list of outcomes out of the options for the property
