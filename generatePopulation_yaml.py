@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 import os
 import argparse
+from types import MethodType
 
 import yaml
 
-import numpy as np
-import pandas as pd
+# import numpy as np
+# import pandas as pd
 
 def find_yamls(yaml_folder):
     # Gather all the YAML files for the aggregated data in the folder.
@@ -62,7 +63,7 @@ def check_yaml(yaml_object):
         assert yaml_object['pdf_file'].endswith('.py'),\
                 fname + ', pdf file is not a Python file'
         try:
-            exec(open(yaml_object['pdf_file'].read())
+            exec(open(yaml_object['pdf_file'].read()))
         except:
             print(fname + ', pdf file can not be executed')
             quit()
@@ -117,7 +118,7 @@ class ProbPopulation():
                                   None, self)
         if yaml_object['conditionals'] is None:
             self.conditionals = None
-        else: 
+        else:
             self.read_conditionals(yaml_object['conditionals'])
 
     def read_data(self, data_file):
@@ -126,16 +127,20 @@ class ProbPopulation():
         # Define list of labels; conversion between index and label name
         # Assign list to self.labels
         # Assign the data to self.data
+        return
 
     def read_conditionals(self, conditionals_file):
         # Read CSV
         # Assign data to self.conditionals
-            
+        return
+
     def least_squares(self):
         # For ordinal variables defined as ranges
+        return
 
     def generate_probabilities(self):
         # From the data generate the probabilities
+        return
 
 class Population():
     def __init__(self, popsize, rand_seed):
@@ -144,30 +149,37 @@ class Population():
 
     def generate_empty_pop(self, popsize):
         # Generate self.population
+        return
 
     def add_property(self, ProbPopulation):
         # Add ProbPopulation object to self.prob_object list
-        # Based on self.population, the conditionals and the 
-        # probabilities from ProbPopulation, draw a value for this 
+        # Based on self.population, the conditionals and the
+        # probabilities from ProbPopulation, draw a value for this
         # property for all people in the population.
+        return
 
     def remove_property(self, property_name):
         # Remove property
+        return
 
     def update_property(self, property_name):
         # Update property by randomly drawing new values
         # TODO: Expand functionality for more control over update
+        return
 
     def add_people(self, num_people):
         # Add people to the population by randomly drawing
         # TODO: Expand functionality for more control over new people
+        return
 
     def remove_people(self, people_id):
         # Remove people by ID
+        return
 
     def update_people(self, people_id, property_name="all"):
         # Update people by randomly drawing new values
         # TODO: Expand functionality for more control over update
+        return
 
 
 if __name__ == '__main__':
