@@ -104,7 +104,7 @@ def load_yamls(yaml_filenames):
 
     return yaml_objects
 
-class ProbPopulation():
+class ProbabilityClass():
     def __init__(self, yaml_object):
         self.property_name = yaml_object['property_name']
         self.data_type = yaml_object['data_type']
@@ -164,7 +164,7 @@ class ProbPopulation():
                 / np.sum(self.probabs['probab'])
         return
 
-class Population():
+class PopulationClass():
     def __init__(self, popsize, rand_seed):
         # Set up random seed
 
@@ -224,6 +224,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-p", "--popsize", type=int,
                         help="Size of the population")
+    parser.add_argument("-o", "--output", type=str,
+                        default="./population.csv",
+                        help="Output file for the population")
     parser.add_argument("--rand_seed", type=int, default=100,
                         help="Seed for random number generation")
     parser.add_argument("--yaml_folder", type=str,
@@ -238,28 +241,25 @@ if __name__ == '__main__':
     yaml_filenames = find_yamls(args.yaml_folder)
     print(yaml_filenames)
     yaml_objects = load_yamls(yaml_filenames)
-    print(yaml_objects)
 
     # Based on the yaml_objects, create a list of ProbPopulation instances.
-    probab_insts = []
+    probab_objects = []
     for y_obj in yaml_objects:
-        probab_insts.append(ProbPopulation(y_obj)) 
+        probab_objects.append(ProbabilityClass(y_obj)) 
 
-    print(probab_insts)
-    for inst in probab_insts:
-        print(inst.property_name)
-        print(inst.probabs)
+    for obj in probab_objects:
+        print(obj.property_name)
+        print(obj.probabs)
+
     # Generate an empty population
-    population_inst = Population(args.popsize, args.rand_seed)
-    print(population_inst.population)
+    population = PopulationClass(args.popsize, args.rand_seed)
+
     # Add variables to the population based on the ProbPopulation instances.
-    for inst in probab_insts:
-        population_inst.add_property(inst)
+    for obj in probab_objects:
+        population.add_property(obj)
 
-    population_inst.update()
-    print(population_inst.population)
+    population.update()
+    print(population.population)
 
-    # Export ProbPopulation.population
-    # print(population)
-    # population.to_csv(path_or_buf="data-process/population.csv",
-    #        index = False)
+    # Export population.population
+    # population.population.to_csv(path_or_buf=args.output, index = False)
