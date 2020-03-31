@@ -5,8 +5,8 @@ from types import MethodType
 
 import yaml
 
-# import numpy as np
-# import pandas as pd
+import numpy as np
+import pandas as pd
 
 def find_yamls(yaml_folder):
     # Gather all the YAML files for the aggregated data in the folder.
@@ -129,9 +129,10 @@ class ProbPopulation():
         data_frame = pd.read_csv(data_file)
         # Define list of labels; conversion between index and label name
         # Assign list to self.labels
-        if "label" is not in data_frame.columns.values:
+        if "label" not in data_frame.columns.values:
             # Replace "option" column with an integer, add corresponding
             # label to self.labels
+            pass
         else:
             options_labels = data_frame[['option', 'label']]\
                     .drop_duplicates(inplace=False)\
@@ -170,7 +171,7 @@ class Population():
     def generate_empty_pop(self, popsize):
         # Generate self.population
         self.population = pd.DataFrame(
-                {"person_id" : np.linspace(0, total_pop - 1,total_pop)})
+            {"person_id" : np.linspace(0, popsize - 1, popsize)})
 
         self.population['person_id'] = self.population['person_id'].apply(int)
         return
@@ -227,7 +228,13 @@ if __name__ == '__main__':
     print(yaml_objects)
 
     # Based on the yaml_objects, create a list of ProbPopulation instances.
-    
+    prob_population_insts = []
+    for y_obj in yaml_objects:
+        prob_population_insts.append(ProbPopulation(y_obj)) 
+
+    print(prob_population_insts)
+    for inst in prob_population_insts:
+        print(inst.property_name)
     # Generate an empty population
     # Add variables to the population based on the ProbPopulation instances.
 
