@@ -110,6 +110,7 @@ class ProbPopulation():
 
         if self.data_type in ["categorical", "ordinal"]:
             self.read_data(yaml_object['data_file'])
+
         elif self.data_type == "continous":
             self.pdf_parameters = yaml_object['pdf_parameters']
             # Execute the pdf file to define the pdf function
@@ -120,26 +121,45 @@ class ProbPopulation():
             self.conditionals = None
         else:
             self.read_conditionals(yaml_object['conditionals'])
+        self.generate_probabilities()
 
     def read_data(self, data_file):
         # Only if self.data_type is categorical or ordinal
         # Read CSV
+        data_frame = pd.read_csv(data_file)
         # Define list of labels; conversion between index and label name
         # Assign list to self.labels
+        if "label" is not in data_frame.columns.values:
+            # Replace "option" column with an integer, add corresponding
+            # label to self.labels
+        else:
+            options_labels = data_frame[['option', 'label']]\
+                    .drop_duplicates(inplace=False)\
+                    .reset_index()
+            self.labels = []
+            for idx in range(options_labels.shape[0]):
+                self.labels[options_labels.at[idx, 'option']] =\
+                        options_labels.at[idx, 'label']
         # Assign the data to self.data
+        self.data = data_frame[['option', 'value', 'conditional_index']]
         return
 
     def read_conditionals(self, conditionals_file):
         # Read CSV
         # Assign data to self.conditionals
+        self.conditionals = pd.read_csv(conditionals_file)
         return
 
-    def least_squares(self):
-        # For ordinal variables defined as ranges
-        return
+    #def least_squares(self):
+    #    # For ordinal variables defined as ranges
+    #    return
 
     def generate_probabilities(self):
         # From the data generate the probabilities
+        self.probabs = self.data.copy()
+        self.probabs = self.probabs.rename({'value': 'probab'})
+        self.probabs['probab'] = self.probabs['probab']\
+                / pd.sum(self.probabs['probab'])
         return
 
 class Population():
@@ -149,6 +169,10 @@ class Population():
 
     def generate_empty_pop(self, popsize):
         # Generate self.population
+        self.population = pd.DataFrame(
+                {"person_id" : np.linspace(0, total_pop - 1,total_pop)})
+
+        self.population['person_id'] = self.population['person_id'].apply(int)
         return
 
     def add_property(self, ProbPopulation):
@@ -203,6 +227,7 @@ if __name__ == '__main__':
     print(yaml_objects)
 
     # Based on the yaml_objects, create a list of ProbPopulation instances.
+    
     # Generate an empty population
     # Add variables to the population based on the ProbPopulation instances.
 
