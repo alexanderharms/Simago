@@ -6,6 +6,7 @@ from types import MethodType
 import yaml
 
 import numpy as np
+from scipy import stats
 import pandas as pd
 
 def find_yamls(yaml_folder):
@@ -136,8 +137,8 @@ class ProbPopulation():
         else:
             options_labels = data_frame[['option', 'label']]\
                     .drop_duplicates(inplace=False)\
-                    .reset_index()
-            self.labels = []
+                    .reset_index(drop=True)
+            self.labels = [None] * (options_labels.option.max() + 1)
             for idx in range(options_labels.shape[0]):
                 self.labels[options_labels.at[idx, 'option']] =\
                         options_labels.at[idx, 'label']
@@ -158,54 +159,66 @@ class ProbPopulation():
     def generate_probabilities(self):
         # From the data generate the probabilities
         self.probabs = self.data.copy()
-        self.probabs = self.probabs.rename({'value': 'probab'})
+        self.probabs = self.probabs.rename(columns={'value':'probab'})
         self.probabs['probab'] = self.probabs['probab']\
-                / pd.sum(self.probabs['probab'])
+                / np.sum(self.probabs['probab'])
         return
 
 class Population():
     def __init__(self, popsize, rand_seed):
         # Set up random seed
-        self.generate_empty_pop(popsize)
 
-    def generate_empty_pop(self, popsize):
-        # Generate self.population
+        # Generate empty population
         self.population = pd.DataFrame(
             {"person_id" : np.linspace(0, popsize - 1, popsize)})
 
         self.population['person_id'] = self.population['person_id'].apply(int)
-        return
+
+        # Initialize list of probability objects
+        self.prob_objects = []
 
     def add_property(self, ProbPopulation):
-        # Add ProbPopulation object to self.prob_object list
-        # Based on self.population, the conditionals and the
-        # probabilities from ProbPopulation, draw a value for this
-        # property for all people in the population.
-        return
+        # Add ProbPopulation object to self.prob_objects list
+        self.prob_objects.append(ProbPopulation)
 
     def remove_property(self, property_name):
         # Remove property
-        return
+        for prob_obj in self.prob_objects:
+            if prob_obj.property_name == property_name:
+                self.prob_objects.remove(prob_obj)
 
-    def update_property(self, property_name):
-        # Update property by randomly drawing new values
-        # TODO: Expand functionality for more control over update
-        return
+    #def add_people(self, num_people):
+    #    # Add people to the population by randomly drawing
+    #    # TODO: Expand functionality for more control over new people
+    #    return
 
-    def add_people(self, num_people):
-        # Add people to the population by randomly drawing
-        # TODO: Expand functionality for more control over new people
-        return
+    #def remove_people(self, people_id):
+    #    # Remove people by ID
+    #    return
 
-    def remove_people(self, people_id):
-        # Remove people by ID
-        return
-
-    def update_people(self, people_id, property_name="all"):
+    def update(self, property_name="all", people_id="all"):
         # Update people by randomly drawing new values
+        # Based on self.population, the conditionals and the
+        # probabilities from ProbPopulation, draw a value for this
+        # property for all people in the population.
         # TODO: Expand functionality for more control over update
-        return
+        if property_name == "all":
+            for prob_obj in self.prob_objects:
+                print(prob_obj.property_name)
+                self.population[prob_obj.property_name] =\
+                        draw_values(prob_obj, self.population)
 
+
+def draw_values(prob_obj, population):
+    # TODO: Manage conditionals
+    if prob_obj.data_type == "categorical":
+        sample_rv = stats.rv_discrete(name='sample_rv',
+                values=(prob_obj.data.option, prob_obj.probabs.probab))
+        sample_num = sample_rv.rvs(size = population.shape[0])
+        drawn_values = prob_obj.data.option.values[sample_num]
+        # TODO: Convert drawn values to labels
+        #drawn_values = prob_obj.labels[drawn_values]
+    return drawn_values
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -228,15 +241,23 @@ if __name__ == '__main__':
     print(yaml_objects)
 
     # Based on the yaml_objects, create a list of ProbPopulation instances.
-    prob_population_insts = []
+    probab_insts = []
     for y_obj in yaml_objects:
-        prob_population_insts.append(ProbPopulation(y_obj)) 
+        probab_insts.append(ProbPopulation(y_obj)) 
 
-    print(prob_population_insts)
-    for inst in prob_population_insts:
+    print(probab_insts)
+    for inst in probab_insts:
         print(inst.property_name)
+        print(inst.probabs)
     # Generate an empty population
+    population_inst = Population(args.popsize, args.rand_seed)
+    print(population_inst.population)
     # Add variables to the population based on the ProbPopulation instances.
+    for inst in probab_insts:
+        population_inst.add_property(inst)
+
+    population_inst.update()
+    print(population_inst.population)
 
     # Export ProbPopulation.population
     # print(population)
