@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python4
 import os
 import argparse
 from types import MethodType
@@ -111,6 +111,7 @@ class ProbabilityClass():
 
         if self.data_type in ["categorical", "ordinal"]:
             self.read_data(yaml_object['data_file'])
+            self.generate_probabilities()
 
         elif self.data_type == "continous":
             self.pdf_parameters = yaml_object['pdf_parameters']
@@ -122,7 +123,6 @@ class ProbabilityClass():
             self.conditionals = None
         else:
             self.read_conditionals(yaml_object['conditionals'])
-        self.generate_probabilities()
 
     def read_data(self, data_file):
         # Only if self.data_type is categorical or ordinal
@@ -159,9 +159,16 @@ class ProbabilityClass():
     def generate_probabilities(self):
         # From the data generate the probabilities
         self.probabs = self.data.copy()
+        sum_values = self.probabs[['value', 'conditional_index']]\
+                .groupby('conditional_index')\
+                .sum()\
+                .rename(columns={'value': 'value_sum'})
+        self.probabs = pd.merge(self.probabs, sum_values, 
+                                on='conditional_index')
+        self.probabs['value'] = self.probabs['value'] \
+                / self.probabs['value_sum']
+        self.probabs = self.probabs.drop('value_sum', axis=1)
         self.probabs = self.probabs.rename(columns={'value':'probab'})
-        self.probabs['probab'] = self.probabs['probab']\
-                / np.sum(self.probabs['probab'])
         return
 
 class PopulationClass():
@@ -173,6 +180,7 @@ class PopulationClass():
             {"person_id" : np.linspace(0, popsize - 1, popsize)})
 
         self.population['person_id'] = self.population['person_id'].apply(int)
+        self.popsize = popsize
 
         # Initialize list of probability objects
         self.prob_objects = []
@@ -190,10 +198,12 @@ class PopulationClass():
     #def add_people(self, num_people):
     #    # Add people to the population by randomly drawing
     #    # TODO: Expand functionality for more control over new people
+    #    self.popsize = new_popsize
     #    return
 
     #def remove_people(self, people_id):
     #    # Remove people by ID
+    #    self.popsize = new_popsize
     #    return
 
     def update(self, property_name="all", people_id="all"):
@@ -204,21 +214,148 @@ class PopulationClass():
         # TODO: Expand functionality for more control over update
         if property_name == "all":
             for prob_obj in self.prob_objects:
-                print(prob_obj.property_name)
-                self.population[prob_obj.property_name] =\
-                        draw_values(prob_obj, self.population)
+                if prob_obj.data_type in ['categorical', 'ordinal']:
+                    self.population = draw_disc_values(prob_obj, self.population)
+                elif prob_obj.data_type == 'continuous':
+                    self.population = draw_cont_values(prob_obj, self.population)
+        else:
+            # Make a singular property name a list to homogenize the next code
+            # section.
+            if isinstance(property_name, 'str'):
+                property_name = [property_name]
+            for prob_obj in self.prob_objects:
+                if prob_obj.property_name in property_name: 
+                    if prob_obj.data_type in ['categorical', 'ordinal']:
+                        self.population = draw_disc_values(prob_obj, self.population)
+                    elif prob_obj.data_type == 'continuous':
+                        self.population = draw_cont_values(prob_obj, self.population)
 
-
-def draw_values(prob_obj, population):
-    # TODO: Manage conditionals
-    if prob_obj.data_type == "categorical":
-        sample_rv = stats.rv_discrete(name='sample_rv',
-                values=(prob_obj.data.option, prob_obj.probabs.probab))
-        sample_num = sample_rv.rvs(size = population.shape[0])
-        drawn_values = prob_obj.data.option.values[sample_num]
-        # TODO: Convert drawn values to labels
-        #drawn_values = prob_obj.labels[drawn_values]
+def draw_from_disc_distribution(probabs, size):
+    sample_rv = stats.rv_discrete(name='sample_rv',
+            values=(probabs.option, probabs.probab))
+    sample_num = sample_rv.rvs(size = size)
+    drawn_values = probabs.option.values[sample_num]
+    # TODO: Convert drawn values to labels
+    #drawn_values = prob_obj.labels[drawn_values]
     return drawn_values
+
+def draw_from_cont_distribution(pdf, params, size):
+    # Repeat pdf(params) to form a list of length size.
+    drawn_values = []
+    for k in range(size):
+        drawn_values.append(pdf(params))
+    return drawn_values
+
+def construct_query_string(property_name, option, relation):
+    if relation == 'eq':
+        relation_string = '=='
+    elif relation == 'leq':
+        relation_string = '<='
+    elif relation == 'geq':
+        relation_string = '>='
+    elif relation == 'le':
+        relation_string = '<'
+    elif relation == 'gr':
+        relation_string = '>'
+    elif relation == 'neq':
+        relation_string = '~='
+
+    query_list = [property_name, relation_string, str(option)]
+    query_string = ' '.join(query_list)
+    return query_string
+
+def get_conditional_population(prob_obj, population, cond_index):
+    # - Get the corresponding conditional from prob_obj.conditionals
+    conds = prob_obj.conditionals.query("conditional_index == @cond_index")
+    # - Get the corr. segment of the population
+    # There can be multiple conditionals.
+    # Combine them all in one query string
+    query_list = [] 
+    for index, row in conds.iterrows():
+        query_list.append(
+                construct_query_string(
+                    row['property_name'], row['option'], row['relation']))
+    query_string = ' & '.join(query_list)
+    population_cond = population.query(query_string)
+    # We're only interested in the ID's of the people. 
+    population_cond = population_cond[['person_id']]
+    return population_cond
+
+def draw_cont_values(prob_obj, population):
+    if prob_obj.conditionals is None:
+        population[prob_obj.property_name] =\
+                draw_from_cont_distribution(prob_obj,
+                                            prob_obj.probabs,
+                                            population.shape[0])
+    else:
+        for cond_index in prob_obj.conditionals.conditional_index.unique():
+            # For every conditional:
+            # - Get the corr. segment of the population
+            # - Draw the values
+            # - Write the values in a list to the correct places
+
+            population_cond = get_conditional_population(prob_obj,
+                    population, cond_index)
+            population_cond[prob_obj.property_name] =\
+                    draw_from_cont_distribution(prob_obj.pdf,
+                                                prob_obj.parameters[cond_index],
+                                                population_cond.shape[0])
+            # - Write the values in a list to the correct places
+            # Use a left join for this
+            if prob_obj.property_name not in population.columns.values:
+                population = pd.merge(population, population_cond, 
+                                      how="left", on="person_id")
+            else:
+                # If the column already exists, update the values in that column.
+                # Couple of index tricks are necessary to arrange that.
+                population = population.set_index('person_id')
+                population_cond = population_cond.set_index('person_id')
+                population_cond = population_cond[[prob_obj.property_name]]
+                population.update(population_cond)
+                population.reset_index(inplace=True, drop=False)
+    return population
+
+
+def draw_disc_values(prob_obj, population):
+    if prob_obj.conditionals is None:
+        population[prob_obj.property_name] =\
+                draw_from_disc_distribution(prob_obj.probabs, 
+                                            population.shape[0])
+    # Iterate over the various conditionals.
+    else:
+        for cond_index in prob_obj.conditionals.conditional_index.unique():
+            # For every conditional:
+            # - Get the corresponding conditional from prob_obj.conditionals
+            # - Get the corr. segment of the population
+            # - Draw the values
+            # - Write the values in a list to the correct places
+
+            # - Get the corr. conditional probabilities from prob_obj.probabs
+            probabs_df = prob_obj.probabs\
+                    .query("conditional_index == @cond_index")
+            # - Get the corr. segment of the population
+            population_cond = get_conditional_population(prob_obj,
+                    population, cond_index)
+
+            # - Draw the values
+            population_cond[prob_obj.property_name] =\
+                    draw_from_disc_distribution(probabs_df,
+                                                population_cond.shape[0])
+
+            # - Write the values in a list to the correct places
+            # Use a left join for this
+            if prob_obj.property_name not in population.columns.values:
+                population = pd.merge(population, population_cond, 
+                                      how="left", on="person_id")
+            else:
+                # If the column already exists, update the values in that column.
+                # Couple of index tricks are necessary to arrange that.
+                population = population.set_index('person_id')
+                population_cond = population_cond.set_index('person_id')
+                population_cond = population_cond[[prob_obj.property_name]]
+                population.update(population_cond)
+                population.reset_index(inplace=True, drop=False)
+    return population
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

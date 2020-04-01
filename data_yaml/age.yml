@@ -1,0 +1,7 @@
+# Age 
+property_name: "age"
+data_type: "ordinal" 
+
+data_file: "./data/age.csv"
+
+conditionals: "./data/age_conditionals.csv"
