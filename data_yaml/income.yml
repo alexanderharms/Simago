@@ -2,8 +2,8 @@
 property_name: "income"
 data_type: "continuous" 
 
-pdf_parameters: [[0, 1]]
-pdf_file: "./pdf/pdf_normal.py"
-pdf: "pdf_normal"
+pdf_parameters: [[0, 1, 0]]
+pdf_file: "./pdfs/pdf.py"
+pdf: "pdf_norm"
 
 conditionals: null # null if no conditionals

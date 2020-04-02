@@ -1,7 +1,7 @@
-#!/usr/bin/env python4
+#!/usr/bin/env python
 import os
 import argparse
-from types import MethodType
+import importlib
 
 import yaml
 
@@ -15,8 +15,8 @@ def find_yamls(yaml_folder):
     yaml_filenames = []
     for dirpath, dirs, filenames in os.walk(yaml_folder):
         for filename in filenames:
-            print(filename)
             if filename.endswith(".yml") or filename.endswith(".yaml"):
+                print(filename)
                 yaml_filenames.append(filename)
     yaml_filenames = [yaml_folder + fname for fname in yaml_filenames]
     return yaml_filenames
@@ -64,7 +64,7 @@ def check_yaml(yaml_object):
         assert yaml_object['pdf_file'].endswith('.py'),\
                 fname + ', pdf file is not a Python file'
         try:
-            exec(open(yaml_object['pdf_file'].read()))
+            exec(open(yaml_object['pdf_file']).read())
         except:
             print(fname + ', pdf file can not be executed')
             quit()
@@ -113,12 +113,14 @@ class ProbabilityClass():
             self.read_data(yaml_object['data_file'])
             self.generate_probabilities()
 
-        elif self.data_type == "continous":
+        elif self.data_type == "continuous":
             self.pdf_parameters = yaml_object['pdf_parameters']
             # Execute the pdf file to define the pdf function
-            exec(open(yaml_object['pdf_file']).read())
-            self.pdf = MethodType(eval(yaml_object['pdf']),
-                                  None, self)
+            module_name = yaml_object['pdf_file'][2:-3].replace('/','.')
+            imported_pdfs = importlib.import_module(module_name)
+            pdf_function = getattr(imported_pdfs, yaml_object['pdf'])
+            self.pdf = pdf_function
+
         if yaml_object['conditionals'] is None:
             self.conditionals = None
         else:
@@ -172,8 +174,9 @@ class ProbabilityClass():
         return
 
 class PopulationClass():
-    def __init__(self, popsize, rand_seed):
+    def __init__(self, popsize, random_seed):
         # Set up random seed
+        self.random_seed = random_seed
 
         # Generate empty population
         self.population = pd.DataFrame(
@@ -215,9 +218,13 @@ class PopulationClass():
         if property_name == "all":
             for prob_obj in self.prob_objects:
                 if prob_obj.data_type in ['categorical', 'ordinal']:
-                    self.population = draw_disc_values(prob_obj, self.population)
+                    self.population = draw_disc_values(prob_obj, 
+                                                       self.population, 
+                                                       self.random_seed)
                 elif prob_obj.data_type == 'continuous':
-                    self.population = draw_cont_values(prob_obj, self.population)
+                    self.population = draw_cont_values(prob_obj,
+                                                       self.population, 
+                                                       self.random_seed)
         else:
             # Make a singular property name a list to homogenize the next code
             # section.
@@ -226,11 +233,15 @@ class PopulationClass():
             for prob_obj in self.prob_objects:
                 if prob_obj.property_name in property_name: 
                     if prob_obj.data_type in ['categorical', 'ordinal']:
-                        self.population = draw_disc_values(prob_obj, self.population)
+                        self.population = draw_disc_values(prob_obj, 
+                                                           self.population, 
+                                                           self.random_seed)
                     elif prob_obj.data_type == 'continuous':
-                        self.population = draw_cont_values(prob_obj, self.population)
+                        self.population = draw_cont_values(prob_obj,
+                                                           self.population, 
+                                                           self.random_seed)
 
-def draw_from_disc_distribution(probabs, size):
+def draw_from_disc_distribution(probabs, size, random_seed):
     sample_rv = stats.rv_discrete(name='sample_rv',
             values=(probabs.option, probabs.probab))
     sample_num = sample_rv.rvs(size = size)
@@ -239,11 +250,9 @@ def draw_from_disc_distribution(probabs, size):
     #drawn_values = prob_obj.labels[drawn_values]
     return drawn_values
 
-def draw_from_cont_distribution(pdf, params, size):
-    # Repeat pdf(params) to form a list of length size.
-    drawn_values = []
-    for k in range(size):
-        drawn_values.append(pdf(params))
+def draw_from_cont_distribution(pdf, parameters, size, random_seed):
+    dist_instance = pdf(parameters)
+    drawn_values = dist_instance.rvs(size=size)
     return drawn_values
 
 def construct_query_string(property_name, option, relation):
@@ -281,12 +290,13 @@ def get_conditional_population(prob_obj, population, cond_index):
     population_cond = population_cond[['person_id']]
     return population_cond
 
-def draw_cont_values(prob_obj, population):
+def draw_cont_values(prob_obj, population, random_seed):
     if prob_obj.conditionals is None:
         population[prob_obj.property_name] =\
-                draw_from_cont_distribution(prob_obj,
-                                            prob_obj.probabs,
-                                            population.shape[0])
+                draw_from_cont_distribution(prob_obj.pdf,
+                                            prob_obj.pdf_parameters[0],
+                                            population.shape[0],
+                                            random_seed)
     else:
         for cond_index in prob_obj.conditionals.conditional_index.unique():
             # For every conditional:
@@ -299,7 +309,8 @@ def draw_cont_values(prob_obj, population):
             population_cond[prob_obj.property_name] =\
                     draw_from_cont_distribution(prob_obj.pdf,
                                                 prob_obj.parameters[cond_index],
-                                                population_cond.shape[0])
+                                                population_cond.shape[0],
+                                                random_seed)
             # - Write the values in a list to the correct places
             # Use a left join for this
             if prob_obj.property_name not in population.columns.values:
@@ -316,11 +327,12 @@ def draw_cont_values(prob_obj, population):
     return population
 
 
-def draw_disc_values(prob_obj, population):
+def draw_disc_values(prob_obj, population, random_seed):
     if prob_obj.conditionals is None:
         population[prob_obj.property_name] =\
                 draw_from_disc_distribution(prob_obj.probabs, 
-                                            population.shape[0])
+                                            population.shape[0],
+                                            random_seed)
     # Iterate over the various conditionals.
     else:
         for cond_index in prob_obj.conditionals.conditional_index.unique():
@@ -340,7 +352,8 @@ def draw_disc_values(prob_obj, population):
             # - Draw the values
             population_cond[prob_obj.property_name] =\
                     draw_from_disc_distribution(probabs_df,
-                                                population_cond.shape[0])
+                                                population_cond.shape[0],
+                                                random_seed)
 
             # - Write the values in a list to the correct places
             # Use a left join for this
@@ -373,6 +386,7 @@ if __name__ == '__main__':
 
     print(args.popsize)
     print(args.rand_seed)
+    # TODO: Set random seed
 
     # Gather YAML files for aggregated data
     yaml_filenames = find_yamls(args.yaml_folder)
@@ -386,7 +400,6 @@ if __name__ == '__main__':
 
     for obj in probab_objects:
         print(obj.property_name)
-        print(obj.probabs)
 
     # Generate an empty population
     population = PopulationClass(args.popsize, args.rand_seed)
@@ -399,4 +412,4 @@ if __name__ == '__main__':
     print(population.population)
 
     # Export population.population
-    # population.population.to_csv(path_or_buf=args.output, index = False)
+    population.population.to_csv(path_or_buf=args.output, index = False)
