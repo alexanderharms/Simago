@@ -41,7 +41,10 @@ constructed based on the data file. For the continuous properties a probability
 distribution function must be defined in a separate Python file. The difference
 between categorical and ordinal properties is that the options for the ordinal
 properties are assumed to contain a certain order, for example in the cases of
-'age' and 'education'.
+'age' and 'education'.  
+
+The function for the PDF for a continous property must return an rv_continuous
+object from the scipy.stats package.
 
 ### Example:
 In the package a simple example is included. By running the Bash file

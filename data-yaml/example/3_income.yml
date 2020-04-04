@@ -2,8 +2,8 @@
 property_name: "income"
 data_type: "continuous" 
 
-pdf_parameters: [[0, 1, 0]]
+pdf_parameters: [[1000, 1], [2000, 1]]
 pdf_file: "./pdfs/example/pdf.py"
-pdf: "pdf_norm"
+pdf: "pdf_lognorm"
 
 conditionals: "./data/example/income_conditionals.csv" # null if no conditionals
