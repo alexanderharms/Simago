@@ -20,7 +20,8 @@ def draw_cont_values(prob_obj, population, random_seed):
                     population, cond_index)
             population_cond[prob_obj.property_name] =\
                     draw_from_cont_distribution(prob_obj.pdf,
-                                                prob_obj.parameters[cond_index],
+                                                prob_obj\
+                                                    .pdf_parameters[cond_index],
                                                 population_cond.shape[0],
                                                 random_seed)
             # - Write the values in a list to the correct places

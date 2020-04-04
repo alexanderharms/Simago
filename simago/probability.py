@@ -2,6 +2,7 @@ import importlib
 import pandas as pd
 
 class ProbabilityClass():
+    # TODO: Method to convert generated options back to the labels
     def __init__(self, yaml_object):
         self.property_name = yaml_object['property_name']
         self.data_type = yaml_object['data_type']
@@ -43,17 +44,11 @@ class ProbabilityClass():
                         options_labels.at[idx, 'label']
         # Assign the data to self.data
         self.data = data_frame[['option', 'value', 'conditional_index']]
-        return
 
     def read_conditionals(self, conditionals_file):
         # Read CSV
         # Assign data to self.conditionals
         self.conditionals = pd.read_csv(conditionals_file)
-        return
-
-    #def least_squares(self):
-    #    # For ordinal variables defined as ranges
-    #    return
 
     def generate_probabilities(self):
         # From the data generate the probabilities
@@ -68,7 +63,6 @@ class ProbabilityClass():
                 / self.probabs['value_sum']
         self.probabs = self.probabs.drop('value_sum', axis=1)
         self.probabs = self.probabs.rename(columns={'value':'probab'})
-        return
 
 def construct_query_string(property_name, option, relation):
     if relation == 'eq':

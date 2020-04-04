@@ -6,4 +6,4 @@ pdf_parameters: [[0, 1, 0]]
 pdf_file: "./pdfs/pdf.py"
 pdf: "pdf_norm"
 
-conditionals: null # null if no conditionals
+conditionals: "./data/income_conditionals.csv" # null if no conditionals

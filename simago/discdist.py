@@ -51,7 +51,5 @@ def draw_from_disc_distribution(probabs, size, random_seed):
             values=(probabs.option, probabs.probab))
     sample_num = sample_rv.rvs(size = size)
     drawn_values = probabs.option.values[sample_num]
-    # TODO: Convert drawn values to labels
-    #drawn_values = prob_obj.labels[drawn_values]
     return drawn_values
 
