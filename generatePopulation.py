@@ -1,76 +1,71 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 import argparse
 
 import numpy as np
-import pandas as pd
-from scipy import stats
 
-from scripts.population import generateEmptyPeople
-from scripts.population import addProperties
-
-# Assign options to properties based on the probabilities given in de prob data frames.
-# How do I handle contradictive/simultaneous conditionals?
-
-# How do I handle discrete vs. continuous random variables?
-
-# Assignment of salary should be performed in tandem with assigning households.
-# The salaries of the persons in a household should add up to the household income.
-# In a household people shoud earn enough to be able to afford housing.
-
-# Generate households
-# Max 4 adults
-# 2 adults with max 3 kids
-# 1 adult,1 bedroom
-# 2 adults, 1(0.9) or 2 (0.1) bedrooms
-# 1 kid, 1 bedroom,
-# n kids, n (0.8) or n-1 (0.2) bedrooms
-# Assign each person with a household ID.
-
-def uniform_distribution(values, pop_size):
-    # Draw pop_size amount samples from uniform 
-    # distribution
-    lower_bound = values[0]
-    upper_bound = values[1]
-    samples = np.random.uniform(low = lower_bound,
-            high = upper_bound,
-            size = pop_size)
-
-    return samples
-
+from simago.yamlutils import find_yamls, load_yamls
+from simago.population import PopulationClass
+from simago.probability import ProbabilityClass
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("-p", "--popsize", type=int, 
+    parser.add_argument("-p", "--popsize", type=int,
                         help="Size of the population")
+    parser.add_argument("-o", "--output", type=str,
+                        default="./population.csv",
+                        help="Output file for the population")
+    parser.add_argument("--nowrite", action="store_true",
+                        help="Do not write the population to file.")
+    parser.add_argument("--rand_seed", type=int, default=None,
+                        help="Seed for random number generation")
+    parser.add_argument("--yaml_folder", type=str,
+                        default="./data_yaml/",
+                        help="Location of YAML files for the aggregated data.")
     args = parser.parse_args()
 
-    censusdata = pd.read_csv('./data/ACS_17_5YR_DP05.csv').transpose()
-    censusdata = censusdata[censusdata.iloc[:, 0].str.contains('Estimate')]
-    censusdata.iloc[:, 1] = censusdata.iloc[:, 1].apply(pd.to_numeric)
+    print("Population size: %d" % (args.popsize))
+    if args.rand_seed is None:
+        print("No random seed defined")
+    else:
+        print("Random seed: %d" % (args.rand_seed))
+    np.random.seed(args.rand_seed)
 
-    total_pop = censusdata.loc['HC01_VC03', 1]
-    print(total_pop)
+    print("------------------------")
+    # Gather YAML files for aggregated data
+    yaml_filenames = find_yamls(args.yaml_folder)
+    yaml_filenames = sorted(yaml_filenames)
+    print("YAML folder: %s" % (args.yaml_folder))
+    print("Found YAML files:")
+    print(yaml_filenames)
+    yaml_objects = load_yamls(yaml_filenames)
 
-    # Load discrete probabilities
-    prob_agesexrace = pd.read_csv("./data-process/probabilities/prob_agesexrace.csv")
-    prob_education = pd.read_csv("./data-process/probabilities/prob_education.csv")
-    prob_personalincome = pd.read_csv("./data-process/probabilities/" + 
-            "prob_personalincome.csv")
+    # Based on the yaml_objects, create a list of ProbPopulation instances.
+    probab_objects = []
+    for y_obj in yaml_objects:
+        probab_objects.append(ProbabilityClass(y_obj)) 
 
-    # Concatenate into one dataframe
-    prob_df = pd.concat([prob_agesexrace, prob_education,
-        prob_personalincome], axis = 0)
+    print("------------------------")
+    print("Defined properties:")
+    for obj in probab_objects:
+        print(obj.property_name)
 
-    # set_properties = set(prob_df.property.values)
-    set_properties = ["sex", "age", "race", "education", "personal_income"] 
-    num_properties = ["age", "personal_income"]
-    population = generateEmptyPeople(args.popsize)
-    population = addProperties(population, set_properties, 
-                               prob_df, num_properties)
+    # Generate an empty population
+    population = PopulationClass(args.popsize, args.rand_seed)
 
-    print(population)
-    population.to_csv(path_or_buf="data-process/population.csv",
-            index = False)
-    
-    
+    # Add variables to the population based on the ProbPopulation instances.
+    for obj in probab_objects:
+        population.add_property(obj)
 
+    population.update()
+    print("------------------------")
+    print("Generated population:")
+    print(population.population)
+
+    print("------------------------")
+    # Export population.population
+    if args.nowrite:
+        print("Population is not written to disk.")
+        pass
+    else:
+        population.population.to_csv(path_or_buf=args.output, index = False)
+        print("Population is written to %s" % (args.output))
