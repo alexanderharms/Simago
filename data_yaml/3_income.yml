@@ -1,9 +1,0 @@
-# Income 
-property_name: "income"
-data_type: "continuous" 
-
-pdf_parameters: [[0, 1, 0]]
-pdf_file: "./pdfs/pdf.py"
-pdf: "pdf_norm"
-
-conditionals: "./data/income_conditionals.csv" # null if no conditionals

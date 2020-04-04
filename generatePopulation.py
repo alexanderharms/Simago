@@ -12,14 +12,14 @@ if __name__ == '__main__':
     parser.add_argument("-p", "--popsize", type=int,
                         help="Size of the population")
     parser.add_argument("-o", "--output", type=str,
-                        default="./population.csv",
+                        default="./output/population.csv",
                         help="Output file for the population")
     parser.add_argument("--nowrite", action="store_true",
                         help="Do not write the population to file.")
     parser.add_argument("--rand_seed", type=int, default=None,
                         help="Seed for random number generation")
     parser.add_argument("--yaml_folder", type=str,
-                        default="./data_yaml/",
+                        default="./data-yaml/",
                         help="Location of YAML files for the aggregated data.")
     args = parser.parse_args()
 

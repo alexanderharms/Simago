@@ -15,7 +15,9 @@ data_type: "categorical" # or "ordinal" or "continuous"
 data_file: "./data/data_filename.csv"
 
 # If "continuous" there is no dataset, there are parameters
-# pdf_parameters: [1, 0] # List of parameters
+# Each element of the list of pdf parameters corresponds to the conditional of
+# the same index.
+# pdf_parameters: [[1, 0]] # List of parameters
 # File to the function that defines the probabililty distribution function.
 # This function should take the list of parameters as the first argument. 
 # pdf_file: "pdf.py" 
@@ -31,11 +33,3 @@ conditionals: null # null if no conditionals
 # meaning 'eq', 'geq', 'gr', 'leq' or 'le' for "equal to", "greater or equal
 # to" etc.
 # conditionals: "cond_filename.csv"
-
-# TODO: Continous properties that have different parameters or PDF's for 
-# different subsets.
-# Solution is to have a list of parameter lists and/or a list of pdf functions
-# where each index in the lists machtes the conditional index. If only one list
-# of parameters or pdf function is defined, these hold for all the conditionals.
-#
-#
