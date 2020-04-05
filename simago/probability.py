@@ -1,5 +1,23 @@
 import importlib
+import numpy as np
 import pandas as pd
+
+def check_conditionals(probab_objects):
+    properties = []
+    for obj in probab_objects:
+        properties.append(obj.property_name)
+
+    for obj in probab_objects:
+        if obj.conditionals is not None:
+            assert obj.conditionals.property_name.values.all() in properties,\
+                    obj.property_name + ', conditionals references undefined '\
+                    + 'properties'
+            if obj.data_type == "continuous":
+                assert len(np.unique(obj.conditionals.conditional_index))\
+                        == len(obj.pdf_parameters),\
+                        obj.property_name + ', not enough PDF parameters for '\
+                        + 'the amount of conditionals'
+    return
 
 class ProbabilityClass():
     # TODO: Method to convert generated options back to the labels

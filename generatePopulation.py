@@ -5,7 +5,7 @@ import numpy as np
 
 from simago.yamlutils import find_yamls, load_yamls
 from simago.population import PopulationClass
-from simago.probability import ProbabilityClass
+from simago.probability import ProbabilityClass, check_conditionals
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -48,6 +48,8 @@ if __name__ == '__main__':
     print("Defined properties:")
     for obj in probab_objects:
         print(obj.property_name)
+
+    check_conditionals(probab_objects)
 
     # Generate an empty population
     population = PopulationClass(args.popsize, args.rand_seed)
