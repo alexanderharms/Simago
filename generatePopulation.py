@@ -7,6 +7,20 @@ from simago.yamlutils import find_yamls, load_yamls
 from simago.population import PopulationClass
 from simago.probability import ProbabilityClass, check_conditionals
 
+def order_probab_objects(probab_objects):
+    # There should be at least one property without conditionals.
+    cond_bool = [True if x.conditionals is None else False 
+                 for x in probab_objects]
+    assert cond_bool.any(), 'At least one of the properties should be without'\
+            + ' conditionals.'
+    # Create a graph of the dependencies.
+    # Check if there are cycles in the graph. Assert that there are no cycles.
+    # Start ordering the list of probab_objects with all the properties with
+    # obj.conditionals is None.
+    # After that follow the graph from these properties to order the list of 
+    # probab objects.
+    return probab_objects
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-p", "--popsize", type=int,
@@ -50,6 +64,8 @@ if __name__ == '__main__':
         print(obj.property_name)
 
     check_conditionals(probab_objects)
+    
+    probab_objects = order_probab_objects(probab_objects)
 
     # Generate an empty population
     population = PopulationClass(args.popsize, args.rand_seed)
