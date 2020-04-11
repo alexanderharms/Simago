@@ -57,15 +57,4 @@ if __name__ == '__main__':
         population.add_property(obj)
 
     population.update()
-    print("------------------------")
-    print("Generated population:")
-    print(population.population)
-
-    print("------------------------")
-    # Export population.population
-    if args.nowrite:
-        print("Population is not written to disk.")
-        pass
-    else:
-        population.population.to_csv(path_or_buf=args.output, index = False)
-        print("Population is written to %s" % (args.output))
+    population.export(args.output, nowrite=args.nowrite)
