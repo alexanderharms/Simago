@@ -51,7 +51,14 @@ def order_probab_objects(probab_objects):
             probab_graph_values = [item for sublist in probab_graph_values 
                     for item in sublist]
 
-    cumul_props = cumulative_properties(probab_objects)
+    #cumul_props = cumulative_properties(probab_objects)
+    #cumul_props = [cumul_props[i] for i, x in enumerate(cond_bool) if not x]
+    #print(cumul_props)
+    #for i, obj in enumerate(probab_cond):
+    #order_check = [True if obj.conditionals.option 
+    #               in cumul_props[i] else False 
+    #               for i, obj in enumerate(probab_cond)]
+    print(order_check)
     
     return probab_objects
 
@@ -94,8 +101,7 @@ if __name__ == '__main__':
 
     print("------------------------")
     print("Defined properties:")
-    for obj in probab_objects:
-        print(obj.property_name)
+    print([obj.property_name for obj in probab_objects])
 
     check_conditionals(probab_objects)
     
