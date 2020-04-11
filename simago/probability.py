@@ -2,23 +2,6 @@ import importlib
 import numpy as np
 import pandas as pd
 
-def check_conditionals(probab_objects):
-    properties = []
-    for obj in probab_objects:
-        properties.append(obj.property_name)
-
-    for obj in probab_objects:
-        if obj.conditionals is not None:
-            assert obj.conditionals.property_name.values.all() in properties,\
-                    obj.property_name + ', conditionals references undefined '\
-                    + 'properties'
-            if obj.data_type == "continuous":
-                assert len(np.unique(obj.conditionals.conditional_index))\
-                        == len(obj.pdf_parameters),\
-                        obj.property_name + ', not enough PDF parameters for '\
-                        + 'the amount of conditionals'
-    return
-
 class ProbabilityClass():
     # TODO: Method to convert generated options back to the labels
     def __init__(self, yaml_object):
@@ -116,3 +99,80 @@ def get_conditional_population(prob_obj, population, cond_index):
     # We're only interested in the ID's of the people. 
     population_cond = population_cond[['person_id']]
     return population_cond
+
+def cumulative_properties(probab_objects):
+    properties = [None] * len(probab_objects)
+    for idx, obj in enumerate(probab_objects):
+        if idx == 0:
+            properties[idx] = [obj.property_name]
+        else: 
+            properties[idx] = properties[idx - 1] + [obj.property_name]
+    return properties
+
+def order_probab_objects(probab_objects):
+    # There should be at least one property without conditionals.
+    cond_bool = [True if x.conditionals is None else False 
+                 for x in probab_objects]
+
+    # Start ordering the list of probab_objects with all the properties with
+    # obj.conditionals is None.
+    probab_none = [probab_objects[i] for i, x in enumerate(cond_bool) if x]
+    probab_none_prop = [obj.property_name for obj in probab_none]
+
+    probab_cond = [probab_objects[i] for i, x in enumerate(cond_bool) if not x]
+    probab_cond_prop = [obj.property_name for obj in probab_cond]
+    
+    probab_objects = probab_none + probab_cond
+    
+    return probab_objects
+
+def check_conditionals(probab_objects):
+    properties = []
+    for obj in probab_objects:
+        properties.append(obj.property_name)
+
+    for obj in probab_objects:
+        if obj.conditionals is not None:
+            assert obj.conditionals.property_name.values.all() in properties,\
+                    obj.property_name + ', conditionals references undefined '\
+                    + 'properties'
+            if obj.data_type == "continuous":
+                assert len(np.unique(obj.conditionals.conditional_index))\
+                        == len(obj.pdf_parameters),\
+                        obj.property_name + ', not enough PDF parameters for '\
+                        + 'the amount of conditionals'
+
+    # There should be at least one property without conditionals.
+    cond_bool = [True if x.conditionals is None else False 
+                 for x in probab_objects]
+    assert any(cond_bool), 'At least one of the properties should be without'\
+            + ' conditionals.'
+
+    # Start ordering the list of probab_objects with all the properties with
+    # obj.conditionals is None.
+    probab_none = [probab_objects[i] for i, x in enumerate(cond_bool) if x]
+    probab_none_prop = [obj.property_name for obj in probab_none]
+
+    probab_cond = [probab_objects[i] for i, x in enumerate(cond_bool) if not x]
+    probab_cond_prop = [obj.property_name for obj in probab_cond]
+
+    # Create a graph of the dependencies.
+    # Check if there are cycles in the graph. Assert that there are no cycles.
+    probab_graph = dict()
+    for obj in probab_cond:
+        probab_graph[obj.property_name] = \
+                np.unique(obj.conditionals.property_name).tolist()
+
+    for key in probab_graph.keys():
+        # If all the values of probab_graph are have no conditionals, the graph
+        # cannot be simplified further.
+        probab_graph_values = probab_graph[key]
+        while not all(item in probab_none_prop for item in probab_graph_values):
+            assert key not in probab_graph_values, 'Circular dependency, ' + key
+            
+            probab_graph_values = [probab_graph[k] for k in probab_graph_values 
+                    if k not in probab_none_prop]
+            probab_graph_values = [item for sublist in probab_graph_values 
+                    for item in sublist]
+    return
+

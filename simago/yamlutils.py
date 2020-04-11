@@ -10,6 +10,12 @@ def find_yamls(yaml_folder):
             if filename.endswith(".yml") or filename.endswith(".yaml"):
                 yaml_filenames.append(filename)
     yaml_filenames = [yaml_folder + fname for fname in yaml_filenames]
+    yaml_filenames = sorted(yaml_filenames)
+
+    print("YAML folder: %s" % (args.yaml_folder))
+    print("Found YAML files:")
+    print(yaml_filenames)
+
     return yaml_filenames
 
 def check_yaml(yaml_object):
