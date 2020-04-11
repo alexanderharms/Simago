@@ -4,6 +4,7 @@ import yaml
 def find_yamls(yaml_folder):
     # Gather all the YAML files for the aggregated data in the folder.
     # Return the list of paths to YAML files.
+    print("YAML folder: %s" % (yaml_folder))
     yaml_filenames = []
     for dirpath, dirs, filenames in os.walk(yaml_folder):
         for filename in filenames:
@@ -12,7 +13,6 @@ def find_yamls(yaml_folder):
     yaml_filenames = [yaml_folder + fname for fname in yaml_filenames]
     yaml_filenames = sorted(yaml_filenames)
 
-    print("YAML folder: %s" % (args.yaml_folder))
     print("Found YAML files:")
     print(yaml_filenames)
 
