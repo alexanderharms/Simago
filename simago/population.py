@@ -71,6 +71,29 @@ class PopulationClass():
                         self.population = draw_cont_values(prob_obj,
                                                            self.population, 
                                                            self.random_seed)
+    def export(self, output, nowrite=False):
+        # Replace the options with the labels
+        population_w_labels = self.population.copy()
+
+        for prob_obj in self.prob_objects:
+            if prob_obj.data_type in ['categorical', 'ordinal']:
+                prop = prob_obj.property_name
+                population_w_labels[prop] = population_w_labels[prop]\
+                        .apply(lambda idx: prob_obj.labels[int(idx)])
+
+        print("------------------------")
+        print("Generated population:")
+        print(population_w_labels)
+
+        print("------------------------")
+        # Export population.population
+        if nowrite:
+            print("Population is not written to disk.")
+            pass
+        else:
+            population_w_labels.to_csv(path_or_buf=output, index = False)
+            print("Population is written to %s" % (output))
+
 
 def construct_query_string(property_name, option, relation):
     if relation == 'eq':

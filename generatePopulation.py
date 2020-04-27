@@ -6,6 +6,7 @@ import numpy as np
 from simago.yamlutils import find_yamls, load_yamls
 from simago.population import PopulationClass
 from simago.probability import ProbabilityClass, check_conditionals
+from simago.probability import order_probab_objects
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -33,41 +34,27 @@ if __name__ == '__main__':
     print("------------------------")
     # Gather YAML files for aggregated data
     yaml_filenames = find_yamls(args.yaml_folder)
-    yaml_filenames = sorted(yaml_filenames)
-    print("YAML folder: %s" % (args.yaml_folder))
-    print("Found YAML files:")
-    print(yaml_filenames)
     yaml_objects = load_yamls(yaml_filenames)
 
-    # Based on the yaml_objects, create a list of ProbPopulation instances.
+    # Based on the yaml_objects, create a list of ProbabilityClass instances.
     probab_objects = []
     for y_obj in yaml_objects:
         probab_objects.append(ProbabilityClass(y_obj)) 
 
     print("------------------------")
     print("Defined properties:")
-    for obj in probab_objects:
-        print(obj.property_name)
+    print([obj.property_name for obj in probab_objects])
 
     check_conditionals(probab_objects)
+    
+    probab_objects = order_probab_objects(probab_objects)
 
     # Generate an empty population
     population = PopulationClass(args.popsize, args.rand_seed)
 
-    # Add variables to the population based on the ProbPopulation instances.
+    # Add variables to the population based on the ProbabilityClass instances.
     for obj in probab_objects:
         population.add_property(obj)
 
     population.update()
-    print("------------------------")
-    print("Generated population:")
-    print(population.population)
-
-    print("------------------------")
-    # Export population.population
-    if args.nowrite:
-        print("Population is not written to disk.")
-        pass
-    else:
-        population.population.to_csv(path_or_buf=args.output, index = False)
-        print("Population is written to %s" % (args.output))
+    population.export(args.output, nowrite=args.nowrite)
