@@ -4,6 +4,6 @@ YAML='./data-yaml/example/'
 OUTPUT='./output/population.csv'
 SEED=100
 
-python generatePopulation.py -p $POPSIZE --yaml_folder $YAML\
+python3 generatePopulation.py -p $POPSIZE --yaml_folder $YAML\
 	-o $OUTPUT --rand_seed $SEED
 
