@@ -10,14 +10,17 @@ class PopulationClass():
         self.random_seed = random_seed
 
         # Generate empty population
+        self.popsize = popsize
+        self._generate_population()
+
+        # Initialize list of probability objects
+        self.prob_objects = []
+
+    def _generate_population(self):
         self.population = pd.DataFrame(
             {"person_id" : np.linspace(0, popsize - 1, popsize)})
 
         self.population['person_id'] = self.population['person_id'].apply(int)
-        self.popsize = popsize
-
-        # Initialize list of probability objects
-        self.prob_objects = []
 
     def add_property(self, ProbPopulation):
         # Add ProbPopulation object to self.prob_objects list

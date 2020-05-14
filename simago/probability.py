@@ -3,7 +3,6 @@ import numpy as np
 import pandas as pd
 
 class ProbabilityClass():
-    # TODO: Method to convert generated options back to the labels
     def __init__(self, yaml_object):
         self.property_name = yaml_object['property_name']
         self.data_type = yaml_object['data_type']
