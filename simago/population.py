@@ -18,7 +18,7 @@ class PopulationClass():
 
     def _generate_population(self):
         self.population = pd.DataFrame(
-            {"person_id" : np.linspace(0, popsize - 1, popsize)})
+            {"person_id" : np.linspace(0, self.popsize - 1, self.popsize)})
 
         self.population['person_id'] = self.population['person_id'].apply(int)
 
