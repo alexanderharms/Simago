@@ -1,7 +1,7 @@
 from scipy import stats
 import pandas as pd
 
-from .probability import get_conditional_population
+from simago.probability import get_conditional_population
 
 def draw_disc_values(prob_obj, population, random_seed):
     if prob_obj.conditionals is None:

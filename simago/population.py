@@ -5,6 +5,24 @@ from .discdist import draw_disc_values
 from .contdist import draw_cont_values
 
 class PopulationClass():
+    """
+    Class for the population 
+    
+    ...
+    
+    Attributes
+    ----------
+    random_seed : int
+        Seed for random number generation.
+    popsize : int
+        Size of the population.
+    prob_objects : list
+        List of ProbabilityClass objects.
+    population : Pandas DataFrame
+        DataFrame containing the generated population.
+
+    """
+
     def __init__(self, popsize, random_seed):
         # Set up random seed
         self.random_seed = random_seed
@@ -18,7 +36,7 @@ class PopulationClass():
 
     def _generate_population(self):
         self.population = pd.DataFrame(
-            {"person_id" : np.linspace(0, popsize - 1, popsize)})
+            {"person_id" : np.linspace(0, self.popsize - 1, self.popsize)})
 
         self.population['person_id'] = self.population['person_id'].apply(int)
 
