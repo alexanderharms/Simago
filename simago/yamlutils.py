@@ -2,6 +2,21 @@ import os
 import yaml
 
 def find_yamls(yaml_folder):
+    """
+    Find YAML files.
+    
+    Parameters
+    ----------
+    yaml_folder : str
+        Name of folder where YAML files are stored.
+
+    Returns
+    -------
+    list
+        List of YAML filenames.
+
+    """
+
     # Gather all the YAML files for the aggregated data in the folder.
     # Return the list of paths to YAML files.
     print("YAML folder: %s" % (yaml_folder))
@@ -19,6 +34,19 @@ def find_yamls(yaml_folder):
     return yaml_filenames
 
 def check_yaml(yaml_object):
+    """
+    Check YAML object.
+    
+    Parameters
+    ----------
+    yaml_object
+
+    Returns
+    -------
+    yaml_object
+
+    """
+
     fname = yaml_object['yaml_filename']
 
     assert 'property_name' in yaml_object.keys(), fname + ', no property defined'
@@ -80,6 +108,21 @@ def check_yaml(yaml_object):
     return yaml_object
 
 def load_yamls(yaml_filenames):
+    """
+    Load YAML files.
+    
+    Parameters
+    ----------
+    yaml_filenames : list
+        List of YAML filenames.
+
+    Returns
+    -------
+    list
+        List of YAML objects.
+
+    """
+
     yaml_objects = []
     for yaml_filename in yaml_filenames:
         with open(yaml_filename, 'r') as yaml_file:

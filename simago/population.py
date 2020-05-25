@@ -6,7 +6,7 @@ from .contdist import draw_cont_values
 
 class PopulationClass():
     """
-    Class for the population 
+    Class for the population.
     
     ...
     

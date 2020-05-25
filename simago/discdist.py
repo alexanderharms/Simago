@@ -4,6 +4,25 @@ import pandas as pd
 from simago.probability import get_conditional_population
 
 def draw_disc_values(prob_obj, population, random_seed):
+    """
+    Draw values for discrete, i.e. categorical and ordinal, variables.
+
+    Parameters
+    ----------
+    prob_obj : ProbabilityClass
+        ProbabilityClass object for the categorical or ordinal variable.
+    population : Pandas DataFrame
+        DataFrame with a population to add the categorical or ordinal variable to.
+    random_seed : int
+        Seed for random number generation.
+
+    Returns
+    -------
+    PopulationClass object
+        PopulationClass object with drawn values for the categorical or ordinal variable.
+
+    """
+
     if prob_obj.conditionals is None:
         population[prob_obj.property_name] =\
                 draw_from_disc_distribution(prob_obj.probabs, 
@@ -47,6 +66,24 @@ def draw_disc_values(prob_obj, population, random_seed):
     return population
 
 def draw_from_disc_distribution(probabs, size, random_seed):
+    """
+    Draw from a discrete distribution.
+
+    Parameters
+    ----------
+    probabs : Pandas DataFrame
+    size : int
+        Number of values drawn from distribution.
+    random_seed : int
+        Seed for random number generation.
+
+    Returns
+    -------
+    list
+        List of drawn values.
+
+    """
+
     sample_rv = stats.rv_discrete(name='sample_rv',
             values=(probabs.option, probabs.probab))
     sample_num = sample_rv.rvs(size = size)

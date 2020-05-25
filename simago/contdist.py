@@ -3,6 +3,25 @@ import pandas as pd
 from simago.probability import get_conditional_population
 
 def draw_cont_values(prob_obj, population, random_seed):
+    """
+    Draw values for continuous variable.
+
+    Parameters
+    ----------
+    prob_obj : ProbabilityClass
+        ProbabilityClass object for the continuous variable.
+    population : Pandas DataFrame
+        DataFrame with a population to add the continuous variable to.
+    random_seed : int
+        Seed for random number generation.
+
+    Returns
+    -------
+    PopulationClass object
+        PopulationClass object with drawn values for the continuous variable.
+
+    """
+
     if prob_obj.conditionals is None:
         population[prob_obj.property_name] =\
                 draw_from_cont_distribution(prob_obj.pdf,
@@ -40,6 +59,27 @@ def draw_cont_values(prob_obj, population, random_seed):
     return population
 
 def draw_from_cont_distribution(pdf, parameters, size, random_seed):
+    """
+    Draw from a continuous distribution.
+
+    Parameters
+    ----------
+    pdf : function
+        Probability distribution function.
+    parameters : list
+        List of parameters for the probability distribution function.
+    size : int
+        Number of values drawn from distribution.
+    random_seed : int
+        Seed for random number generation.
+
+    Returns
+    -------
+    list
+        List of values drawn from the probability distribution function.
+
+    """
+
     dist_instance = pdf(parameters)
     drawn_values = dist_instance.rvs(size=size)
     return drawn_values
