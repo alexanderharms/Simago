@@ -21,9 +21,30 @@ class PopulationClass():
     population : Pandas DataFrame
         DataFrame containing the generated population.
 
+    Methods
+    -------
+    add_property(ProbPopulation)
+        Adds property to PopulationClass.
+    remove_property(property_name)
+        Removes property from PopulationClass.
+    update(property_name="all", people_id="all")
+        Updates property.
+    export(output, nowrite=False)
+        Prints and writes population to file.
+
     """
 
     def __init__(self, popsize, random_seed):
+        """
+        Parameters
+        ----------
+        popsize : int
+            Size of population.
+        random_seed : int
+            Seed for random number generation.
+
+        """
+
         # Set up random seed
         self.random_seed = random_seed
 
