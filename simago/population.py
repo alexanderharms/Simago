@@ -8,7 +8,6 @@ class PopulationClass():
     """
     Class for the population.
     
-    ...
     
     Attributes
     ----------

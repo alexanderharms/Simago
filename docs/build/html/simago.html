@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <title>simago package &#8212; Simago  documentation</title>
-    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
@@ -14,20 +14,28 @@
     <script src="_static/language_data.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-   
-  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
-  
-  
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
+    <link rel="prev" title="simago" href="modules.html" /> 
   </head><body>
-  
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="modules.html" title="simago"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Simago  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" accesskey="U">simago</a> &#187;</li> 
+      </ul>
+    </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          
-
           <div class="body" role="main">
             
   <div class="section" id="simago-package">
@@ -43,17 +51,20 @@
 <dd><p>Draw values for continuous variable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>prob_obj</strong> (<a class="reference internal" href="#simago.probability.ProbabilityClass" title="simago.probability.ProbabilityClass"><em>ProbabilityClass</em></a>) – ProbabilityClass object for the continuous variable.</p></li>
-<li><p><strong>population</strong> (<em>Pandas DataFrame</em>) – DataFrame with a population to add the continuous variable to.</p></li>
-<li><p><strong>random_seed</strong> (<em>int</em>) – Seed for random number generation.</p></li>
-</ul>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>prob_obj</strong><span class="classifier">ProbabilityClass</span></dt><dd><p>ProbabilityClass object for the continuous variable.</p>
+</dd>
+<dt><strong>population</strong><span class="classifier">Pandas DataFrame</span></dt><dd><p>DataFrame with a population to add the continuous variable to.</p>
+</dd>
+<dt><strong>random_seed</strong><span class="classifier">int</span></dt><dd><p>Seed for random number generation.</p>
+</dd>
+</dl>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>PopulationClass object with drawn values for the continuous variable.</p>
+<dd class="field-even"><dl class="simple">
+<dt>PopulationClass object</dt><dd><p>PopulationClass object with drawn values for the continuous variable.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>PopulationClass object</p>
+</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -64,18 +75,22 @@
 <dd><p>Draw from a continuous distribution.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>pdf</strong> (<em>function</em>) – Probability distribution function.</p></li>
-<li><p><strong>parameters</strong> (<em>list</em>) – List of parameters for the probability distribution function.</p></li>
-<li><p><strong>size</strong> (<em>int</em>) – Number of values drawn from distribution.</p></li>
-<li><p><strong>random_seed</strong> (<em>int</em>) – Seed for random number generation.</p></li>
-</ul>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>pdf</strong><span class="classifier">function</span></dt><dd><p>Probability distribution function.</p>
+</dd>
+<dt><strong>parameters</strong><span class="classifier">list</span></dt><dd><p>List of parameters for the probability distribution function.</p>
+</dd>
+<dt><strong>size</strong><span class="classifier">int</span></dt><dd><p>Number of values drawn from distribution.</p>
+</dd>
+<dt><strong>random_seed</strong><span class="classifier">int</span></dt><dd><p>Seed for random number generation.</p>
+</dd>
+</dl>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>List of values drawn from the probability distribution function.</p>
+<dd class="field-even"><dl class="simple">
+<dt>list</dt><dd><p>List of values drawn from the probability distribution function.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list</p>
+</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -89,17 +104,20 @@
 <dd><p>Draw values for discrete, i.e. categorical and ordinal, variables.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>prob_obj</strong> (<a class="reference internal" href="#simago.probability.ProbabilityClass" title="simago.probability.ProbabilityClass"><em>ProbabilityClass</em></a>) – ProbabilityClass object for the categorical or ordinal variable.</p></li>
-<li><p><strong>population</strong> (<em>Pandas DataFrame</em>) – DataFrame with a population to add the categorical or ordinal variable to.</p></li>
-<li><p><strong>random_seed</strong> (<em>int</em>) – Seed for random number generation.</p></li>
-</ul>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>prob_obj</strong><span class="classifier">ProbabilityClass</span></dt><dd><p>ProbabilityClass object for the categorical or ordinal variable.</p>
+</dd>
+<dt><strong>population</strong><span class="classifier">Pandas DataFrame</span></dt><dd><p>DataFrame with a population to add the categorical or ordinal variable to.</p>
+</dd>
+<dt><strong>random_seed</strong><span class="classifier">int</span></dt><dd><p>Seed for random number generation.</p>
+</dd>
+</dl>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>PopulationClass object with drawn values for the categorical or ordinal variable.</p>
+<dd class="field-even"><dl class="simple">
+<dt>PopulationClass object</dt><dd><p>PopulationClass object with drawn values for the categorical or ordinal variable.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>PopulationClass object</p>
+</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -110,17 +128,19 @@
 <dd><p>Draw from a discrete distribution.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>probabs</strong> (<em>Pandas DataFrame</em>) – </p></li>
-<li><p><strong>size</strong> (<em>int</em>) – Number of values drawn from distribution.</p></li>
-<li><p><strong>random_seed</strong> (<em>int</em>) – Seed for random number generation.</p></li>
-</ul>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>probabs</strong><span class="classifier">Pandas DataFrame</span></dt><dd></dd>
+<dt><strong>size</strong><span class="classifier">int</span></dt><dd><p>Number of values drawn from distribution.</p>
+</dd>
+<dt><strong>random_seed</strong><span class="classifier">int</span></dt><dd><p>Seed for random number generation.</p>
+</dd>
+</dl>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>List of drawn values.</p>
+<dd class="field-even"><dl class="simple">
+<dt>list</dt><dd><p>List of drawn values.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list</p>
+</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -134,92 +154,59 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class for the population.</p>
 <p>…</p>
-<dl class="py attribute">
-<dt id="simago.population.PopulationClass.random_seed">
-<code class="sig-name descname">random_seed</code><a class="headerlink" href="#simago.population.PopulationClass.random_seed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Seed for random number generation.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>int</p>
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>random_seed</strong><span class="classifier">int</span></dt><dd><p>Seed for random number generation.</p>
+</dd>
+<dt><strong>popsize</strong><span class="classifier">int</span></dt><dd><p>Size of the population.</p>
+</dd>
+<dt><strong>prob_objects</strong><span class="classifier">list</span></dt><dd><p>List of ProbabilityClass objects.</p>
+</dd>
+<dt><strong>population</strong><span class="classifier">Pandas DataFrame</span></dt><dd><p>DataFrame containing the generated population.</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt id="simago.population.PopulationClass.popsize">
-<code class="sig-name descname">popsize</code><a class="headerlink" href="#simago.population.PopulationClass.popsize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Size of the population.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>int</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt id="simago.population.PopulationClass.prob_objects">
-<code class="sig-name descname">prob_objects</code><a class="headerlink" href="#simago.population.PopulationClass.prob_objects" title="Permalink to this definition">¶</a></dt>
-<dd><p>List of ProbabilityClass objects.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>list</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt id="simago.population.PopulationClass.population">
-<code class="sig-name descname">population</code><a class="headerlink" href="#simago.population.PopulationClass.population" title="Permalink to this definition">¶</a></dt>
-<dd><p>DataFrame containing the generated population.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type</dt>
-<dd class="field-odd"><p>Pandas DataFrame</p>
-</dd>
-</dl>
-</dd></dl>
-
+<p class="rubric">Methods</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 56%" />
+<col style="width: 44%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>add_property(ProbPopulation)</strong></p></td>
+<td><p>Adds property to PopulationClass.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>remove_property(property_name)</strong></p></td>
+<td><p>Removes property from PopulationClass.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>update(property_name=”all”, people_id=”all”)</strong></p></td>
+<td><p>Updates property.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>export(output, nowrite=False)</strong></p></td>
+<td><p>Prints and writes population to file.</p></td>
+</tr>
+</tbody>
+</table>
 <dl class="py method">
 <dt id="simago.population.PopulationClass.add_property">
-<code class="sig-name descname">add_property</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ProbPopulation</span></em><span class="sig-paren">)</span><a class="headerlink" href="#simago.population.PopulationClass.add_property" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds property to PopulationClass.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="simago.population.PopulationClass.remove_property">
-<code class="sig-name descname">remove_property</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">property_name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#simago.population.PopulationClass.remove_property" title="Permalink to this definition">¶</a></dt>
-<dd><p>Removes property from PopulationClass.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="simago.population.PopulationClass.update">
-<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">property_name</span><span class="o">=</span><span class="default_value">'all'</span></em>, <em class="sig-param"><span class="n">people_id</span><span class="o">=</span><span class="default_value">'all'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#simago.population.PopulationClass.update" title="Permalink to this definition">¶</a></dt>
-<dd><p>Updates property.</p>
-</dd></dl>
+<code class="sig-name descname">add_property</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">ProbPopulation</span></em><span class="sig-paren">)</span><a class="headerlink" href="#simago.population.PopulationClass.add_property" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt id="simago.population.PopulationClass.export">
-<code class="sig-name descname">export</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">output</span></em>, <em class="sig-param"><span class="n">nowrite</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#simago.population.PopulationClass.export" title="Permalink to this definition">¶</a></dt>
-<dd><p>Prints and writes population to file.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="id0">
-<code class="sig-name descname">add_property</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ProbPopulation</span></em><span class="sig-paren">)</span><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">export</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">output</span></em>, <em class="sig-param"><span class="n">nowrite</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#simago.population.PopulationClass.export" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="id1">
-<code class="sig-name descname">export</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">output</span></em>, <em class="sig-param"><span class="n">nowrite</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
+<dt id="simago.population.PopulationClass.remove_property">
+<code class="sig-name descname">remove_property</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">property_name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#simago.population.PopulationClass.remove_property" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="id2">
-<code class="sig-name descname">remove_property</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">property_name</span></em><span class="sig-paren">)</span><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="id3">
-<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">property_name</span><span class="o">=</span><span class="default_value">'all'</span></em>, <em class="sig-param"><span class="n">people_id</span><span class="o">=</span><span class="default_value">'all'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
+<dt id="simago.population.PopulationClass.update">
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">property_name</span><span class="o">=</span><span class="default_value">'all'</span></em>, <em class="sig-param"><span class="n">people_id</span><span class="o">=</span><span class="default_value">'all'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#simago.population.PopulationClass.update" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -241,19 +228,37 @@
 <dt id="simago.probability.ProbabilityClass">
 <em class="property">class </em><code class="sig-prename descclassname">simago.probability.</code><code class="sig-name descname">ProbabilityClass</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">yaml_object</span></em><span class="sig-paren">)</span><a class="headerlink" href="#simago.probability.ProbabilityClass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p class="rubric">Methods</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 72%" />
+<col style="width: 28%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>generate_probabilities</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>read_conditionals</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>read_data</strong></p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
 <dl class="py method">
 <dt id="simago.probability.ProbabilityClass.generate_probabilities">
-<code class="sig-name descname">generate_probabilities</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#simago.probability.ProbabilityClass.generate_probabilities" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">generate_probabilities</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#simago.probability.ProbabilityClass.generate_probabilities" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="simago.probability.ProbabilityClass.read_conditionals">
-<code class="sig-name descname">read_conditionals</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">conditionals_file</span></em><span class="sig-paren">)</span><a class="headerlink" href="#simago.probability.ProbabilityClass.read_conditionals" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">read_conditionals</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">conditionals_file</span></em><span class="sig-paren">)</span><a class="headerlink" href="#simago.probability.ProbabilityClass.read_conditionals" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt id="simago.probability.ProbabilityClass.read_data">
-<code class="sig-name descname">read_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_file</span></em><span class="sig-paren">)</span><a class="headerlink" href="#simago.probability.ProbabilityClass.read_data" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">read_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">data_file</span></em><span class="sig-paren">)</span><a class="headerlink" href="#simago.probability.ProbabilityClass.read_data" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -292,13 +297,14 @@
 <dd><p>Check YAML object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>yaml_object</strong> – </p>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>yaml_object</strong></dt><dd></dd>
+</dl>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>yaml_object</p>
+<dd class="field-even"><dl class="simple">
+<dt>yaml_object</dt><dd></dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -309,13 +315,16 @@
 <dd><p>Find YAML files.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>yaml_folder</strong> (<em>str</em>) – Name of folder where YAML files are stored.</p>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>yaml_folder</strong><span class="classifier">str</span></dt><dd><p>Name of folder where YAML files are stored.</p>
+</dd>
+</dl>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>List of YAML filenames.</p>
+<dd class="field-even"><dl class="simple">
+<dt>list</dt><dd><p>List of YAML filenames.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list</p>
+</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -326,49 +335,52 @@
 <dd><p>Load YAML files.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>yaml_filenames</strong> (<em>list</em>) – List of YAML filenames.</p>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>yaml_filenames</strong><span class="classifier">list</span></dt><dd><p>List of YAML filenames.</p>
+</dd>
+</dl>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>List of YAML objects.</p>
+<dd class="field-even"><dl class="simple">
+<dt>list</dt><dd><p>List of YAML objects.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list</p>
+</dl>
 </dd>
 </dl>
 </dd></dl>
 
 </div>
-<div class="section" id="module-simago">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-simago" title="Permalink to this headline">¶</a></h2>
-<p>Simago: Randomly generate populations</p>
-</div>
 </div>
 
 
           </div>
-          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">Simago</a></h1>
-
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-
-<div class="relations">
-<h3>Related Topics</h3>
-<ul>
-  <li><a href="index.html">Documentation overview</a><ul>
-  </ul></li>
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">simago package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-simago.contdist">simago.contdist module</a></li>
+<li><a class="reference internal" href="#module-simago.discdist">simago.discdist module</a></li>
+<li><a class="reference internal" href="#module-simago.population">simago.population module</a></li>
+<li><a class="reference internal" href="#module-simago.probability">simago.probability module</a></li>
+<li><a class="reference internal" href="#module-simago.yamlutils">simago.yamlutils module</a></li>
 </ul>
-</div>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="modules.html"
+                        title="previous chapter">simago</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/simago.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
@@ -379,32 +391,29 @@
     </div>
 </div>
 <script>$('#searchbox').show(0);</script>
-
-
-
-
-
-
-
-
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="footer">
-      &copy;2020, Alexander Harms.
-      
-      |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.4</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
-      
-      |
-      <a href="_sources/simago.rst.txt"
-          rel="nofollow">Page source</a>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="modules.html" title="simago"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Simago  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >simago</a> &#187;</li> 
+      </ul>
     </div>
-
-    
-
-    
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Alexander Harms.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 3.0.4.
+    </div>
   </body>
 </html>
