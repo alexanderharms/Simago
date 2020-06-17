@@ -126,10 +126,9 @@ def load_yamls(yaml_filenames):
     yaml_objects = []
     for yaml_filename in yaml_filenames:
         with open(yaml_filename, 'r') as yaml_file:
-            try:
-                yaml_object = yaml.safe_load(yaml_file)
-            except yaml.YAMLError as exc:
-                print(exc)
+            yaml_object = yaml.safe_load(yaml_file)
+            assert isinstance(yaml_object, dict),\
+                yaml_filename + ', improper YAML syntax'
 
         yaml_object['yaml_filename'] = yaml_filename
         yaml_objects.append(yaml_object)
