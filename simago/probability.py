@@ -30,20 +30,29 @@ class ProbabilityClass():
         data_frame = pd.read_csv(data_file)
         # Define list of labels; conversion between index and label name
         # Assign list to self.labels
-        if "label" not in data_frame.columns.values:
-            # Replace "option" column with an integer, add corresponding
-            # label to self.labels
-            pass
-        else:
-            options_labels = data_frame[['option', 'label']]\
-                    .drop_duplicates(inplace=False)\
-                    .reset_index(drop=True)
-            self.labels = [None] * (options_labels.option.max() + 1)
-            for idx in range(options_labels.shape[0]):
-                self.labels[options_labels.at[idx, 'option']] =\
-                        options_labels.at[idx, 'label']
+        options_labels = data_frame[['option', 'label']]\
+                .drop_duplicates(inplace=False)\
+                .reset_index(drop=True)
+        self.labels = [None] * (options_labels.option.max() + 1)
+        for idx in range(options_labels.shape[0]):
+            self.labels[options_labels.at[idx, 'option']] =\
+                    options_labels.at[idx, 'label']
+        # if "label" not in data_frame.columns.values:
+        #     # Replace "option" column with an integer, add corresponding
+        #     # label to self.labels
+        #     pass
+        # else:
+        #     options_labels = data_frame[['option', 'label']]\
+        #             .drop_duplicates(inplace=False)\
+        #             .reset_index(drop=True)
+        #     self.labels = [None] * (options_labels.option.max() + 1)
+        #     for idx in range(options_labels.shape[0]):
+        #         self.labels[options_labels.at[idx, 'option']] =\
+        #                 options_labels.at[idx, 'label']
         # Assign the data to self.data
-        self.data = data_frame[['option', 'value', 'conditional_index']]
+        self.data = data_frame[['option', 'value', 'conditional_index']]\
+                .drop_duplicates(inplace=False)\
+                .reset_index(drop=True)
 
     def read_conditionals(self, conditionals_file):
         # Read CSV
@@ -125,7 +134,7 @@ def order_probab_objects(probab_objects):
     
     return probab_objects
 
-def check_conditionals(probab_objects):
+def check_comb_conditionals(probab_objects):
     properties = []
     for obj in probab_objects:
         properties.append(obj.property_name)

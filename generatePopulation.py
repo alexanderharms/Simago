@@ -5,7 +5,7 @@ import numpy as np
 
 from simago.yamlutils import find_yamls, load_yamls
 from simago.population import PopulationClass
-from simago.probability import ProbabilityClass, check_conditionals
+from simago.probability import ProbabilityClass, check_comb_conditionals
 from simago.probability import order_probab_objects
 
 if __name__ == '__main__':
@@ -45,7 +45,7 @@ if __name__ == '__main__':
     print("Defined properties:")
     print([obj.property_name for obj in probab_objects])
 
-    check_conditionals(probab_objects)
+    check_comb_conditionals(probab_objects)
     
     probab_objects = order_probab_objects(probab_objects)
 
