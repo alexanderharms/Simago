@@ -15,5 +15,5 @@ row for every person and a column for each property of this person. The values
 for these properties are randomly drawn from probability distributions defined
 by the supplied data. This is done by supplying a settings file, a data file and
 possibly a conditionals file. In the
-(simago-examples)[www.github.com/alexanderharms/simago-examples] an example is
+[simago-examples](www.github.com/alexanderharms/simago-examples) an example is
 described of how to use the package.
