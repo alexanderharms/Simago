@@ -26,7 +26,7 @@ class PopulationClass():
         Adds property to PopulationClass.
     remove_property(property_name)
         Removes property from PopulationClass.
-    update(property_name="all", people_id="all")
+    update(property_name="all")
         Updates property.
     export(output, nowrite=False)
         Prints and writes population to file.
@@ -82,7 +82,8 @@ class PopulationClass():
     #    self.popsize = new_popsize
     #    return
 
-    def update(self, property_name="all", people_id="all"):
+    # def update(self, property_name="all", people_id="all"):
+    def update(self, property_name="all"):
         # Update people by randomly drawing new values
         # Based on self.population, the conditionals and the
         # probabilities from ProbPopulation, draw a value for this
@@ -136,3 +137,55 @@ class PopulationClass():
             population_w_labels.to_csv(path_or_buf=output, index = False)
             print("Population is written to %s" % (output))
 
+
+def generate_population(popsize, yaml_folder, rand_seed=None):
+    """
+    Generate population.
+
+    Parameters
+    ----------
+    popsize : int
+        Size of population.
+    yaml_folder : string
+        Folder with settings YAML files.
+    random_seed : int
+        Seed for random number generation.
+
+    Returns
+    -------
+    PopulationClass object
+
+    """
+    print("Population size: %d" % (popsize))
+    if rand_seed is None:
+        print("No random seed defined")
+    else:
+        print("Random seed: %d" % (rand_seed))
+    np.random.seed(rand_seed)
+
+    print("------------------------")
+    # Gather YAML files for aggregated data
+    yaml_filenames = find_yamls(yaml_folder)
+    yaml_objects = load_yamls(yaml_filenames)
+
+    # Based on the yaml_objects, create a list of ProbabilityClass instances.
+    probab_objects = []
+    for y_obj in yaml_objects:
+        probab_objects.append(ProbabilityClass(y_obj)) 
+
+    print("------------------------")
+    print("Defined properties:")
+    print([obj.property_name for obj in probab_objects])
+
+    check_comb_conditionals(probab_objects)
+    
+    probab_objects = order_probab_objects(probab_objects)
+
+    # Generate an empty population
+    population = PopulationClass(popsize, rand_seed)
+
+    # Add variables to the population based on the ProbabilityClass instances.
+    for obj in probab_objects:
+        population.add_property(obj)
+    
+    return population

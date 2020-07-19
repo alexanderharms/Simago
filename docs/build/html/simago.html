@@ -150,10 +150,9 @@
 <span id="simago-population-module"></span><h2>simago.population module<a class="headerlink" href="#module-simago.population" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt id="simago.population.PopulationClass">
-<em class="property">class </em><code class="sig-prename descclassname">simago.population.</code><code class="sig-name descname">PopulationClass</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">popsize</span></em>, <em class="sig-param"><span class="n">random_seed</span></em><span class="sig-paren">)</span><a class="headerlink" href="#simago.population.PopulationClass" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">simago.population.</code><code class="sig-name descname">PopulationClass</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">popsize</span></em>, <em class="sig-param"><span class="n">random_seed</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#simago.population.PopulationClass" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Class for the population.</p>
-<p>…</p>
 <dl class="field-list simple">
 <dt class="field-odd">Attributes</dt>
 <dd class="field-odd"><dl class="simple">
@@ -171,8 +170,8 @@
 <p class="rubric">Methods</p>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 56%" />
-<col style="width: 44%" />
+<col style="width: 47%" />
+<col style="width: 53%" />
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><strong>add_property(ProbPopulation)</strong></p></td>
@@ -181,7 +180,7 @@
 <tr class="row-even"><td><p><strong>remove_property(property_name)</strong></p></td>
 <td><p>Removes property from PopulationClass.</p></td>
 </tr>
-<tr class="row-odd"><td><p><strong>update(property_name=”all”, people_id=”all”)</strong></p></td>
+<tr class="row-odd"><td><p><strong>update(property_name=”all”)</strong></p></td>
 <td><p>Updates property.</p></td>
 </tr>
 <tr class="row-even"><td><p><strong>export(output, nowrite=False)</strong></p></td>
@@ -206,20 +205,33 @@
 
 <dl class="py method">
 <dt id="simago.population.PopulationClass.update">
-<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">property_name</span><span class="o">=</span><span class="default_value">'all'</span></em>, <em class="sig-param"><span class="n">people_id</span><span class="o">=</span><span class="default_value">'all'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#simago.population.PopulationClass.update" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">property_name</span><span class="o">=</span><span class="default_value">'all'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#simago.population.PopulationClass.update" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
-<dt id="simago.population.construct_query_string">
-<code class="sig-prename descclassname">simago.population.</code><code class="sig-name descname">construct_query_string</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">property_name</span></em>, <em class="sig-param"><span class="n">option</span></em>, <em class="sig-param"><span class="n">relation</span></em><span class="sig-paren">)</span><a class="headerlink" href="#simago.population.construct_query_string" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="simago.population.get_conditional_population">
-<code class="sig-prename descclassname">simago.population.</code><code class="sig-name descname">get_conditional_population</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prob_obj</span></em>, <em class="sig-param"><span class="n">population</span></em>, <em class="sig-param"><span class="n">cond_index</span></em><span class="sig-paren">)</span><a class="headerlink" href="#simago.population.get_conditional_population" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="simago.population.generate_population">
+<code class="sig-prename descclassname">simago.population.</code><code class="sig-name descname">generate_population</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">popsize</span></em>, <em class="sig-param"><span class="n">yaml_folder</span></em>, <em class="sig-param"><span class="n">rand_seed</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#simago.population.generate_population" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate population.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>popsize</strong><span class="classifier">int</span></dt><dd><p>Size of population.</p>
+</dd>
+<dt><strong>yaml_folder</strong><span class="classifier">string</span></dt><dd><p>Folder with settings YAML files.</p>
+</dd>
+<dt><strong>random_seed</strong><span class="classifier">int</span></dt><dd><p>Seed for random number generation.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>PopulationClass object</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 </div>
 <div class="section" id="module-simago.probability">
@@ -264,18 +276,13 @@
 </dd></dl>
 
 <dl class="py function">
-<dt id="simago.probability.check_conditionals">
-<code class="sig-prename descclassname">simago.probability.</code><code class="sig-name descname">check_conditionals</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">probab_objects</span></em><span class="sig-paren">)</span><a class="headerlink" href="#simago.probability.check_conditionals" title="Permalink to this definition">¶</a></dt>
+<dt id="simago.probability.check_comb_conditionals">
+<code class="sig-prename descclassname">simago.probability.</code><code class="sig-name descname">check_comb_conditionals</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">probab_objects</span></em><span class="sig-paren">)</span><a class="headerlink" href="#simago.probability.check_comb_conditionals" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt id="simago.probability.construct_query_string">
 <code class="sig-prename descclassname">simago.probability.</code><code class="sig-name descname">construct_query_string</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">property_name</span></em>, <em class="sig-param"><span class="n">option</span></em>, <em class="sig-param"><span class="n">relation</span></em><span class="sig-paren">)</span><a class="headerlink" href="#simago.probability.construct_query_string" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="simago.probability.cumulative_properties">
-<code class="sig-prename descclassname">simago.probability.</code><code class="sig-name descname">cumulative_properties</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">probab_objects</span></em><span class="sig-paren">)</span><a class="headerlink" href="#simago.probability.cumulative_properties" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">

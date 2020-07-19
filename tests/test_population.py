@@ -38,3 +38,16 @@ def test_PopClass_popsize_edge():
 
     assert pop_class.population.equals(test_population)
 
+# def test_PopClass_update_disc_all():
+#     # Test update for a discrete variable
+# 
+# def test_PopClass_update_cont_all():
+#     # Test update for a continuous variable
+# 
+# def test_PopClass_update_disc_specific():
+#     # Test update for a discrete variable
+# 
+# def test_PopClass_update_cont_specific():
+#     # Test update for a continuous variable
+
+

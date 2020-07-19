@@ -12,9 +12,6 @@ Welcome to Simago's documentation!
 
    modules
 
-Hello, world!
-
-
 Indices and tables
 ==================
 

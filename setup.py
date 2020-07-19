@@ -5,9 +5,9 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
         name="simago", 
-        version="0.1.0", 
+        version="0.1.1", 
         author="Alexander Harms", 
-        author_email="a.g.j.harms@gmail.com", 
+        author_email="a.g.j.harms@protonmail.com", 
         description="Generate random populations.", 
         long_description=long_description, 
         long_description_content_type="text/markdown", 
