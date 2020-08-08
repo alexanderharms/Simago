@@ -63,7 +63,8 @@ class ProbabilityClass():
         # Assign data to self.conditionals
         self.conditionals = pd.read_csv(conditionals_file)
         assert self.conditionals.columns.tolist() ==\
-                ['conditionals_index', 'option', 'value', 'relation'],\
+                ['conditional_index', 'property_name', 'option', 'relation'],\
+                str(self.property_name) + ', ' \
                 'Conditionals file does not contain the necessary columns'
 
     def generate_probabilities(self):
