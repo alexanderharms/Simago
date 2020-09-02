@@ -1,0 +1,7 @@
+# Sex
+property_name: "sex"
+data_type: "categorical" 
+
+data_file: "./tests/testdata/check_yamls/sex.txt"
+
+conditionals: null # null if no conditionals
