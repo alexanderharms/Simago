@@ -1,10 +1,12 @@
 import os
+
 import yaml
+
 
 def find_yamls(yaml_folder):
     """
     Find YAML files.
-    
+
     Parameters
     ----------
     yaml_folder : str
@@ -33,10 +35,11 @@ def find_yamls(yaml_folder):
 
     return yaml_filenames
 
+
 def check_yaml(yaml_object):
     """
     Check YAML object.
-    
+
     Parameters
     ----------
     yaml_object
@@ -49,48 +52,49 @@ def check_yaml(yaml_object):
 
     fname = yaml_object['yaml_filename']
 
-    assert 'property_name' in yaml_object.keys(), fname + ', no property defined'
+    assert 'property_name' in yaml_object.keys(), \
+        fname + ', no property defined'
     assert isinstance(yaml_object['property_name'], str),\
-            fname + ", incorrect name format"
+        fname + ", incorrect name format"
 
     assert 'data_type' in yaml_object.keys(), fname + ', no data type defined'
     assert isinstance(yaml_object['data_type'], str),\
-            fname + ", incorrect data type"
+        fname + ", incorrect data type"
     assert yaml_object['data_type'] in\
-            ['categorical', 'ordinal', 'continuous'],\
-            fname + ", invalid data type"
+        ['categorical', 'ordinal', 'continuous'],\
+        fname + ", invalid data type"
 
     if yaml_object['data_type'] in ['categorical', 'ordinal']:
         assert 'data_file' in yaml_object.keys(), fname +\
-                ', no data file defined'
+            ', no data file defined'
         assert isinstance(yaml_object['data_file'], str),\
-                fname + ", incorrect data filename type"
+            fname + ", incorrect data filename type"
         assert os.path.isfile(yaml_object['data_file']),\
-                fname + ', data file does not exist'
+            fname + ', data file does not exist'
         assert yaml_object['data_file'].endswith('.csv'),\
-                fname + ', data file is not a CSV file'
+            fname + ', data file is not a CSV file'
     elif yaml_object['data_type'] == "continuous":
         assert 'pdf_parameters' in yaml_object.keys(),\
-                fname + ', no parameters defined'
+            fname + ', no parameters defined'
         assert isinstance(yaml_object['pdf_parameters'], list),\
-                fname + ', parameters are not a list'
+            fname + ', parameters are not a list'
 
         assert 'pdf' in yaml_object.keys(),\
-                fname + ', no pdf defined'
+            fname + ', no pdf defined'
         assert isinstance(yaml_object['pdf'], str),\
-                fname + ', pdf is not a string'
+            fname + ', pdf is not a string'
 
         assert 'pdf_file' in yaml_object.keys(),\
-                fname + ', no pdf file defined'
+            fname + ', no pdf file defined'
         assert isinstance(yaml_object['pdf_file'], str),\
-                fname + ', pdf filename is not a string'
+            fname + ', pdf filename is not a string'
         assert os.path.isfile(yaml_object['pdf_file']),\
-                fname + ', pdf file does not exist'
+            fname + ', pdf file does not exist'
         assert yaml_object['pdf_file'].endswith('.py'),\
-                fname + ', pdf file is not a Python file'
+            fname + ', pdf file is not a Python file'
         try:
             exec(open(yaml_object['pdf_file']).read())
-        except:
+        except SyntaxError:
             print(fname + ', pdf file can not be executed')
             quit()
 
@@ -99,18 +103,19 @@ def check_yaml(yaml_object):
     else:
         if yaml_object['conditionals'] is not None:
             assert isinstance(yaml_object['conditionals'], str),\
-                    fname + ', conditionals not None or a string'
+                fname + ', conditionals not None or a string'
             assert os.path.isfile(yaml_object['conditionals']),\
-                    fname + ', conditionals file does not exist'
+                fname + ', conditionals file does not exist'
             assert yaml_object['conditionals'].endswith('.csv'),\
-                    fname + ', conditionals files is not a csv'
+                fname + ', conditionals files is not a csv'
 
     return yaml_object
+
 
 def load_yamls(yaml_filenames):
     """
     Load YAML files.
-    
+
     Parameters
     ----------
     yaml_filenames : list
@@ -136,6 +141,6 @@ def load_yamls(yaml_filenames):
     yaml_objects = [check_yaml(obj) for obj in yaml_objects]
     yaml_properties = [obj['property_name'] for obj in yaml_objects]
     assert len(yaml_properties) == len(set(yaml_properties)),\
-            "Multiple YAMLs are defined for the same property"
+        "Multiple YAMLs are defined for the same property"
 
     return yaml_objects

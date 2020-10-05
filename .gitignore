@@ -1,1 +1,14 @@
 *~
+*.egg-info
+*.pyc
+.cache
+.coverage*
+.pytest_cache
+.tox
+build
+dist
+docs/_build/
+htmlcov
+pip-wheel-metadata
+devenv/*
+testenv/*
