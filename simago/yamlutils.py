@@ -60,9 +60,13 @@ def check_yaml(yaml_object):
     assert 'data_type' in yaml_object.keys(), fname + ', no data type defined'
     assert isinstance(yaml_object['data_type'], str),\
         fname + ", incorrect data type"
-    assert yaml_object['data_type'] in\
-        ['categorical', 'ordinal', 'continuous'],\
+    assert yaml_object['data_type'] in [
+        'categorical',
+        'ordinal',
+        'continuous'
+    ], (
         fname + ", invalid data type"
+    )
 
     if yaml_object['data_type'] in ['categorical', 'ordinal']:
         assert 'data_file' in yaml_object.keys(), fname +\

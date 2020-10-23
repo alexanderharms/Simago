@@ -1,10 +1,9 @@
 import numpy as np
 import pandas as pd
 
-from .contdist import draw_cont_values
-from .discdist import draw_disc_values
 from .probability import (
-    ProbabilityClass,
+    ContinuousProbabilityClass,
+    DiscreteProbabilityClass,
     check_comb_conditionals,
     order_probab_objects,
 )
@@ -59,8 +58,8 @@ class PopulationClass:
         self.popsize = popsize
         self._generate_population()
 
-        # Initialize list of probability objects
-        self.prob_objects = []
+        # Initialize dictionary of probability objects
+        self.prob_objects = {}
 
     def _generate_population(self):
         self.population = pd.DataFrame(
@@ -69,26 +68,20 @@ class PopulationClass:
 
         self.population["person_id"] = self.population["person_id"].apply(int)
 
-    def add_property(self, ProbPopulation):
+    def add_property(self, ProbClass):
+        # Check that property is a ProbabilityClass
+        # Check that property is not already defined for the
+        # PopulationClass.
         # Add ProbPopulation object to self.prob_objects list
-        self.prob_objects.append(ProbPopulation)
+        self.prob_ojects[ProbClass.property_name] = ProbClass
+        # self.prob_objects.append(ProbClass)
 
     def remove_property(self, property_name):
         # Remove property
-        for prob_obj in self.prob_objects:
-            if prob_obj.property_name == property_name:
-                self.prob_objects.remove(prob_obj)
-
-    # def add_people(self, num_people):
-    #    # Add people to the population by randomly drawing
-    #    # TODO: Expand functionality for more control over new people
-    #    self.popsize = new_popsize
-    #    return
-
-    # def remove_people(self, people_id):
-    #    # Remove people by ID
-    #    self.popsize = new_popsize
-    #    return
+        del self.prob_objects[property_name]
+        # for prob_obj in self.prob_objects:
+        #     if prob_obj.property_name == property_name:
+        #         self.prob_objects.remove(prob_obj)
 
     # def update(self, property_name="all", people_id="all"):
     def update(self, property_name="all"):
@@ -98,36 +91,41 @@ class PopulationClass:
         # property for all people in the population.
         # TODO: Expand functionality for more control over update
         if property_name == "all":
-            for prob_obj in self.prob_objects:
-                if prob_obj.data_type in ["categorical", "ordinal"]:
-                    self.population = draw_disc_values(
-                        prob_obj, self.population, self.random_seed
-                    )
-                elif prob_obj.data_type == "continuous":
-                    self.population = draw_cont_values(
-                        prob_obj, self.population, self.random_seed
-                    )
+            for prob_obj in self.prob_objects.values():
+                self.population = prob_obj.draw_values(self)
         else:
             # Make a singular property name a list to homogenize the next code
             # section.
             if isinstance(property_name, "str"):
                 property_name = [property_name]
-            for prob_obj in self.prob_objects:
-                if prob_obj.property_name in property_name:
-                    if prob_obj.data_type in ["categorical", "ordinal"]:
-                        self.population = draw_disc_values(
-                            prob_obj, self.population, self.random_seed
-                        )
-                    elif prob_obj.data_type == "continuous":
-                        self.population = draw_cont_values(
-                            prob_obj, self.population, self.random_seed
-                        )
+            for prob_obj in self.prob_objects.values():
+                self.populuation = prob_obj.draw_values(self)
+
+    def get_conditional_population(self, property_name, cond_index):
+        prob_obj = self.prob_objects[property_name]
+        # - Get the corresponding conditional from prob_obj.conditionals
+        conds = prob_obj.conditionals.query("conditional_index == @cond_index")
+        # - Get the corr. segment of the population
+        # There can be multiple conditionals.
+        # Combine them all in one query string
+        query_list = []
+        for index, row in conds.iterrows():
+            query_list.append(
+                construct_query_string(
+                    row["property_name"], row["option"], row["relation"]
+                )
+            )
+        query_string = " & ".join(query_list)
+        population_cond = self.population.query(query_string)
+        # We're only interested in the ID's of the people.
+        population_cond = population_cond[["person_id"]]
+        return population_cond
 
     def export(self, output, nowrite=False):
         # Replace the options with the labels
         population_w_labels = self.population.copy()
 
-        for prob_obj in self.prob_objects:
+        for prob_obj in self.prob_objects.values():
             if prob_obj.data_type in ["categorical", "ordinal"]:
                 prop = prob_obj.property_name
                 population_w_labels[prop] = population_w_labels[prop].apply(
@@ -181,7 +179,10 @@ def generate_population(popsize, yaml_folder, rand_seed=None):
     # Based on the yaml_objects, create a list of ProbabilityClass instances.
     probab_objects = []
     for y_obj in yaml_objects:
-        probab_objects.append(ProbabilityClass(y_obj))
+        if y_obj["data_type"] in ["categorical", "ordinal"]:
+            probab_objects.append(DiscreteProbabilityClass(y_obj))
+        elif y_obj["data_type"] in ["continuous"]:
+            probab_objects.append(ContinuousProbabilityClass(y_obj))
 
     print("------------------------")
     print("Defined properties:")
@@ -199,3 +200,22 @@ def generate_population(popsize, yaml_folder, rand_seed=None):
         population.add_property(obj)
 
     return population
+
+
+def construct_query_string(property_name, option, relation):
+    if relation == "eq":
+        relation_string = "=="
+    elif relation == "leq":
+        relation_string = "<="
+    elif relation == "geq":
+        relation_string = ">="
+    elif relation == "le":
+        relation_string = "<"
+    elif relation == "gr":
+        relation_string = ">"
+    elif relation == "neq":
+        relation_string = "~="
+
+    query_list = [property_name, relation_string, str(option)]
+    query_string = " ".join(query_list)
+    return query_string

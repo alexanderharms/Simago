@@ -4,6 +4,10 @@ from simago.yamlutils import find_yamls, load_yamls
 
 
 def test_find_yamls():
+    """
+    Check if find_yamls() only finds the files with the correct filename 
+    format.
+    """
     folder_name = "./tests/testdata/find_yamls/"
     yaml_filenames = find_yamls(folder_name)
     test_filenames = [
@@ -15,9 +19,9 @@ def test_find_yamls():
 
 
 def test_load_yamls_YAMLError():
-    # If YAML does not contain valid YAML content,
-    # raise yaml.YAMLError
-    # Create YAML with invalid content
+    """
+    Check if load_yamls() catches YAML files with improper YAML syntax.
+    """
     yaml_filenames = ["./tests/testdata/load_yamls-invalid_yaml/invalid.yaml"]
     with pytest.raises(AssertionError):
         yaml_objects = load_yamls(yaml_filenames)
@@ -25,8 +29,10 @@ def test_load_yamls_YAMLError():
 
 
 def test_load_yamls_multi_prop():
-    # If multiple YAML files are defined for the same property, trigger an
-    # AssertionError.
+    """
+    If multiple YAML files are defined for the same property, trigger 
+    an AssertionError.
+    """
     testfolder = "./tests/testdata/load_yamls-multiple_properties/"
     yaml_filenames = find_yamls(testfolder)
     with pytest.raises(AssertionError):
@@ -35,6 +41,10 @@ def test_load_yamls_multi_prop():
 
 
 def test_check_yaml():
+    """
+    Check if check_yaml() catches the various ways that the function checks
+    missing and wrong data in the YAML files.
+    """
     testfiles_folder = "./tests/testdata/check_yaml/"
     testfiles = [
         "no_property_name.yml",

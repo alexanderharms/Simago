@@ -2,31 +2,11 @@ import pandas as pd
 import pytest
 
 from simago.probability import (
-    ProbabilityClass,
+    ContinuousProbabilityClass,
+    DiscreteProbabilityClass,
     check_comb_conditionals,
-    construct_query_string,
 )
 from simago.yamlutils import load_yamls
-
-
-def test_construct_query_string():
-    option = 0
-    property_name = "sex"
-    relation_list = ["eq", "leq", "geq", "le", "gr", "neq"]
-
-    test_list = [
-        "sex == 0",
-        "sex <= 0",
-        "sex >= 0",
-        "sex < 0",
-        "sex > 0",
-        "sex ~= 0",
-    ]
-    query_list = [None] * len(relation_list)
-    for k, rel in enumerate(relation_list):
-        query_list[k] = construct_query_string(property_name, option, rel)
-
-    assert query_list == test_list
 
 
 # def test_order_probab():
@@ -42,10 +22,13 @@ def test_construct_query_string():
 
 
 def test_ProbClass_read_data():
+    """
+    Test reading a data file for a categorical variable.
+    """
     test_yaml = "./tests/testdata/ProbabilityClass/sex.yml"
     yaml_object = load_yamls([test_yaml])
 
-    prob_object = ProbabilityClass(yaml_object[0])
+    prob_object = DiscreteProbabilityClass(yaml_object[0])
     test_data = pd.DataFrame(
         {
             "option": [0, 1],
@@ -69,12 +52,19 @@ def test_ProbClass_read_data():
     assert prob_object.data.equals(test_data)
     assert prob_object.labels == test_labels
 
+# TODO: Test importing PDF function and PDF parameters for a continuous 
+# variable.
+
 
 def test_ProbClass_gen_probabs():
+    """
+    Check that a correct ProbabilityClass is generated for a categorical
+    variable.
+    """
     test_yaml = "./tests/testdata/ProbabilityClass/sex.yml"
     yaml_object = load_yamls([test_yaml])
 
-    prob_object = ProbabilityClass(yaml_object[0])
+    prob_object = DiscreteProbabilityClass(yaml_object[0])
     test_probabs = pd.DataFrame(
         {
             "option": [0, 1],
@@ -91,6 +81,9 @@ def test_ProbClass_gen_probabs():
 
 
 def test_ProbClass_read_conditionals():
+    """
+    Check that the conditionals files is properly imported.
+    """
     test_yaml = "./tests/testdata/ProbabilityClass/age.yml"
     test_conditionals = pd.DataFrame(
         {
@@ -102,7 +95,7 @@ def test_ProbClass_read_conditionals():
     )
 
     yaml_object = load_yamls([test_yaml])
-    prob_object = ProbabilityClass(yaml_object[0])
+    prob_object = DiscreteProbabilityClass(yaml_object[0])
     # The conditionals should have the columns:
     #   'conditional_index', 'property_name', 'option', 'relation'
     assert prob_object.conditionals.columns.tolist() == [
@@ -127,10 +120,6 @@ def test_ProbClass_read_conditionals():
 #    #   have the same value
 #    # - there are duplicate conditional indices with different values for
 #    #   option, value or label.
-#
-# def test_check_conditionals():
-#   # Conditionals cannot have different relations than defined in
-#   # construct_query_string
 
 
 def test_check_comb_conditionals_undefinedprop():
@@ -138,17 +127,23 @@ def test_check_comb_conditionals_undefinedprop():
     test_yaml = "./tests/testdata/ProbabilityClass/age.yml"
 
     yaml_object = load_yamls([test_yaml])
-    prob_objects = [ProbabilityClass(yaml_object[0])]
+    prob_objects = [DiscreteProbabilityClass(yaml_object[0])]
     with pytest.raises(AssertionError):
         check_comb_conditionals(prob_objects)
 
-
-# def test_check_comb_cond():
-#     # There should be at least one property without conditionals
+# def test_check_comb_conditionals_amountparams():
+#     # TODO: Check that a continuous variable has enough PDF parameters for the
+#     # amount of conditionals.
+#     return
 #
-# def test_order_properties():
-#     # Order properties so those with no conditionals are in the front and the
-#     # rest in end of the list.
+# def test_check_comb_cond():
+#     # TODO: There should be at least one property without conditionals
 #
 # def test_get_cond_pop():
-#     # Test if the correct conditional population is retrieved.
+#     # TODO: Test if the correct conditional population is retrieved.
+
+# def test_order_probab_objects():
+#     # TODO: Test if the ProbabilityClass objects are ordered correctly.
+
+# TODO: Check that get_conditional_population gets the correct conditional
+# population.
