@@ -1,8 +1,12 @@
 import pandas as pd
 import pytest
 
+# from simago.probability import (
+#     ContinuousProbabilityClass,
+#     DiscreteProbabilityClass,
+#     check_comb_conditionals,
+# )
 from simago.probability import (
-    ContinuousProbabilityClass,
     DiscreteProbabilityClass,
     check_comb_conditionals,
 )
@@ -51,6 +55,7 @@ def test_ProbClass_read_data():
     #    per option.
     assert prob_object.data.equals(test_data)
     assert prob_object.labels == test_labels
+
 
 # TODO: Test importing PDF function and PDF parameters for a continuous
 # variable.
@@ -131,9 +136,10 @@ def test_check_comb_conditionals_undefinedprop():
     with pytest.raises(AssertionError):
         check_comb_conditionals(prob_objects)
 
+
 # def test_check_comb_conditionals_amountparams():
-#     # TODO: Check that a continuous variable has enough PDF parameters for the
-#     # amount of conditionals.
+#     # TODO: Check that a continuous variable has enough PDF parameters for
+#     # the amount of conditionals.
 #     return
 #
 # def test_check_comb_cond():

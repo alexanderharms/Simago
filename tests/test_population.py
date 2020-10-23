@@ -48,6 +48,7 @@ def test_PopClass_popsize_edge():
 
     assert pop_class.population.equals(test_population)
 
+
 # TODO: Test adding a property with PopulationClass.add_property.
 # Test for regular ProbabilityClass.
 # Check that property is a ProbabilityClass
@@ -71,6 +72,7 @@ def test_PopClass_popsize_edge():
 #     # TODO: Test update for a continuous variable
 
 # TODO: Test the function generate_population.
+
 
 def test_construct_query_string():
     option = 0

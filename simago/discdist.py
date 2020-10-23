@@ -22,8 +22,8 @@
 #     Returns
 #     -------
 #     PopulationClass object
-#         PopulationClass object with drawn values for the categorical or ordinal
-#         variable.
+#         PopulationClass object with drawn values for the categorical or
+#         ordinal variable.
 #
 #     """
 #

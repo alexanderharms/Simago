@@ -1,4 +1,0 @@
-"""
-Simago: Randomly generate populations
-
-"""

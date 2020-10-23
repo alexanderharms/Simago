@@ -3,6 +3,8 @@ import importlib
 import numpy as np
 import pandas as pd
 
+from scipy import stats
+
 
 class ProbabilityClass:
     def __init__(self, yaml_object):
@@ -18,12 +20,14 @@ class ProbabilityClass:
         # Read CSV
         # Assign data to self.conditionals
         self.conditionals = pd.read_csv(conditionals_file)
-        assert sorted(self.conditionals.columns.tolist()) == sorted([
-            "conditional_index",
-            "property_name",
-            "option",
-            "relation",
-        ]), (
+        assert sorted(self.conditionals.columns.tolist()) == sorted(
+            [
+                "conditional_index",
+                "property_name",
+                "option",
+                "relation",
+            ]
+        ), (
             str(self.property_name) + ", "
             "Conditionals file does not contain the necessary columns"
         )
@@ -40,12 +44,14 @@ class DiscreteProbabilityClass(ProbabilityClass):
         # Only if self.data_type is categorical or ordinal
         # Read CSV
         data_frame = pd.read_csv(data_file)
-        assert sorted(data_frame.columns.tolist()) == sorted([
-            "option",
-            "value",
-            "label",
-            "conditional_index",
-        ]), "Data file does not contain the necessary columns"
+        assert sorted(data_frame.columns.tolist()) == sorted(
+            [
+                "option",
+                "value",
+                "label",
+                "conditional_index",
+            ]
+        ), "Data file does not contain the necessary columns"
         # Define list of labels; conversion between index and label name
         # Assign list to self.labels
         options_labels = (
@@ -119,16 +125,17 @@ class DiscreteProbabilityClass(ProbabilityClass):
         """
 
         if self.conditionals is None:
-            pop_obj.population[self.property_name] = \
-                draw_from_disc_distribution(self.probabs,
-                    pop_obj.population.shape[0], pop_obj.random_seed
-                    )
+            pop_obj.population[
+                self.property_name
+            ] = draw_from_disc_distribution(
+                self.probabs, pop_obj.population.shape[0], pop_obj.random_seed
+            )
         # Iterate over the various conditionals.
         else:
             for cond_index in self.conditionals.conditional_index.unique():
                 # For every conditional:
                 # - Get the corresponding conditional from
-		#     self.conditionals
+                #     self.conditionals
                 # - Get the corr. segment of the population
                 # - Draw the values
                 # - Write the values in a list to the correct places
@@ -153,7 +160,10 @@ class DiscreteProbabilityClass(ProbabilityClass):
                 # Use a left join for this
                 if self.property_name not in pop_obj.population.columns.values:
                     population = pd.merge(
-                        pop_obj.population, population_cond, how="left", on="person_id"
+                        pop_obj.population,
+                        population_cond,
+                        how="left",
+                        on="person_id",
                     )
                 else:
                     # If the column already exists, update the values in that
@@ -161,7 +171,7 @@ class DiscreteProbabilityClass(ProbabilityClass):
                     # that.
                     population = pop_obj.population.set_index("person_id")
                     population_cond = population_cond.set_index("person_id")
-                    population_cond = population_cond[[prob_obj.property_name]]
+                    population_cond = population_cond[[self.property_name]]
                     population.update(population_cond)
                     population.reset_index(inplace=True, drop=False)
         return population
@@ -193,10 +203,10 @@ def draw_from_disc_distribution(probabs, size, random_seed):
     drawn_values = probabs.option.values[sample_num]
     return drawn_values
 
+
 class ContinuousProbabilityClass(ProbabilityClass):
     def __init__(self, yaml_object):
         super(ContinuousProbabilityClass, self).__init__(yaml_object)
-
 
         self.pdf_parameters = yaml_object["pdf_parameters"]
         # Execute the pdf file to define the pdf function
@@ -212,41 +222,45 @@ class ContinuousProbabilityClass(ProbabilityClass):
         Parameters
         ----------
         prob_obj : ProbabilityClass
-    	ProbabilityClass object for the continuous variable.
+        ProbabilityClass object for the continuous variable.
         population : Pandas DataFrame
-    	DataFrame with a population to add the continuous variable to.
+        DataFrame with a population to add the continuous variable to.
 
         Returns
         -------
         PopulationClass object
-    	PopulationClass object with drawn values for the continuous variable.
+        PopulationClass object with drawn values for the continuous variable.
 
         """
-        population = prob_obj.population
+        population = pop_obj.population
 
         if self.conditionals is None:
-       	    population[self.property_name] = draw_from_cont_distribution(
-       	        self.pdf,
-       	        self.pdf_parameters[0],
-       	        population.shape[0],
-       	        pop_obj.random_seed,
-       	    )
+            population[self.property_name] = draw_from_cont_distribution(
+                self.pdf,
+                self.pdf_parameters[0],
+                population.shape[0],
+                pop_obj.random_seed,
+            )
         else:
             for cond_index in self.conditionals.conditional_index.unique():
-    	        # For every conditional:
-    	        # - Get the corr. segment of the population
-    	        # - Draw the values
-    	        # - Write the values in a list to the correct places
+                # For every conditional:
+                # - Get the corr. segment of the population
+                # - Draw the values
+                # - Write the values in a list to the correct places
 
                 population_cond = pop_obj.get_conditional_population(
-                     self.property_name, cond_index)
-                population_cond[self.property_name] = draw_from_cont_distribution(
-    	            self.pdf,
-    	            self.pdf_parameters[cond_index],
-    	            population_cond.shape[0],
-    	            pop_obj.random_seed)
-    	        # - Write the values in a list to the correct places
-    	        # Use a left join for this
+                    self.property_name, cond_index
+                )
+                population_cond[
+                    self.property_name
+                ] = draw_from_cont_distribution(
+                    self.pdf,
+                    self.pdf_parameters[cond_index],
+                    population_cond.shape[0],
+                    pop_obj.random_seed,
+                )
+                # - Write the values in a list to the correct places
+                # Use a left join for this
                 if self.property_name not in pop_obj.population.columns.values:
                     population = pd.merge(
                         population, population_cond, how="left", on="person_id"
@@ -257,7 +271,7 @@ class ContinuousProbabilityClass(ProbabilityClass):
                     # Couple of index tricks are necessary to arrange that.
                     population = population.set_index("person_id")
                     population_cond = population_cond.set_index("person_id")
-                    population_cond = population_cond[[prob_obj.property_name]]
+                    population_cond = population_cond[[self.property_name]]
                     population.update(population_cond)
                     population.reset_index(inplace=True, drop=False)
         return population

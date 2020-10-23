@@ -1,5 +1,30 @@
 repos:
--   repo: https://github.com/pre-commit/pre-commit-hooks
+#  - repo: https://github.com/psf/black
+#    rev: 20.8b1
+#    hooks:
+#      - id: black
+#        language_version: python3.8
+
+  - repo: https://github.com/pre-commit/mirrors-isort
+    rev: v5.6.4
+    hooks:
+      - id: isort
+        additional_dependencies: [toml]
+
+  - repo: https://gitlab.com/pycqa/flake8
+    rev: 3.8.4
+    hooks:
+      - id: flake8
+#        language_version: python3.8
+
+  - repo: https://github.com/econchick/interrogate
+    rev: 1.3.1
+    hooks:
+      - id: interrogate
+        additional_dependencies: [toml]
+#        args: [--quiet, --fail-under=95]
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v2.4.0
     hooks:
     -   id: check-yaml

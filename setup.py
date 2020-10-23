@@ -1,8 +1,11 @@
+"""
+Setup file for setuptools
+"""
 import codecs
 import os
 import re
 
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 
 ###################################################################
@@ -35,6 +38,7 @@ def read(*parts):
     with codecs.open(os.path.join(HERE, *parts), "rb", "utf-8") as f:
         return f.read()
 
+
 META_FILE = read(META_PATH)
 
 
@@ -43,8 +47,7 @@ def find_meta(meta):
     Extract __*meta*__ from META_FILE.
     """
     meta_match = re.search(
-        r"^__{meta}__ = ['\"]([^'\"]*)['\"]".format(meta=meta),
-        META_FILE, re.M
+        r"^__{meta}__ = ['\"]([^'\"]*)['\"]".format(meta=meta), META_FILE, re.M
     )
     if meta_match:
         return meta_match.group(1)
@@ -68,5 +71,5 @@ if __name__ == "__main__":
         packages=PACKAGES,
         zip_safe=False,
         classifiers=CLASSIFIERS,
-        install_requires=INSTALL_REQUIRES
+        install_requires=INSTALL_REQUIRES,
     )
