@@ -1,6 +1,6 @@
 # Sex
-property_name: 0 
-data_type: "categorical" 
+property_name: 0
+data_type: "categorical"
 
 data_file: "./data/example/sex.csv"
 

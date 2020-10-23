@@ -52,7 +52,7 @@ def test_ProbClass_read_data():
     assert prob_object.data.equals(test_data)
     assert prob_object.labels == test_labels
 
-# TODO: Test importing PDF function and PDF parameters for a continuous 
+# TODO: Test importing PDF function and PDF parameters for a continuous
 # variable.
 
 

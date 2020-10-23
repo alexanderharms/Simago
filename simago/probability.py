@@ -120,14 +120,14 @@ class DiscreteProbabilityClass(ProbabilityClass):
 
         if self.conditionals is None:
             pop_obj.population[self.property_name] = \
-                draw_from_disc_distribution(self.probabs, 
+                draw_from_disc_distribution(self.probabs,
                     pop_obj.population.shape[0], pop_obj.random_seed
                     )
         # Iterate over the various conditionals.
         else:
             for cond_index in self.conditionals.conditional_index.unique():
                 # For every conditional:
-                # - Get the corresponding conditional from 
+                # - Get the corresponding conditional from
 		#     self.conditionals
                 # - Get the corr. segment of the population
                 # - Draw the values
@@ -208,22 +208,22 @@ class ContinuousProbabilityClass(ProbabilityClass):
     def draw_values(self, pop_obj):
         """
         Draw values for continuous variable.
-    
+
         Parameters
         ----------
         prob_obj : ProbabilityClass
     	ProbabilityClass object for the continuous variable.
         population : Pandas DataFrame
     	DataFrame with a population to add the continuous variable to.
-    
+
         Returns
         -------
         PopulationClass object
     	PopulationClass object with drawn values for the continuous variable.
-    
+
         """
         population = prob_obj.population
-    
+
         if self.conditionals is None:
        	    population[self.property_name] = draw_from_cont_distribution(
        	        self.pdf,
@@ -237,7 +237,7 @@ class ContinuousProbabilityClass(ProbabilityClass):
     	        # - Get the corr. segment of the population
     	        # - Draw the values
     	        # - Write the values in a list to the correct places
-    
+
                 population_cond = pop_obj.get_conditional_population(
                      self.property_name, cond_index)
                 population_cond[self.property_name] = draw_from_cont_distribution(

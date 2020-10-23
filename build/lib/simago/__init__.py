@@ -2,4 +2,3 @@
 Simago: Randomly generate populations
 
 """
-

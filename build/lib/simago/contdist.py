@@ -46,7 +46,7 @@ def draw_cont_values(prob_obj, population, random_seed):
             # - Write the values in a list to the correct places
             # Use a left join for this
             if prob_obj.property_name not in population.columns.values:
-                population = pd.merge(population, population_cond, 
+                population = pd.merge(population, population_cond,
                                       how="left", on="person_id")
             else:
                 # If the column already exists, update the values in that column.

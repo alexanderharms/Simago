@@ -4,7 +4,7 @@ import yaml
 def find_yamls(yaml_folder):
     """
     Find YAML files.
-    
+
     Parameters
     ----------
     yaml_folder : str
@@ -36,7 +36,7 @@ def find_yamls(yaml_folder):
 def check_yaml(yaml_object):
     """
     Check YAML object.
-    
+
     Parameters
     ----------
     yaml_object
@@ -110,7 +110,7 @@ def check_yaml(yaml_object):
 def load_yamls(yaml_filenames):
     """
     Load YAML files.
-    
+
     Parameters
     ----------
     yaml_filenames : list

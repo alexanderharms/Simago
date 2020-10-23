@@ -43,4 +43,3 @@ simago.yamlutils module
    :members:
    :undoc-members:
    :show-inheritance:
-

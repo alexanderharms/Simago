@@ -74,7 +74,7 @@ class ProbabilityClass():
                 .groupby('conditional_index')\
                 .sum()\
                 .rename(columns={'value': 'value_sum'})
-        self.probabs = pd.merge(self.probabs, sum_values, 
+        self.probabs = pd.merge(self.probabs, sum_values,
                                 on='conditional_index')
         self.probabs['value'] = self.probabs['value'] \
                 / self.probabs['value_sum']
@@ -105,14 +105,14 @@ def get_conditional_population(prob_obj, population, cond_index):
     # - Get the corr. segment of the population
     # There can be multiple conditionals.
     # Combine them all in one query string
-    query_list = [] 
+    query_list = []
     for index, row in conds.iterrows():
         query_list.append(
                 construct_query_string(
                     row['property_name'], row['option'], row['relation']))
     query_string = ' & '.join(query_list)
     population_cond = population.query(query_string)
-    # We're only interested in the ID's of the people. 
+    # We're only interested in the ID's of the people.
     population_cond = population_cond[['person_id']]
     return population_cond
 
@@ -121,13 +121,13 @@ def get_conditional_population(prob_obj, population, cond_index):
 #     for idx, obj in enumerate(probab_objects):
 #         if idx == 0:
 #             properties[idx] = [obj.property_name]
-#         else: 
+#         else:
 #             properties[idx] = properties[idx - 1] + [obj.property_name]
 #     return properties
 
 def order_probab_objects(probab_objects):
     # There should be at least one property without conditionals.
-    cond_bool = [True if x.conditionals is None else False 
+    cond_bool = [True if x.conditionals is None else False
                  for x in probab_objects]
     assert any(cond_bool),\
             'There should be at least one property without conditionals'
@@ -139,9 +139,9 @@ def order_probab_objects(probab_objects):
 
     probab_cond = [probab_objects[i] for i, x in enumerate(cond_bool) if not x]
     probab_cond_prop = [obj.property_name for obj in probab_cond]
-    
+
     probab_objects = probab_none + probab_cond
-    
+
     return probab_objects
 
 def check_comb_conditionals(probab_objects):
@@ -161,7 +161,7 @@ def check_comb_conditionals(probab_objects):
                         + 'the amount of conditionals'
 
     # There should be at least one property without conditionals.
-    cond_bool = [True if x.conditionals is None else False 
+    cond_bool = [True if x.conditionals is None else False
                  for x in probab_objects]
     assert any(cond_bool), 'At least one of the properties should be without'\
             + ' conditionals.'
@@ -180,17 +180,16 @@ def check_comb_conditionals(probab_objects):
 #     for obj in probab_cond:
 #         probab_graph[obj.property_name] = \
 #                 np.unique(obj.conditionals.property_name).tolist()
-# 
+#
 #     for key in probab_graph.keys():
 #         # If all the values of probab_graph are have no conditionals, the graph
 #         # cannot be simplified further.
 #         probab_graph_values = probab_graph[key]
 #         while not all(item in probab_none_prop for item in probab_graph_values):
 #             assert key not in probab_graph_values, 'Circular dependency, ' + key
-#             
-#             probab_graph_values = [probab_graph[k] for k in probab_graph_values 
+#
+#             probab_graph_values = [probab_graph[k] for k in probab_graph_values
 #                     if k not in probab_none_prop]
-#             probab_graph_values = [item for sublist in probab_graph_values 
+#             probab_graph_values = [item for sublist in probab_graph_values
 #                     for item in sublist]
-    return 
-
+    return

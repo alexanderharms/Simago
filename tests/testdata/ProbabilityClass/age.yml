@@ -1,6 +1,6 @@
-# Age 
+# Age
 property_name: "age"
-data_type: "ordinal" 
+data_type: "ordinal"
 
 data_file: "./tests/testdata/ProbabilityClass/age.csv"
 

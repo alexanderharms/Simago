@@ -25,7 +25,7 @@ def draw_disc_values(prob_obj, population, random_seed):
 
     if prob_obj.conditionals is None:
         population[prob_obj.property_name] =\
-                draw_from_disc_distribution(prob_obj.probabs, 
+                draw_from_disc_distribution(prob_obj.probabs,
                                             population.shape[0],
                                             random_seed)
     # Iterate over the various conditionals.
@@ -53,7 +53,7 @@ def draw_disc_values(prob_obj, population, random_seed):
             # - Write the values in a list to the correct places
             # Use a left join for this
             if prob_obj.property_name not in population.columns.values:
-                population = pd.merge(population, population_cond, 
+                population = pd.merge(population, population_cond,
                                       how="left", on="person_id")
             else:
                 # If the column already exists, update the values in that column.
@@ -89,4 +89,3 @@ def draw_from_disc_distribution(probabs, size, random_seed):
     sample_num = sample_rv.rvs(size = size)
     drawn_values = probabs.option.values[sample_num]
     return drawn_values
-

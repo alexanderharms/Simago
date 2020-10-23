@@ -5,7 +5,7 @@ from simago.yamlutils import find_yamls, load_yamls
 
 def test_find_yamls():
     """
-    Check if find_yamls() only finds the files with the correct filename 
+    Check if find_yamls() only finds the files with the correct filename
     format.
     """
     folder_name = "./tests/testdata/find_yamls/"
@@ -30,7 +30,7 @@ def test_load_yamls_YAMLError():
 
 def test_load_yamls_multi_prop():
     """
-    If multiple YAML files are defined for the same property, trigger 
+    If multiple YAML files are defined for the same property, trigger
     an AssertionError.
     """
     testfolder = "./tests/testdata/load_yamls-multiple_properties/"

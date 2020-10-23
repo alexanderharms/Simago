@@ -10,8 +10,8 @@ from .contdist import draw_cont_values
 class PopulationClass():
     """
     Class for the population.
-    
-    
+
+
     Attributes
     ----------
     random_seed : int
@@ -95,12 +95,12 @@ class PopulationClass():
         if property_name == "all":
             for prob_obj in self.prob_objects:
                 if prob_obj.data_type in ['categorical', 'ordinal']:
-                    self.population = draw_disc_values(prob_obj, 
-                                                       self.population, 
+                    self.population = draw_disc_values(prob_obj,
+                                                       self.population,
                                                        self.random_seed)
                 elif prob_obj.data_type == 'continuous':
                     self.population = draw_cont_values(prob_obj,
-                                                       self.population, 
+                                                       self.population,
                                                        self.random_seed)
         else:
             # Make a singular property name a list to homogenize the next code
@@ -108,14 +108,14 @@ class PopulationClass():
             if isinstance(property_name, 'str'):
                 property_name = [property_name]
             for prob_obj in self.prob_objects:
-                if prob_obj.property_name in property_name: 
+                if prob_obj.property_name in property_name:
                     if prob_obj.data_type in ['categorical', 'ordinal']:
-                        self.population = draw_disc_values(prob_obj, 
-                                                           self.population, 
+                        self.population = draw_disc_values(prob_obj,
+                                                           self.population,
                                                            self.random_seed)
                     elif prob_obj.data_type == 'continuous':
                         self.population = draw_cont_values(prob_obj,
-                                                           self.population, 
+                                                           self.population,
                                                            self.random_seed)
     def export(self, output, nowrite=False):
         # Replace the options with the labels
@@ -174,14 +174,14 @@ def generate_population(popsize, yaml_folder, rand_seed=None):
     # Based on the yaml_objects, create a list of ProbabilityClass instances.
     probab_objects = []
     for y_obj in yaml_objects:
-        probab_objects.append(ProbabilityClass(y_obj)) 
+        probab_objects.append(ProbabilityClass(y_obj))
 
     print("------------------------")
     print("Defined properties:")
     print([obj.property_name for obj in probab_objects])
 
     check_comb_conditionals(probab_objects)
-    
+
     probab_objects = order_probab_objects(probab_objects)
 
     # Generate an empty population
@@ -190,5 +190,5 @@ def generate_population(popsize, yaml_folder, rand_seed=None):
     # Add variables to the population based on the ProbabilityClass instances.
     for obj in probab_objects:
         population.add_property(obj)
-    
+
     return population
