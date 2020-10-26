@@ -12,7 +12,8 @@ docs/_build/*
 docs/doctrees/*
 htmlcov
 pip-wheel-metadata
-devenv/*
-testenv/*
 coverage/*
 */__pycache__/*
+devenv/*
+testenv/*
+make_env/*
