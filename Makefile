@@ -60,13 +60,19 @@ check_install_sdist:
 	rm -rf venv-sdist
 	python3 -m venv venv-sdist
 	venv-sdist/bin/pip install dist/simago-*.tar.gz
-	venv-sdist/bin/python -c "import simago; simago.__version__"
+	venv-sdist/bin/python -c "import simago; print(simago.__version__)"
 
 check_install_wheel:
 	rm -rf venv-wheel
 	python3 -m venv venv-wheel
 	venv-wheel/bin/pip install dist/simago-*.whl
-	venv-wheel/bin/python -c "import simago; simago.__version__"
+	venv-wheel/bin/python -c "import simago; print(simago.__version__)"
+
+upload_pypi_test:
+	@echo "To be implemented"
+
+upload_pypi_prod:
+	@echo "To be implementend"
 
 clean:
 	rm -rf make_env
