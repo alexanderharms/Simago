@@ -10,11 +10,13 @@ repos:
     hooks:
       - id: isort
         additional_dependencies: [toml]
+        exclude: tests/testdata/check_yaml/incorrect_pdf.py
 
   - repo: https://gitlab.com/pycqa/flake8
     rev: 3.8.4
     hooks:
       - id: flake8
+        exclude: tests/testdata/check_yaml/incorrect_pdf.py
 #        language_version: python3.8
 
   - repo: https://github.com/econchick/interrogate
@@ -22,6 +24,7 @@ repos:
     hooks:
       - id: interrogate
         additional_dependencies: [toml]
+        exclude: tests/testdata/check_yaml/incorrect_pdf.py
 #        args: [--quiet, --fail-under=95]
 
   - repo: https://github.com/pre-commit/pre-commit-hooks

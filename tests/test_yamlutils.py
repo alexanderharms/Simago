@@ -74,3 +74,25 @@ def test_check_yaml():
         with pytest.raises(AssertionError):
             yaml_objects = load_yamls(testfile)
             del yaml_objects
+
+
+def test_undefined_conditionals():
+    """
+    If no conditionals are defined, yaml_object['conditionals'] should be set
+    to None.
+    """
+    testfile = ["./tests/testdata/check_yaml/undefined_cond.yml"]
+    yaml_objects = load_yamls(testfile)
+    yaml_object = yaml_objects[0]
+    assert yaml_object['conditionals'] is None
+
+
+def test_incorrect_pdf_syntax():
+    """
+    The supplied Python file for the probability distribution function
+    for a continuous variable should have correct syntax.
+    """
+    testfile = ["./tests/testdata/check_yaml/incorrect_pdf_syntax.yml"]
+    with pytest.raises(SystemExit):
+        yaml_objects = load_yamls(testfile)
+        del yaml_objects

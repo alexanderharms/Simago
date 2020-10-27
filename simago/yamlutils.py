@@ -1,3 +1,4 @@
+import ast
 import os
 
 import yaml
@@ -97,7 +98,9 @@ def check_yaml(yaml_object):
         assert yaml_object['pdf_file'].endswith('.py'),\
             fname + ', pdf file is not a Python file'
         try:
-            exec(open(yaml_object['pdf_file']).read())
+            with open(yaml_object['pdf_file'], 'r') as f:
+                source = f.read()
+            ast.parse(source)
         except SyntaxError:
             print(fname + ', pdf file can not be executed')
             quit()
