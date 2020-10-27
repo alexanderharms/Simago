@@ -305,45 +305,6 @@ def draw_from_cont_distribution(pdf, parameters, size, random_seed):
     return drawn_values
 
 
-def construct_query_string(property_name, option, relation):
-    if relation == "eq":
-        relation_string = "=="
-    elif relation == "leq":
-        relation_string = "<="
-    elif relation == "geq":
-        relation_string = ">="
-    elif relation == "le":
-        relation_string = "<"
-    elif relation == "gr":
-        relation_string = ">"
-    elif relation == "neq":
-        relation_string = "~="
-
-    query_list = [property_name, relation_string, str(option)]
-    query_string = " ".join(query_list)
-    return query_string
-
-
-def get_conditional_population(prob_obj, population, cond_index):
-    # - Get the corresponding conditional from prob_obj.conditionals
-    conds = prob_obj.conditionals.query("conditional_index == @cond_index")
-    # - Get the corr. segment of the population
-    # There can be multiple conditionals.
-    # Combine them all in one query string
-    query_list = []
-    for index, row in conds.iterrows():
-        query_list.append(
-            construct_query_string(
-                row["property_name"], row["option"], row["relation"]
-            )
-        )
-    query_string = " & ".join(query_list)
-    population_cond = population.query(query_string)
-    # We're only interested in the ID's of the people.
-    population_cond = population_cond[["person_id"]]
-    return population_cond
-
-
 # def cumulative_properties(probab_objects):
 #     properties = [None] * len(probab_objects)
 #     for idx, obj in enumerate(probab_objects):
