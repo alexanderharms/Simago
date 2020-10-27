@@ -1,3 +1,6 @@
+"""
+Functions for finding, checking and loading of the YAML configuration files.
+"""
 import ast
 import os
 

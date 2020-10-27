@@ -1,3 +1,6 @@
+"""
+Tests corresponding to simago/yamlutils.py.
+"""
 import pytest
 
 from simago.yamlutils import find_yamls, load_yamls
