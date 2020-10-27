@@ -123,9 +123,10 @@ class DiscreteProbabilityClass(ProbabilityClass):
             ordinal variable.
 
         """
+        population = pop_obj.population
 
         if self.conditionals is None:
-            pop_obj.population[
+            population[
                 self.property_name
             ] = draw_from_disc_distribution(
                 self.probabs, pop_obj.population.shape[0], pop_obj.random_seed
@@ -158,9 +159,9 @@ class DiscreteProbabilityClass(ProbabilityClass):
 
                 # - Write the values in a list to the correct places
                 # Use a left join for this
-                if self.property_name not in pop_obj.population.columns.values:
+                if self.property_name not in population.columns.values:
                     population = pd.merge(
-                        pop_obj.population,
+                        population,
                         population_cond,
                         how="left",
                         on="person_id",
@@ -169,7 +170,7 @@ class DiscreteProbabilityClass(ProbabilityClass):
                     # If the column already exists, update the values in that
                     # column. A couple of index tricks are necessary to arrange
                     # that.
-                    population = pop_obj.population.set_index("person_id")
+                    population = population.set_index("person_id")
                     population_cond = population_cond.set_index("person_id")
                     population_cond = population_cond[[self.property_name]]
                     population.update(population_cond)
@@ -261,7 +262,7 @@ class ContinuousProbabilityClass(ProbabilityClass):
                 )
                 # - Write the values in a list to the correct places
                 # Use a left join for this
-                if self.property_name not in pop_obj.population.columns.values:
+                if self.property_name not in population.columns.values:
                     population = pd.merge(
                         population, population_cond, how="left", on="person_id"
                     )

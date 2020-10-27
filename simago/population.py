@@ -62,6 +62,15 @@ class PopulationClass:
         # Initialize dictionary of probability objects
         self.prob_objects = {}
 
+    def __eq__(self, other):
+        if isinstance(other, PopulationClass):
+            return ((self.popsize == other.popsize)
+                    and ((self.random_seed == other.random_seed)
+                         or ((self.random_seed is None)
+                             and (other.random_seed is None))))
+        else:
+            return False
+
     def _generate_population(self):
         self.population = pd.DataFrame(
             {"person_id": np.linspace(0, self.popsize - 1, self.popsize)}
@@ -117,10 +126,11 @@ class PopulationClass:
         else:
             # Make a singular property name a list to homogenize the next code
             # section.
-            if isinstance(property_name, "str"):
+            if isinstance(property_name, str):
                 property_name = [property_name]
             for prob_obj in self.prob_objects.values():
-                self.populuation = prob_obj.draw_values(self)
+                if prob_obj.property_name in property_name:
+                    self.population = prob_obj.draw_values(self)
 
     def get_conditional_population(self, property_name, cond_index):
         prob_obj = self.prob_objects[property_name]
@@ -144,14 +154,17 @@ class PopulationClass:
 
     def export(self, output, nowrite=False):
         # Replace the options with the labels
+        assert isinstance(output, str), "Filename should be of type string"
+        assert isinstance(nowrite, bool), \
+            "Argument nowrite should be of type boolean"
         population_w_labels = self.population.copy()
 
         for prob_obj in self.prob_objects.values():
             if prob_obj.data_type in ["categorical", "ordinal"]:
                 prop = prob_obj.property_name
-                population_w_labels[prop] = population_w_labels[prop].apply(
-                    lambda idx: prob_obj.labels[int(idx)]
-                )
+                population_w_labels[prop] = population_w_labels[prop]\
+                    .apply(lambda idx: 'nodata' if np.isnan(idx)
+                           else prob_obj.labels[int(idx)])
 
         print("------------------------")
         print("Generated population:")
