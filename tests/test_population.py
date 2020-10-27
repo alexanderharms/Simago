@@ -3,6 +3,11 @@ import pandas as pd
 import pytest
 
 from simago.population import PopulationClass, construct_query_string
+from simago.probability import (
+    ContinuousProbabilityClass,
+    DiscreteProbabilityClass,
+)
+from simago.yamlutils import find_yamls, load_yamls
 
 
 def test_PopClass_init():
@@ -49,10 +54,45 @@ def test_PopClass_popsize_edge():
     assert pop_class.population.equals(test_population)
 
 
-# TODO: Test adding a property with PopulationClass.add_property.
-# Test for regular ProbabilityClass.
-# Check that property is a ProbabilityClass
-# Check that property is not already defined for the PopulationClass.
+def test_PopClass_add_property():
+    """
+    Test adding a property with PopulationClass.add_property.
+    - Test for regular ProbabilityClass.
+    - Check that property is a ProbabilityClass
+    - Check that property is not already defined for the PopulationClass.
+    """
+    # Define test population
+    popsize = 100
+    random_seed = 100
+    pop_class = PopulationClass(popsize, random_seed)
+    # Check if pop_class.prob_objects is an empty dictionary at the start
+    assert isinstance(pop_class.prob_objects, dict) and not \
+        bool(pop_class.prob_objects)
+
+    # Define test ProbabilityClass objects
+    test_prob_objects = {}
+    yaml_folder = "./tests/testdata/PopulationClass/"
+    yaml_filenames = find_yamls(yaml_folder)
+    yaml_objects = load_yamls(yaml_filenames)
+    probab_objects = []
+    for y_obj in yaml_objects:
+        if y_obj["data_type"] in ["categorical", "ordinal"]:
+            probab_objects.append(DiscreteProbabilityClass(y_obj))
+        elif y_obj["data_type"] in ["continuous"]:
+            probab_objects.append(ContinuousProbabilityClass(y_obj))
+    for probab_object in probab_objects:
+        pop_class.add_property(probab_object)
+        test_prob_objects[probab_object.property_name] = \
+            probab_object
+    # Test behaviour for correct input
+    assert pop_class.prob_objects == test_prob_objects
+    # Test if prob_object is not a ProbabilityClass object
+    pop_class.add_property("new_variable")
+    assert pop_class.prob_objects == test_prob_objects
+    # Test if prob_object already exists
+    pop_class.add_property(probab_objects[0])
+    assert pop_class.prob_objects == test_prob_objects
+
 
 # TODO: Test removing a property with PopulationClass.remove_property.
 # Test with a correct property_name.

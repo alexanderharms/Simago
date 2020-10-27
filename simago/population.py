@@ -4,6 +4,7 @@ import pandas as pd
 from .probability import (
     ContinuousProbabilityClass,
     DiscreteProbabilityClass,
+    ProbabilityClass,
     check_comb_conditionals,
     order_probab_objects,
 )
@@ -69,12 +70,16 @@ class PopulationClass:
         self.population["person_id"] = self.population["person_id"].apply(int)
 
     def add_property(self, ProbClass):
-        # Check that property is a ProbabilityClass
-        # Check that property is not already defined for the
-        # PopulationClass.
-        # Add ProbPopulation object to self.prob_objects list
-        self.prob_ojects[ProbClass.property_name] = ProbClass
-        # self.prob_objects.append(ProbClass)
+        if not isinstance(ProbClass, ProbabilityClass):
+            # Check that property is a ProbabilityClass
+            print("Added property is not an instance of ProbabilityClass")
+        elif ProbClass.property_name in self.prob_objects.keys():
+            # Check that property is not already defined for the
+            # PopulationClass.
+            print("Property is already defined in the PopulationClass object")
+        else:
+            # Add ProbPopulation object to self.prob_objects list
+            self.prob_objects[ProbClass.property_name] = ProbClass
 
     def remove_property(self, property_name):
         # Remove property
