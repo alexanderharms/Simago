@@ -91,7 +91,14 @@ class PopulationClass:
             self.prob_objects[ProbClass.property_name] = ProbClass
 
     def remove_property(self, property_name):
-        # Remove property
+        """
+        Removes a ProbabilityClass object from the PopulationClass object.
+
+        Parameters
+        ----------
+        property_name : string
+            Name of property to be removed.
+        """
         if property_name in self.prob_objects.keys():
             del self.prob_objects[property_name]
         else:
