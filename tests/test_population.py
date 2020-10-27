@@ -57,9 +57,9 @@ def test_PopClass_popsize_edge():
 def test_PopClass_add_property():
     """
     Test adding a property with PopulationClass.add_property.
-    - Test for regular ProbabilityClass.
-    - Check that property is a ProbabilityClass
-    - Check that property is not already defined for the PopulationClass.
+    - Test in case of correct input; a ProbabilityClass object .
+    - Test if a non-ProbabilityClass object is entered.
+    - Test if the property is already defined.
     """
     # Define test population
     popsize = 100
@@ -94,10 +94,42 @@ def test_PopClass_add_property():
     assert pop_class.prob_objects == test_prob_objects
 
 
-# TODO: Test removing a property with PopulationClass.remove_property.
-# Test with a correct property_name.
-# Assert property_name is a string.
-# Check if property_name is defined within the PopulationClass.
+def test_PopClass_remove_property():
+    """
+    Test removing a property with PopulationClass.remove_property.
+    - Test for a regular, defined, property name.
+    - Test if the property name does not exist.
+    - Test if a string is not entered.
+    """
+    # Define test population
+    popsize = 100
+    random_seed = 100
+    pop_class = PopulationClass(popsize, random_seed)
+
+    test_prob_objects = {}
+    yaml_folder = "./tests/testdata/PopulationClass/"
+    yaml_filenames = find_yamls(yaml_folder)
+    yaml_objects = load_yamls(yaml_filenames)
+    probab_objects = []
+    for y_obj in yaml_objects:
+        if y_obj["data_type"] in ["categorical", "ordinal"]:
+            probab_objects.append(DiscreteProbabilityClass(y_obj))
+        elif y_obj["data_type"] in ["continuous"]:
+            probab_objects.append(ContinuousProbabilityClass(y_obj))
+    for probab_object in probab_objects:
+        pop_class.add_property(probab_object)
+        test_prob_objects[probab_object.property_name] = \
+            probab_object
+    del test_prob_objects['age']
+    # Test behaviour for correct input
+    pop_class.remove_property('age')
+    assert pop_class.prob_objects == test_prob_objects
+    # Test if property is not in the ProbabilityClass object
+    pop_class.remove_property('age')
+    assert pop_class.prob_objects == test_prob_objects
+    # Test if a non-string is entered
+    pop_class.remove_property(0)
+    assert pop_class.prob_objects == test_prob_objects
 
 # def test_PopClass_update_disc_all():
 #     # TODO: Test update for a discrete variable

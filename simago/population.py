@@ -70,23 +70,32 @@ class PopulationClass:
         self.population["person_id"] = self.population["person_id"].apply(int)
 
     def add_property(self, ProbClass):
+        """
+        Adds a ProbabilityClass object to the PopulationClass object.
+
+        Parameters
+        ----------
+        ProbClass : ProbabilityClass object
+            ProbabilityClass object for the property.
+        """
         if not isinstance(ProbClass, ProbabilityClass):
             # Check that property is a ProbabilityClass
             print("Added property is not an instance of ProbabilityClass")
         elif ProbClass.property_name in self.prob_objects.keys():
             # Check that property is not already defined for the
             # PopulationClass.
-            print("Property is already defined in the PopulationClass object")
+            print("Property is already defined in the PopulationClass"
+                  + " instance.")
         else:
             # Add ProbPopulation object to self.prob_objects list
             self.prob_objects[ProbClass.property_name] = ProbClass
 
     def remove_property(self, property_name):
         # Remove property
-        del self.prob_objects[property_name]
-        # for prob_obj in self.prob_objects:
-        #     if prob_obj.property_name == property_name:
-        #         self.prob_objects.remove(prob_obj)
+        if property_name in self.prob_objects.keys():
+            del self.prob_objects[property_name]
+        else:
+            print("Property is not defined in the PopulationClass instance.")
 
     # def update(self, property_name="all", people_id="all"):
     def update(self, property_name="all"):
