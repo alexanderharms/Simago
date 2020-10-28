@@ -50,7 +50,7 @@ check_changelog:
 	@echo "Is the changelog updated?"
 
 build_docs: setup_makefile
-	source make_env/bin/activate; \
+	bash ./make_env/bin/activate; \
 	sphinx-apidoc -T -f -o docs/source simago
 	# sphinx-build -W -b html -d docs/doctrees docs/source docs/_build/html
 
