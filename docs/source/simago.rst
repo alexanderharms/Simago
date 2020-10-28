@@ -4,22 +4,6 @@ simago package
 Submodules
 ----------
 
-simago.contdist module
-----------------------
-
-.. automodule:: simago.contdist
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-simago.discdist module
-----------------------
-
-.. automodule:: simago.discdist
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 simago.population module
 ------------------------
 
