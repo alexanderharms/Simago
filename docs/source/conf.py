@@ -66,7 +66,8 @@ version = release.rsplit(u".", 1)[0]
 # ones.
 extensions = ["sphinx.ext.napoleon", "sphinx.ext.doctest"]
 
-
+# Napoleon settings
+napoleon_numpy_docstring = True
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 
