@@ -10,7 +10,7 @@ Welcome to Simago's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   modules
+   simago
 
 Indices and tables
 ==================

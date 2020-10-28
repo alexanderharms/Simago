@@ -27,3 +27,11 @@ simago.yamlutils module
    :members:
    :undoc-members:
    :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: simago
+   :members:
+   :undoc-members:
+   :show-inheritance:
