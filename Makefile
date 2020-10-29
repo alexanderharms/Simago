@@ -23,15 +23,13 @@ package: pre_build build_package post_build clean
 
 build_package: pre_build
 	rm -rf build dist
-	python3 -m pep517.build .
+	python3 -m pep517.build --source --binary .
+	ls -l dist
 
 setup_makefile:
 	rm -rf make_env
 	python3 -m venv make_env
-	make_env/bin/pip install tox
-	make_env/bin/pip install sphinx
-	make_env/bin/pip install twine
-	make_env/bin/pip install pep517
+	make_env/bin/pip install tox pre-commit sphinx twine pep517
 
 pre_build: run_tests check_version_number check_changelog build_docs
 
@@ -39,9 +37,7 @@ post_build: twine_check check_install_sdist check_install_wheel
 
 run_tests: setup_makefile
 	make_env/bin/python -m tox
-	# make_env/bin/python -m tox -e docs
-	make_env/bin/python -m tox -e manifest
-	make_env/bin/python -m tox -e precommit
+	make_env/bin/python -m tox -e docs,manifest,precommit
 
 check_version_number:
 	@echo "Is the version number correct?"
