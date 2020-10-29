@@ -11,10 +11,12 @@ Release v\ |release|.
    :start-after: title-string
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 2
    :caption: Contents:
 
+   example
    simago
+
 
 Indices and tables
 ==================

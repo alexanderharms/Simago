@@ -1,5 +1,6 @@
 include LICENCE *.rst *.toml *.yml *.yaml *.ini Makefile
 graft .github
+graft example
 
 # Code
 recursive-include simago *.py

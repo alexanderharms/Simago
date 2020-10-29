@@ -6,27 +6,24 @@ API Reference
    :undoc-members:
    :show-inheritance:
 
-Submodules
+Population
 ----------
-
-simago.population module
-------------------------
 
 .. automodule:: simago.population
    :members:
    :undoc-members:
    :show-inheritance:
 
-simago.probability module
--------------------------
+Probability
+-----------
 
 .. automodule:: simago.probability
    :members:
    :undoc-members:
    :show-inheritance:
 
-simago.yamlutils module
------------------------
+Yamlutils
+---------
 
 .. automodule:: simago.yamlutils
    :members:
