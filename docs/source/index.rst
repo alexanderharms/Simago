@@ -10,9 +10,10 @@ Release v\ |release|.
 .. include:: ../../README.rst
    :start-after: title-string
 
+Contents
+--------
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
 
    example
    simago

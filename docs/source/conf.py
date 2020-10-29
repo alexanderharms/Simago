@@ -93,6 +93,8 @@ add_function_parentheses = True
 
 autosummary_generate = True
 
+pygments_style = 'sphinx'
+
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
