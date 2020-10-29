@@ -3,6 +3,14 @@ Simago: Population simulation
 
 .. title-string
 
+.. image:: https://github.com/alexanderharms/Simago/workflows/CI/badge.svg?branch=master
+    :target: https://github.com/alexanderharms/Simago/actions?workflow=CI
+    :alt: CI Status
+
+.. image:: https://readthedocs.org/projects/simago/badge/?version=latest
+    :target: https://simago.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
+
 This package can be used to generate random populations, sets of microdata, based
 on (publicly availabled) aggregated data.
 
