@@ -24,7 +24,9 @@ jobs:
         python -m pip install --upgrade pip setuptools wheel
         python -m pip install --upgrade coverage virtualenv tox
     - name: Run tests
-      run: make run_tests; make clean
+      run: |
+         python -m tox
+         python -m tox -e docs,manifest,precommit
 
   # This workflow contains a single job called "build"
 #  build:

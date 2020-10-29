@@ -1,13 +1,14 @@
 include LICENCE *.rst *.toml *.yml *.yaml *.ini Makefile
 graft .github
 graft example
+global-exclude */__pycache__/*
 
 # Code
 recursive-include simago *.py
 
 # Tests
 recursive-include tests *.py *.yml *.yaml *.not_yaml *.csv *.txt
-prune tests/testdata/PopulationClass/export.csv
+exclude tests/testdata/PopulationClass/export.csv
 
 # Documentation
 include docs/Makefile docs/make.bat
