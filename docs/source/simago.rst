@@ -1,46 +1,31 @@
-simago package
-==============
+API Reference
+=============
 
-Submodules
+.. automodule:: simago
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Population
 ----------
-
-simago.contdist module
-----------------------
-
-.. automodule:: simago.contdist
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-simago.discdist module
-----------------------
-
-.. automodule:: simago.discdist
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-simago.population module
-------------------------
 
 .. automodule:: simago.population
    :members:
    :undoc-members:
    :show-inheritance:
 
-simago.probability module
--------------------------
+Probability
+-----------
 
 .. automodule:: simago.probability
    :members:
    :undoc-members:
    :show-inheritance:
 
-simago.yamlutils module
------------------------
+Yamlutils
+---------
 
 .. automodule:: simago.yamlutils
    :members:
    :undoc-members:
    :show-inheritance:
-

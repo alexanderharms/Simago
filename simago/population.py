@@ -1,17 +1,24 @@
+"""
+Functions around the PopulationClass object.
+"""
 import numpy as np
 import pandas as pd
 
+from .probability import (
+    ContinuousProbabilityClass,
+    DiscreteProbabilityClass,
+    ProbabilityClass,
+    check_comb_conditionals,
+    order_probab_objects,
+)
 from .yamlutils import find_yamls, load_yamls
-from .probability import ProbabilityClass
-from .probability import check_comb_conditionals, order_probab_objects
-from .discdist import draw_disc_values
-from .contdist import draw_cont_values
 
-class PopulationClass():
+
+class PopulationClass:
     """
     Class for the population.
-    
-    
+
+
     Attributes
     ----------
     random_seed : int
@@ -23,17 +30,6 @@ class PopulationClass():
     population : Pandas DataFrame
         DataFrame containing the generated population.
 
-    Methods
-    -------
-    add_property(ProbPopulation)
-        Adds property to PopulationClass.
-    remove_property(property_name)
-        Removes property from PopulationClass.
-    update(property_name="all")
-        Updates property.
-    export(output, nowrite=False)
-        Prints and writes population to file.
-
     """
 
     def __init__(self, popsize, random_seed=None):
@@ -43,7 +39,7 @@ class PopulationClass():
         popsize : int
             Size of population.
         random_seed : int
-            Seed for random number generation.
+            Seed for random number generation. Defaults to None.
 
         """
 
@@ -55,77 +51,142 @@ class PopulationClass():
         self.popsize = popsize
         self._generate_population()
 
-        # Initialize list of probability objects
-        self.prob_objects = []
+        # Initialize dictionary of probability objects
+        self.prob_objects = {}
+
+    def __eq__(self, other):
+        """Equality between two PopulationClass instances."""
+        if isinstance(other, PopulationClass):
+            return ((self.popsize == other.popsize)
+                    and ((self.random_seed == other.random_seed)
+                         or ((self.random_seed is None)
+                             and (other.random_seed is None))))
+        else:
+            return False
 
     def _generate_population(self):
+        """Generate initial population."""
         self.population = pd.DataFrame(
-            {"person_id" : np.linspace(0, self.popsize - 1, self.popsize)})
+            {"person_id": np.linspace(0, self.popsize - 1, self.popsize)}
+        )
 
-        self.population['person_id'] = self.population['person_id'].apply(int)
+        self.population["person_id"] = self.population["person_id"].apply(int)
 
-    def add_property(self, ProbPopulation):
-        # Add ProbPopulation object to self.prob_objects list
-        self.prob_objects.append(ProbPopulation)
+    def add_property(self, ProbClass):
+        """
+        Adds a ProbabilityClass object to the PopulationClass object.
+
+        Parameters
+        ----------
+        ProbClass : ProbabilityClass object
+            ProbabilityClass object for the property.
+        """
+        if not isinstance(ProbClass, ProbabilityClass):
+            # Check that property is a ProbabilityClass
+            print("Added property is not an instance of ProbabilityClass")
+        elif ProbClass.property_name in self.prob_objects.keys():
+            # Check that property is not already defined for the
+            # PopulationClass.
+            print("Property is already defined in the PopulationClass"
+                  + " instance.")
+        else:
+            # Add ProbPopulation object to self.prob_objects list
+            self.prob_objects[ProbClass.property_name] = ProbClass
 
     def remove_property(self, property_name):
-        # Remove property
-        for prob_obj in self.prob_objects:
-            if prob_obj.property_name == property_name:
-                self.prob_objects.remove(prob_obj)
+        """
+        Removes a ProbabilityClass object from the PopulationClass object.
 
-    #def add_people(self, num_people):
-    #    # Add people to the population by randomly drawing
-    #    # TODO: Expand functionality for more control over new people
-    #    self.popsize = new_popsize
-    #    return
-
-    #def remove_people(self, people_id):
-    #    # Remove people by ID
-    #    self.popsize = new_popsize
-    #    return
+        Parameters
+        ----------
+        property_name : string
+            Name of property to be removed.
+        """
+        if property_name in self.prob_objects.keys():
+            del self.prob_objects[property_name]
+        else:
+            print("Property is not defined in the PopulationClass instance.")
 
     # def update(self, property_name="all", people_id="all"):
     def update(self, property_name="all"):
-        # Update people by randomly drawing new values
-        # Based on self.population, the conditionals and the
-        # probabilities from ProbPopulation, draw a value for this
-        # property for all people in the population.
+        """
+        Updates properties for the population by drawing new values.
+
+        Parameters
+        ----------
+        property_name : string
+            Name of property to be updated. Defaults to 'all' which updates
+            all of the properties defined for in the PopulationClass instance.
+        """
         # TODO: Expand functionality for more control over update
         if property_name == "all":
-            for prob_obj in self.prob_objects:
-                if prob_obj.data_type in ['categorical', 'ordinal']:
-                    self.population = draw_disc_values(prob_obj, 
-                                                       self.population, 
-                                                       self.random_seed)
-                elif prob_obj.data_type == 'continuous':
-                    self.population = draw_cont_values(prob_obj,
-                                                       self.population, 
-                                                       self.random_seed)
+            for prob_obj in self.prob_objects.values():
+                self.population = prob_obj.draw_values(self)
         else:
             # Make a singular property name a list to homogenize the next code
             # section.
-            if isinstance(property_name, 'str'):
+            if isinstance(property_name, str):
                 property_name = [property_name]
-            for prob_obj in self.prob_objects:
-                if prob_obj.property_name in property_name: 
-                    if prob_obj.data_type in ['categorical', 'ordinal']:
-                        self.population = draw_disc_values(prob_obj, 
-                                                           self.population, 
-                                                           self.random_seed)
-                    elif prob_obj.data_type == 'continuous':
-                        self.population = draw_cont_values(prob_obj,
-                                                           self.population, 
-                                                           self.random_seed)
+            for prob_obj in self.prob_objects.values():
+                if prob_obj.property_name in property_name:
+                    self.population = prob_obj.draw_values(self)
+
+    def get_conditional_population(self, property_name, cond_index):
+        """
+        Gets the population corresponding to the conditions supplied by the
+        conditional index for a certain property.
+
+        Parameters
+        ----------
+        property_name : string
+            Name of property to be considered.
+        cond_index : int
+            Index of one of the conditions defined for the property.
+        """
+        prob_obj = self.prob_objects[property_name]
+        # - Get the corresponding conditional from prob_obj.conditionals
+        conds = prob_obj.conditionals.query("conditional_index == @cond_index")
+        # - Get the corr. segment of the population
+        # There can be multiple conditionals.
+        # Combine them all in one query string
+        query_list = []
+        for index, row in conds.iterrows():
+            query_list.append(
+                construct_query_string(
+                    row["property_name"], row["option"], row["relation"]
+                )
+            )
+        query_string = " & ".join(query_list)
+        population_cond = self.population.query(query_string)
+        # We're only interested in the ID's of the people.
+        population_cond = population_cond[["person_id"]]
+        return population_cond
+
     def export(self, output, nowrite=False):
+        """
+        Exports the generated population from PopulationClass.population. The
+        population can either be printed to screen or written to a CSV file.
+
+        Parameters
+        ----------
+        output : string
+            Path and filename for the CSV file.
+        nowrite : boolean
+            If True, the population will only be printed to the command line
+            and not written to file. Defaults to False.
+        """
         # Replace the options with the labels
+        assert isinstance(output, str), "Filename should be of type string"
+        assert isinstance(nowrite, bool), \
+            "Argument nowrite should be of type boolean"
         population_w_labels = self.population.copy()
 
-        for prob_obj in self.prob_objects:
-            if prob_obj.data_type in ['categorical', 'ordinal']:
+        for prob_obj in self.prob_objects.values():
+            if prob_obj.data_type in ["categorical", "ordinal"]:
                 prop = prob_obj.property_name
                 population_w_labels[prop] = population_w_labels[prop]\
-                        .apply(lambda idx: prob_obj.labels[int(idx)])
+                    .apply(lambda idx: 'nodata' if np.isnan(idx)
+                           else prob_obj.labels[int(idx)])
 
         print("------------------------")
         print("Generated population:")
@@ -137,7 +198,7 @@ class PopulationClass():
             print("Population is not written to disk.")
             pass
         else:
-            population_w_labels.to_csv(path_or_buf=output, index = False)
+            population_w_labels.to_csv(path_or_buf=output, index=False)
             print("Population is written to %s" % (output))
 
 
@@ -174,14 +235,17 @@ def generate_population(popsize, yaml_folder, rand_seed=None):
     # Based on the yaml_objects, create a list of ProbabilityClass instances.
     probab_objects = []
     for y_obj in yaml_objects:
-        probab_objects.append(ProbabilityClass(y_obj)) 
+        if y_obj["data_type"] in ["categorical", "ordinal"]:
+            probab_objects.append(DiscreteProbabilityClass(y_obj))
+        elif y_obj["data_type"] in ["continuous"]:
+            probab_objects.append(ContinuousProbabilityClass(y_obj))
 
     print("------------------------")
     print("Defined properties:")
     print([obj.property_name for obj in probab_objects])
 
     check_comb_conditionals(probab_objects)
-    
+
     probab_objects = order_probab_objects(probab_objects)
 
     # Generate an empty population
@@ -190,5 +254,28 @@ def generate_population(popsize, yaml_folder, rand_seed=None):
     # Add variables to the population based on the ProbabilityClass instances.
     for obj in probab_objects:
         population.add_property(obj)
-    
+
     return population
+
+
+def construct_query_string(property_name, option, relation):
+    """
+    Construct query string for Pandas .query for the relations defined
+    in the conditionals file.
+    """
+    if relation == "eq":
+        relation_string = "=="
+    elif relation == "leq":
+        relation_string = "<="
+    elif relation == "geq":
+        relation_string = ">="
+    elif relation == "le":
+        relation_string = "<"
+    elif relation == "gr":
+        relation_string = ">"
+    elif relation == "neq":
+        relation_string = "~="
+
+    query_list = [property_name, relation_string, str(option)]
+    query_string = " ".join(query_list)
+    return query_string

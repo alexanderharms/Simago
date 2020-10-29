@@ -1,6 +1,6 @@
-# Income 
+# Income
 property_name: "income"
-data_type: "continuous" 
+data_type: "continuous"
 
 pdf_parameters: [[1000, 1], [2000, 1]]
 pdf_file: "./tests/testdata/check_yaml/pdf.txt"

@@ -1,6 +1,6 @@
 # Sex
 property_name: "sex"
-data_type: "incorrect" 
+data_type: "incorrect"
 
 data_file: "./data/example/sex.csv"
 
