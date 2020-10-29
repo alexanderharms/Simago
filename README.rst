@@ -14,10 +14,10 @@ The package is tested for Python 3.7 and up.
 
 Usage
 -----
-The easiest way to get started, after installing the package with `pip install simago`,
-is to use the function `generate_population()` from `simago.population`.
-This function creates an instance of the `PopulationClass` object with
-the generated population Pandas DataFrame as the `PopulationClass.population`
+The easiest way to get started, after installing the package with ``pip install simago``,
+is to use the function ``generate_population()`` from ``simago.population``.
+This function creates an instance of the ``PopulationClass`` object with
+the generated population Pandas DataFrame as the ``PopulationClass.population``
 attribute.
 
 The population DataFrame contains a row for every person and a column for each
