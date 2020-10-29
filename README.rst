@@ -7,7 +7,7 @@ on (publicly availabled) aggregated data.
 These populations can then for example be used for experimentation in the field
 of machine learning or simulation studies.
 
-The package is available for Python 3 on `PyPi <https://pypi.org/project/simago/>`_,
+The package is available for Python 3 on `PyPI <https://pypi.org/project/simago/>`_,
 the source code on `Github <https://github.com/alexanderharms/Simago>`_ and
 the documentation on `ReadTheDocs <https://simago.readthedocs.io/en/latest/>`_.
 The package is tested for Python 3.7 and up.
