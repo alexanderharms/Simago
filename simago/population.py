@@ -1,3 +1,6 @@
+"""
+Functions around the PopulationClass object.
+"""
 import numpy as np
 import pandas as pd
 
@@ -52,6 +55,7 @@ class PopulationClass:
         self.prob_objects = {}
 
     def __eq__(self, other):
+        """Equality between two PopulationClass instances."""
         if isinstance(other, PopulationClass):
             return ((self.popsize == other.popsize)
                     and ((self.random_seed == other.random_seed)
@@ -61,6 +65,7 @@ class PopulationClass:
             return False
 
     def _generate_population(self):
+        """Generate initial population."""
         self.population = pd.DataFrame(
             {"person_id": np.linspace(0, self.popsize - 1, self.popsize)}
         )

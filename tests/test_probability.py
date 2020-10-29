@@ -1,3 +1,4 @@
+"""Tests corresponding to the simago/probability.py file."""
 import pandas as pd
 import pytest
 
@@ -128,6 +129,10 @@ def test_ProbClass_read_conditionals():
 
 
 def test_check_comb_conditionals_undefinedprop():
+    """
+    Function check_comb_conditionals() returns an AssertionError when
+    the conditionals of a new property reference an undefined property.
+    """
     # Conditionals reference undefined property
     test_yaml = "./tests/testdata/ProbabilityClass/age.yml"
 

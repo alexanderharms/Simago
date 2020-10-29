@@ -70,6 +70,7 @@ class DiscreteProbabilityClass(ProbabilityClass):
         self.generate_probabilities()
 
     def read_data(self, data_file):
+        """Read in data for discrete probability distributions."""
         # Only if self.data_type is categorical or ordinal
         # Read CSV
         data_frame = pd.read_csv(data_file)
@@ -114,6 +115,7 @@ class DiscreteProbabilityClass(ProbabilityClass):
         )
 
     def generate_probabilities(self):
+        """Generate probabilities through normalization of the data."""
         # From the data generate the probabilities
         self.probabs = self.data.copy()
         sum_values = (

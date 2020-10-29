@@ -6,8 +6,9 @@ build-backend = "setuptools.build_meta"
 line-length = 79
 
 [tool.interrogate]
+ignore_init_method = true
 verbose = 1
-fail-under = 65
+fail-under = 100
 
 [tool.isort]
 atomic = true

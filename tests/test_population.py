@@ -1,3 +1,6 @@
+"""
+Tests for the file simago/population.py.
+"""
 import os
 
 import numpy as np
@@ -21,6 +24,8 @@ from simago.yamlutils import find_yamls, load_yamls
 def test_PopClass_init():
     """
     Test that PopulationClass is initialized properly.
+    - Test with reasonable population size and defined random seed.
+    - Test with reasonable population size and undefined random seed.
     """
     popsize = 100
     random_seed = 100
@@ -35,8 +40,6 @@ def test_PopClass_init():
     assert pop_class.random_seed == random_seed
     assert pop_class.population.equals(test_population)
 
-
-def test_PopClass_init_noseed():
     popsize = 100
     pop_class = PopulationClass(popsize)
 
@@ -314,10 +317,10 @@ def test_generate_population():
     assert pop_class_no_seed == test_pop_class_no_seed
 
 
-# TODO: Test the function generate_population.
-
-
 def test_construct_query_string():
+    """
+    Test if every relation is property translated to a query string.
+    """
     option = 0
     property_name = "sex"
     relation_list = ["eq", "leq", "geq", "le", "gr", "neq"]
