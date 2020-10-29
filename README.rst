@@ -1,6 +1,6 @@
 Simago: Population simulation
 =============================
-
+.. title-string
 This package can be used to generate random populations, sets of microdata, based
 on (publicly availabled) aggregated data.
 
@@ -24,8 +24,6 @@ The population DataFrame contains a row for every person and a column for each
 property. The values for these properties are randomly drawn from probability
 distributions defined by the supplied data. This is done by supplying a
 settings (YAML) file, a data (CSV) file and possibly a conditionals (CSV) file.
-In the `simago-examples <www.github.com/alexanderharms/simago-examples>`_
-repository an example is described of how to use the package.
 
 How to contribute
 -----------------

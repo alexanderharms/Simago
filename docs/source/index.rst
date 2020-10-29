@@ -3,11 +3,12 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Simago's documentation!
-==================================
+Simago: Population simulation
+=============================
 Release v\ |release|.
 
 .. include:: ../../README.rst
+   :start-after: title-string
 
 .. toctree::
    :maxdepth: 4

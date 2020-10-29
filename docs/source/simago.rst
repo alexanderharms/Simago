@@ -1,8 +1,5 @@
-simago package
-==============
-
-Module contents
----------------
+API Reference
+=============
 
 .. automodule:: simago
    :members:
