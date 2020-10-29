@@ -1,6 +1,8 @@
 Simago: Population simulation
 =============================
+
 .. title-string
+
 This package can be used to generate random populations, sets of microdata, based
 on (publicly availabled) aggregated data.
 
