@@ -1,4 +1,9 @@
+"""
+Classes and functions surrounding the ProbabilityClass objects.
+"""
 import importlib
+
+from abc import ABC
 
 import numpy as np
 import pandas as pd
@@ -6,7 +11,19 @@ import pandas as pd
 from scipy import stats
 
 
-class ProbabilityClass:
+class ProbabilityClass(ABC):
+    """
+    Abstract base class; inherited versions of this class contain attributes
+    and methods surrounding the properties of the population and their
+    stochastic behaviour.
+
+    Attributes
+    ----------
+    property_name : string
+    data_type : string
+    conditionals : DataFrame
+
+    """
     def __init__(self, yaml_object):
         self.property_name = yaml_object["property_name"]
         self.data_type = yaml_object["data_type"]
@@ -17,6 +34,14 @@ class ProbabilityClass:
             self.read_conditionals(yaml_object["conditionals"])
 
     def read_conditionals(self, conditionals_file):
+        """
+        Reads and checks the conditionals file from a CSV file.
+
+        Parameters
+        ----------
+        conditionals_file : string
+            Filename for the CSV file.
+        """
         # Read CSV
         # Assign data to self.conditionals
         self.conditionals = pd.read_csv(conditionals_file)
@@ -34,6 +59,10 @@ class ProbabilityClass:
 
 
 class DiscreteProbabilityClass(ProbabilityClass):
+    """
+    DiscreteProbabilityClass contains attributes and methods surrounding the
+    properties with discrete probability distributions.
+    """
     def __init__(self, yaml_object):
         super(DiscreteProbabilityClass, self).__init__(yaml_object)
 
@@ -108,19 +137,11 @@ class DiscreteProbabilityClass(ProbabilityClass):
 
         Parameters
         ----------
-        prob_obj : ProbabilityClass
-            ProbabilityClass object for the categorical or ordinal variable.
-        population : Pandas DataFrame
-            DataFrame with a population to add the categorical or ordinal
-            variable to.
-        random_seed : int
-            Seed for random number generation.
+        pop_obj : PopulationClass
 
         Returns
         -------
-        PopulationClass object
-            PopulationClass object with drawn values for the categorical or
-            ordinal variable.
+        DataFrame
 
         """
         population = pop_obj.population
@@ -206,6 +227,10 @@ def draw_from_disc_distribution(probabs, size, random_seed):
 
 
 class ContinuousProbabilityClass(ProbabilityClass):
+    """
+    ContinuousProbabilityClass contains attributes and methods surrounding the
+    properties with continuous probability distributions.
+    """
     def __init__(self, yaml_object):
         super(ContinuousProbabilityClass, self).__init__(yaml_object)
 
@@ -218,19 +243,15 @@ class ContinuousProbabilityClass(ProbabilityClass):
 
     def draw_values(self, pop_obj):
         """
-        Draw values for continuous variable.
+        Draw values for continuous variables.
 
         Parameters
         ----------
-        prob_obj : ProbabilityClass
-        ProbabilityClass object for the continuous variable.
-        population : Pandas DataFrame
-        DataFrame with a population to add the continuous variable to.
+        pop_obj : PopulationClass
 
         Returns
         -------
-        PopulationClass object
-        PopulationClass object with drawn values for the continuous variable.
+        DataFrame
 
         """
         population = pop_obj.population
@@ -316,6 +337,10 @@ def draw_from_cont_distribution(pdf, parameters, size, random_seed):
 
 
 def order_probab_objects(probab_objects):
+    """
+    Orders ProbabilityClass objects so all properties that do not depend on
+    others are handled first.
+    """
     # There should be at least one property without conditionals.
     cond_bool = [
         True if x.conditionals is None else False for x in probab_objects
@@ -338,6 +363,10 @@ def order_probab_objects(probab_objects):
 
 
 def check_comb_conditionals(probab_objects):
+    """
+    Checks the ProbabilityClass objects for impossible situations, e.g.
+    properties that are dependent on non-defined properties.
+    """
     properties = []
     for obj in probab_objects:
         properties.append(obj.property_name)

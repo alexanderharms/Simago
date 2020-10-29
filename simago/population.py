@@ -27,17 +27,6 @@ class PopulationClass:
     population : Pandas DataFrame
         DataFrame containing the generated population.
 
-    Methods
-    -------
-    add_property(ProbPopulation)
-        Adds property to PopulationClass.
-    remove_property(property_name)
-        Removes property from PopulationClass.
-    update(property_name="all")
-        Updates property.
-    export(output, nowrite=False)
-        Prints and writes population to file.
-
     """
 
     def __init__(self, popsize, random_seed=None):
@@ -47,7 +36,7 @@ class PopulationClass:
         popsize : int
             Size of population.
         random_seed : int
-            Seed for random number generation.
+            Seed for random number generation. Defaults to None.
 
         """
 
@@ -115,10 +104,15 @@ class PopulationClass:
 
     # def update(self, property_name="all", people_id="all"):
     def update(self, property_name="all"):
-        # Update people by randomly drawing new values
-        # Based on self.population, the conditionals and the
-        # probabilities from ProbPopulation, draw a value for this
-        # property for all people in the population.
+        """
+        Updates properties for the population by drawing new values.
+
+        Parameters
+        ----------
+        property_name : string
+            Name of property to be updated. Defaults to 'all' which updates
+            all of the properties defined for in the PopulationClass instance.
+        """
         # TODO: Expand functionality for more control over update
         if property_name == "all":
             for prob_obj in self.prob_objects.values():
@@ -133,6 +127,17 @@ class PopulationClass:
                     self.population = prob_obj.draw_values(self)
 
     def get_conditional_population(self, property_name, cond_index):
+        """
+        Gets the population corresponding to the conditions supplied by the
+        conditional index for a certain property.
+
+        Parameters
+        ----------
+        property_name : string
+            Name of property to be considered.
+        cond_index : int
+            Index of one of the conditions defined for the property.
+        """
         prob_obj = self.prob_objects[property_name]
         # - Get the corresponding conditional from prob_obj.conditionals
         conds = prob_obj.conditionals.query("conditional_index == @cond_index")
@@ -153,6 +158,18 @@ class PopulationClass:
         return population_cond
 
     def export(self, output, nowrite=False):
+        """
+        Exports the generated population from PopulationClass.population. The
+        population can either be printed to screen or written to a CSV file.
+
+        Parameters
+        ----------
+        output : string
+            Path and filename for the CSV file.
+        nowrite : boolean
+            If True, the population will only be printed to the command line
+            and not written to file. Defaults to False.
+        """
         # Replace the options with the labels
         assert isinstance(output, str), "Filename should be of type string"
         assert isinstance(nowrite, bool), \
@@ -237,6 +254,10 @@ def generate_population(popsize, yaml_folder, rand_seed=None):
 
 
 def construct_query_string(property_name, option, relation):
+    """
+    Construct query string for Pandas .query for the relations defined
+    in the conditionals file.
+    """
     if relation == "eq":
         relation_string = "=="
     elif relation == "leq":
