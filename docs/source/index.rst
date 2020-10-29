@@ -5,6 +5,9 @@
 
 Welcome to Simago's documentation!
 ==================================
+Release v\ |release|.
+
+.. include:: ../README.rst
 
 .. toctree::
    :maxdepth: 4
