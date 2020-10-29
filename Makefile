@@ -52,7 +52,7 @@ check_changelog:
 build_docs: setup_makefile
 	bash ./make_env/bin/activate; \
 	sphinx-apidoc -T -f -o docs/source simago
-	# sphinx-build -W -b html -d docs/doctrees docs/source docs/_build/html
+	sphinx-build -W -b html -d docs/doctrees docs/source docs/_build/html
 
 twine_check: setup_makefile
 	make_env/bin/python -m twine check dist/*
