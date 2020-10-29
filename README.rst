@@ -24,6 +24,8 @@ The population DataFrame contains a row for every person and a column for each
 property. The values for these properties are randomly drawn from probability
 distributions defined by the supplied data. This is done by supplying a
 settings (YAML) file, a data (CSV) file and possibly a conditionals (CSV) file.
+For more guidance see the `example <https://simago.readthedocs.io/en/latest/example.html>`_
+in the documentation.
 
 How to contribute
 -----------------

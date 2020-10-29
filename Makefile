@@ -21,7 +21,7 @@
 
 package: pre_build build_package post_build clean
 
-build_package:
+build_package: pre_build
 	rm -rf build dist
 	python3 -m pep517.build .
 
@@ -51,7 +51,6 @@ check_changelog:
 
 build_docs: setup_makefile
 	bash ./make_env/bin/activate; \
-	# sphinx-apidoc -T -f -o docs/source simago
 	sphinx-build -W -b html -d docs/doctrees docs/source docs/_build/html
 
 twine_check: setup_makefile
@@ -74,6 +73,16 @@ upload_pypi_test:
 
 upload_pypi_prod:
 	@echo "To be implementend"
+
+generate_example:
+	python3 -m venv example_env
+	example_env/bin/pip install -e .
+	cd example; \
+	../example_env/bin/python gen_population.py -p 1000 \
+	--yaml_folder ./data-yaml/ -o ./output/population.csv \
+	--rand_seed 100
+	rm -rf example_env
+
 
 clean:
 	rm -rf make_env

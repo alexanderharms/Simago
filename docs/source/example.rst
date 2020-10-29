@@ -21,7 +21,7 @@ the example the following expression can be used:
 
 .. code-block::
 
-    python gen_population.py -p 10000 --yaml-folder ./data-yaml -o ./output/population.csv --rand_seed 100
+    python gen_population.py -p 1000 --yaml-folder ./data-yaml/ -o ./output/population.csv --rand_seed 100
 
 In the Python script the following code is executed:
 
@@ -50,19 +50,20 @@ Property: Sex
 -------------
 For each property a settings file must be defined in the form of a YAML file.
 For this example all the settings files for the example are stored in
-``./data/example``. For the property 'sex' this looks as follows:
+``./data/``. For the property 'sex' this looks as follows:
 
 .. code-block:: yaml
 
     property_name: "sex"
     data_type: "categorical"
 
-    data_file: "./data/example/sex.csv"
+    data_file: "./data/sex.csv"
 
     conditionals: null # null if no conditionals
 
 Every property needs to have a unique property name; in this case the obvious
 choice has been made. As a data type there currently are three possible options:
+
 - categorical: Discrete options with no ordering.
 - ordinal: Discrete options with an order in them.
 - continuous: Continuous values.
@@ -102,9 +103,9 @@ The settings file of the 'age' property is as follows:
     property_name: "age"
     data_type: "ordinal"
 
-    data_file: "./data/example/age.csv"
+    data_file: "./data/age.csv"
 
-    conditionals: "./data/example/age_conditionals.csv"
+    conditionals: "./data/age_conditionals.csv"
 
 The data type in this case is ``ordinal`` because one can make an ordering of
 people based on their age; some people are older or younger than others. When we
@@ -161,10 +162,10 @@ a look at the settings file in this example:
     data_type: "continuous"
 
     pdf_parameters: [[1000, 1], [2000, 1]]
-    pdf_file: "./pdfs/example/pdf.py"
+    pdf_file: "./pdfs/pdf.py"
     pdf: "pdf_lognorm"
 
-    conditionals: "./data/example/income_conditionals.csv" # null if no conditionals
+    conditionals: "./data/income_conditionals.csv" # null if no conditionals
 
 For each continuous variable a continuous
 probability density function in the form of an ``rvs_continuous`` object from the
@@ -231,16 +232,18 @@ Resulting data
 If we look at the resulting data, we see that the characteristics roughly match
 the supplied aggregated data. This is what we expected seen as these values are
 all randomly drawn.
+
 +--------+------------+------------+
 | Sex    | Original   | Generated  |
 +========+============+============+
 | Male   | 0.504      | 0.508      |
++--------+------------+------------+
 | Female | 0.496      | 0.492      |
 +--------+------------+------------+
 
 
-.. image:: ../../example/output/age.png
+.. image:: ./example/age.png
     :alt: Comparison plot for the ages.
 
-.. image:: ../../example/output/income.png
+.. image:: ./example/income.png
     :alt: Comparison plot for the incomes.

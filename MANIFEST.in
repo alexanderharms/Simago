@@ -7,10 +7,12 @@ recursive-include simago *.py
 
 # Tests
 recursive-include tests *.py *.yml *.yaml *.not_yaml *.csv *.txt
+prune tests/testdata/PopulationClass/export.csv
 
 # Documentation
 include docs/Makefile docs/make.bat
 recursive-include docs *.rst
 recursive-include docs *.py
 recursive-include docs *.keep
+recursive-include docs *.png
 prune docs/_build
