@@ -17,4 +17,5 @@ coverage/*
 devenv/*
 testenv/*
 make_env/*
+example_env/*
 tests/testdata/PopulationClass/export.csv
