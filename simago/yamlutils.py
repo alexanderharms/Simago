@@ -8,8 +8,10 @@ import yaml
 
 
 def find_yamls(yaml_folder):
-    """
-    Find YAML files.
+    """Find YAML files from a folder.
+
+    Gather all the YAML files for the aggregated data in the folder.
+    Return the list of paths to YAML files.
 
     Parameters
     ----------
@@ -18,13 +20,9 @@ def find_yamls(yaml_folder):
 
     Returns
     -------
-    list
+    yaml_filenames : list of str
         List of YAML filenames.
-
     """
-
-    # Gather all the YAML files for the aggregated data in the folder.
-    # Return the list of paths to YAML files.
     print("YAML folder: %s" % (yaml_folder))
     yaml_filenames = []
     for dirpath, dirs, filenames in os.walk(yaml_folder):
@@ -41,19 +39,22 @@ def find_yamls(yaml_folder):
 
 
 def check_yaml(yaml_object):
-    """
-    Check YAML object.
+    """Check YAML object.
+
+    Using a number of assertions each YAML object, the dictionary derived
+    from the YAML file, is checked if it is complete and if the defined
+    variables are in the correct format.
 
     Parameters
     ----------
-    yaml_object
+    yaml_object : dict
+        Dictionary with the information from the YAML file.
 
     Returns
     -------
-    yaml_object
-
+    yaml_object : dict
+        Dictionary with the checked information from the YAML file.
     """
-
     fname = yaml_object['yaml_filename']
 
     assert 'property_name' in yaml_object.keys(), \
@@ -123,21 +124,22 @@ def check_yaml(yaml_object):
 
 
 def load_yamls(yaml_filenames):
-    """
-    Load YAML files.
+    """Load YAML files.
+
+    Loads the YAML configuration files and converts them to dictionaries
+    using `yaml` package. Checks if the imported YAML files contain
+    the correct information using the function `check_yaml`.
 
     Parameters
     ----------
-    yaml_filenames : list
+    yaml_filenames : list of str
         List of YAML filenames.
 
     Returns
     -------
-    list
+    yaml_objects : list of dict
         List of YAML objects.
-
     """
-
     yaml_objects = []
     for yaml_filename in yaml_filenames:
         with open(yaml_filename, 'r') as yaml_file:

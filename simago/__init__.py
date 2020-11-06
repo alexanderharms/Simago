@@ -1,5 +1,5 @@
 """
-Simago: Randomly generate populations
+Simago: Randomly generate populations.
 
 """
 
