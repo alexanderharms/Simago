@@ -40,3 +40,9 @@ in the documentation.
 How to contribute
 -----------------
 In order to contribute either leave a message in the Issues section or open a pull request.
+
+Changelog
+---------
+.. include:: ./CHANGELOG.rst
+   :start-after: last-version-start
+   :end-before: last-version-end
