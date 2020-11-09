@@ -17,6 +17,8 @@ Contents
 
    example
    simago
+   datafiles
+   ../../CHANGELOG.rst
 
 
 Indices and tables

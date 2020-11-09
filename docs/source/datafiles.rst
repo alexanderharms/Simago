@@ -1,171 +1,81 @@
 File properties
 ===============
 
+The settings and data in order to generate a random population are determined
+by three types of files. On this page more information is given about these
+files. For an example of the ``simago`` package in use, see the Example page.
 
-YAML configuration file
+Settings (YAML) file
 -----------------------
 
-In this section the possible variables of the YAML configuration files can
+In this section the possible variables of the settings (YAML) files can
 are discussed. The validity of these rules are checked by the function
-``simago.yamlutils.check_yaml``.
+``simago.yamlutils.check_yaml``. The settings files should have a valid YAML
+syntax and the extenstions ``.yml`` or ``.yaml``.
 
-*
+* ``property_name`` (essential): Name of the (random) property of the persons.
+Entries for ``property_name`` should be unique strings.
+* ``data_type`` (essential): Type of the data of the property.
+Entries for ``data_type`` should be either ``categorical``, ``ordinal`` or
+``continuous``, for data that is discrete without ordering, discrete with
+ordering or continous in nature respectively.
+* ``data_file`` (essential if ``data_type`` is ``categorical`` or
+``ordinal``): File containing the number of people corresponding to each
+discrete category. These numbers are normalized to form the discrete
+probability distribution. Entries for ``data_file`` should be strings
+for the filenames of the CSV files containing the data.
+* ``pdf_file`` (essential if ``data_type`` is ``continuous``): Filename
+of the Python file in which the PDF (probability density function) is defined
+for the continuous probability distribution.
+* ``pdf`` (essential if ``data_type`` is ``continuous``): String
+of the function name defined in ``pdf_file`` that produces the PDF for
+the continuous property. This function should return a
+``scipy.stats.rvs_continuous`` object.
+* ``pdf_parameters`` (essential if ``data_type`` is ``continuous``):
+A list of parameters for the PDF function. Each position in the list
+corresponds to the equivalent condition index in the conditions file.
+* ``conditions``: File containing the conditions for the conditional
+probability distributions. Entries for ``conditions`` should be strings
+for the filenames of the CSV files containing the data. If an entry is not
+supplied this variable is set to ``None``.
 
+Data file
+---------
 
-Property: Age
--------------
-The treatment of the 'age' is a little more complicated than the
-property of 'sex'. In this case we let the age of a person depend on their sex.
-This follows from the data that was gathered; the age distribution is different
-for males and females.
-The settings file of the 'age' property is as follows:
-
-.. code-block:: yaml
-
-    property_name: "age"
-    data_type: "ordinal"
-
-    data_file: "./data/age.csv"
-
-    conditionals: "./data/age_conditionals.csv"
-
-The data type in this case is ``ordinal`` because one can make an ordering of
-people based on their age; some people are older or younger than others. When we
-take a look at the data file we see (shortened for readability):
-
-.. code-block::
-
-    option,value,label,conditional_index
-    0,69623692.0,0,0
-    1,69623692.0,1,0
-    2,69623692.0,2,0
-    ...
-    97,202110.8,97,0
-    98,202110.8,98,0
-    99,202110.8,99,0
-    0,65323152.2,0,1
-    1,65323152.2,1,1
-    2,65323152.2,2,1
-    ...
-    97,556794.6,97,1
-    98,556794.6,98,1
-    99,556794.6,99,1
-
-In this case we see that some rows correspond to ``conditional_index`` of 0 and
-others to 1. These indices match to the conditions given in the conditionals file mentioned
-at the ``conditionals`` parameter in the settings file. This conditionals file
-looks like this:
-
-.. code-block::
-
-    conditional_index,property_name,option,relation
-    0,sex,0,eq
-    1,sex,1,eq
-
-Here we see two conditions corresponding to the conditional
-index of 0 and 1. In this case the values for the options mentioned in the data
-file with ``conditional_index == 0`` hold when the property 'sex' is equal to
-option 0, which in this case means the sex is male. The values in the data file
-with ``conditional_index == 1`` correspond to option 1 for property 'sex' which is
-female. The values in the data file are normalized for each conditional index.
-These normalized values will then form the discrete conditional probability for
-a person to be of a certain age given that they are of a certain sex.
-
-Property: Income
-----------------
-Where for categorical and ordinal variables the settings files are mainly a way
-to indicate where the relevant files are stored, the settings files for
-continuous variables such as 'income' contain a bit more information. Let's take
-a look at the settings file in this example:
-
-.. code-block:: yaml
-
-    property_name: "income"
-    data_type: "continuous"
-
-    pdf_parameters: [[1000, 1], [2000, 1]]
-    pdf_file: "./pdfs/pdf.py"
-    pdf: "pdf_lognorm"
-
-    conditionals: "./data/income_conditionals.csv" # null if no conditionals
-
-For each continuous variable a continuous
-probability density function in the form of an ``rvs_continuous`` object from the
-``scipy.stats`` package needs to be supplied. The name of the function for this
-probability density function is in this case ``pdf_lognorm`` in the file mentioned
-under ``pdf_file``. Ths file looks as follows:
-
-.. code-block:: python
-
-    from scipy.stats import lognorm
+The data file is a CSV file containing the data for the discrete probability
+distributions. This is the case when ``data_type`` is ``categorical`` or
+``ordinal``.  This file should have the following columns:
+* ``option``: Index for the possibilities in the probability distributions.
+* ``value``: The number of people corresponding to each ``option``.
+* ``label``: A human readable label for each ``option``. Only used
+when exporting the population.
+* ``condition_index``: Index corresponding to the conditions defined in
+the conditions file.
 
 
-    def pdf_lognorm(params):
-        """
-        This function returns an instance of scipy.stats.norm
-        with the correct paramters
-        s = sigma
-        scale = exp(mu)
-        """
-        scale = params[0]
-        s = params[1]
-        return lognorm(s=s, scale=scale)
+Conditions file
+---------------
 
-The parameters for this function can be varied with the conditional index. They
-are selected by taking the values in the position of the list
-``pdf_parameters`` corresponding to the conditional index. To see what these
-conditional indices mean we look at the conditionals file:
+The conditions file is a CSV file containing the conditions for the
+conditional probability distributions. Each condition is defined by
+the ``relation`` to the ``option`` of an already defined ``property_name``.
+For example, an age distribution for males would only hold for the people
+for which ``property_name`` ``sex`` is equal, ``relation`` is ``eq``, to the
+``option`` ``0`` if ``0`` is defined as male. This file should have the
+following columns:
 
-.. code-block::
-
-    conditional_index,property_name,option,relation
-    0,sex,0,eq
-    0,age,18,geq
-    0,age,50,leq
-    1,sex,1,eq
-    1,age,18,geq
-    1,age,65,leq
-
-Multiple conditions for each ``conditional_index`` are combined. In this case
-``conditional_index`` of 0, and therefore the parameters ``[1000, 1]`` correspond to
-every person that
-
-- is male,
-- has an age greater than or equal to 18
-- and less than or equal to 50.
-
-The parameters ``[2000, 1]`` associated with a ``conditional_index``
-of 1 are for every person that
-
-- is female,
-- has an age greater than or equal to 18
-- and less than or equal to 65.
-
-Probability and Population objects
-----------------------------------
-All the information on each of the properties is each encapsulated in their own
-``ProbabilityClass`` object. All the ``ProbabilityClass`` objects of the properties are
-then incorporated into a ``PopulationClass`` object. By calling the ``update()``
-method of the ``PopulationClass`` object the values are drawn from the (conditional)
-probability distributions that were supplied.
-
-Resulting data
---------------
-If we look at the resulting data, we see that the characteristics roughly match
-the supplied aggregated data. This is what we expected seen as these values are
-all randomly drawn.
-
-+--------+------------+------------+
-| Sex    | Original   | Generated  |
-+========+============+============+
-| Male   | 0.504      | 0.508      |
-+--------+------------+------------+
-| Female | 0.496      | 0.492      |
-+--------+------------+------------+
-
-
-.. image:: ./example/age.png
-    :alt: Comparison plot for the ages.
-
-.. image:: ./example/income.png
-    :alt: Comparison plot for the incomes.
+* ``condition_index``: Index for the conditional probability distribution.
+This index should match the ``condition_index`` defined in the data file in
+the case of a discrete probability distribution or the position in the list of
+parameters defined in the variable ``pdf_parameters`` in the settings file for
+a continuous probability distribution.
+* ``property_name``: Name of the property which determines the condition.
+* ``option``: Option of the property.
+* ``relation``: Relation to the ``option``. For ``categorical`` data only
+``eq`` or ``neq`` should be used. Entries for ``relation`` can be
+  * ``eq`` for 'equal to'
+  * ``neq`` for 'not equal to'
+  * ``leq`` for 'lesser than or equal to'
+  * ``geq`` for 'greater than or equal to'
+  * ``le`` for 'less than'
+  * ``gr`` for 'greater than'.

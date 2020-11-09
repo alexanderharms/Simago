@@ -59,7 +59,7 @@ For this example all the settings files for the example are stored in
 
     data_file: "./data/sex.csv"
 
-    conditionals: null # null if no conditionals
+    conditions: null # null if no conditions
 
 Every property needs to have a unique property name; in this case the obvious
 choice has been made. As a data type there currently are three possible options:
@@ -75,7 +75,7 @@ distribution. The data file in this case looks as follows:
 
 .. code-block::
 
-    option,value,label,conditional_index
+    option,value,label,condition_index
     0,3805370719,male,0
     1,3742018211,female,0
 
@@ -85,8 +85,8 @@ to the human readable ``label`` of 'male' and 'female'. In the case of the
 property 'sex' the total amount of males and females are shown. The normalized
 values for each option will form the discrete probability distribution.
 
-The column for ``conditional_index`` is not used for this property and in the
-settings file ``conditionals`` is set to ``null``. These options are used when the
+The column for ``condition_index`` is not used for this property and in the
+settings file ``conditions`` is set to ``null``. These options are used when the
 the probabilities for a certain property depend on another property. This will
 be a factor for 'age' and 'income'.
 
@@ -105,7 +105,7 @@ The settings file of the 'age' property is as follows:
 
     data_file: "./data/age.csv"
 
-    conditionals: "./data/age_conditionals.csv"
+    conditions: "./data/age_conditions.csv"
 
 The data type in this case is ``ordinal`` because one can make an ordering of
 people based on their age; some people are older or younger than others. When we
@@ -113,7 +113,7 @@ take a look at the data file we see (shortened for readability):
 
 .. code-block::
 
-    option,value,label,conditional_index
+    option,value,label,condition_index
     0,69623692.0,0,0
     1,69623692.0,1,0
     2,69623692.0,2,0
@@ -129,23 +129,23 @@ take a look at the data file we see (shortened for readability):
     98,556794.6,98,1
     99,556794.6,99,1
 
-In this case we see that some rows correspond to ``conditional_index`` of 0 and
-others to 1. These indices match to the conditions given in the conditionals file mentioned
-at the ``conditionals`` parameter in the settings file. This conditionals file
+In this case we see that some rows correspond to ``condition_index`` of 0 and
+others to 1. These indices match to the conditions given in the conditions file mentioned
+at the ``conditions`` parameter in the settings file. This conditions file
 looks like this:
 
 .. code-block::
 
-    conditional_index,property_name,option,relation
+    condition_index,property_name,option,relation
     0,sex,0,eq
     1,sex,1,eq
 
-Here we see two conditions corresponding to the conditional
+Here we see two conditions corresponding to the condition
 index of 0 and 1. In this case the values for the options mentioned in the data
-file with ``conditional_index == 0`` hold when the property 'sex' is equal to
+file with ``condition_index == 0`` hold when the property 'sex' is equal to
 option 0, which in this case means the sex is male. The values in the data file
-with ``conditional_index == 1`` correspond to option 1 for property 'sex' which is
-female. The values in the data file are normalized for each conditional index.
+with ``condition_index == 1`` correspond to option 1 for property 'sex' which is
+female. The values in the data file are normalized for each condition index.
 These normalized values will then form the discrete conditional probability for
 a person to be of a certain age given that they are of a certain sex.
 
@@ -165,7 +165,7 @@ a look at the settings file in this example:
     pdf_file: "./pdfs/pdf.py"
     pdf: "pdf_lognorm"
 
-    conditionals: "./data/income_conditionals.csv" # null if no conditionals
+    conditions: "./data/income_conditions.csv"
 
 For each continuous variable a continuous
 probability density function in the form of an ``rvs_continuous`` object from the
@@ -189,14 +189,14 @@ under ``pdf_file``. Ths file looks as follows:
         s = params[1]
         return lognorm(s=s, scale=scale)
 
-The parameters for this function can be varied with the conditional index. They
+The parameters for this function can be varied with the condition index. They
 are selected by taking the values in the position of the list
-``pdf_parameters`` corresponding to the conditional index. To see what these
-conditional indices mean we look at the conditionals file:
+``pdf_parameters`` corresponding to the condition index. To see what these
+condition indices mean we look at the conditions file:
 
 .. code-block::
 
-    conditional_index,property_name,option,relation
+    condition_index,property_name,option,relation
     0,sex,0,eq
     0,age,18,geq
     0,age,50,leq
@@ -204,15 +204,15 @@ conditional indices mean we look at the conditionals file:
     1,age,18,geq
     1,age,65,leq
 
-Multiple conditions for each ``conditional_index`` are combined. In this case
-``conditional_index`` of 0, and therefore the parameters ``[1000, 1]`` correspond to
+Multiple conditions for each ``condition_index`` are combined. In this case
+``condition_index`` of 0, and therefore the parameters ``[1000, 1]`` correspond to
 every person that
 
 - is male,
 - has an age greater than or equal to 18
 - and less than or equal to 50.
 
-The parameters ``[2000, 1]`` associated with a ``conditional_index``
+The parameters ``[2000, 1]`` associated with a ``condition_index``
 of 1 are for every person that
 
 - is female,

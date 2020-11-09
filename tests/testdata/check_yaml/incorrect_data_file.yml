@@ -4,4 +4,4 @@ data_type: "categorical"
 
 data_file: 0
 
-conditionals: null # null if no conditionals
+conditions: null # null if no conditions

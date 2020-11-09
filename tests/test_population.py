@@ -162,7 +162,7 @@ def test_PopClass_remove_property():
 def test_PopClass_get_conditional_population():
     """
     Test get_conditional_population method.
-    - Get conditional population for the conditionals for the property
+    - Get conditional population for the conditions for the property
         'age'.
     """
     # Define test population
@@ -199,7 +199,7 @@ def test_PopClass_update():
     First update each property step by step.
     The age column should be completely filled.
     There should not be double columns as a consequence of joining in
-    the update process with conditionals.
+    the update process with conditions.
     """
     popsize = 10
     random_seed = 100

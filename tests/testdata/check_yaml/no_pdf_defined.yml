@@ -6,4 +6,4 @@ pdf_parameters: [[1000, 1], [2000, 1]]
 pdf_file: "./tests/testdata/check_yaml/pdf.py"
 # pdf: "pdf_lognorm"
 
-conditionals: "./data/example/income_conditionals.csv" # null if no conditionals
+conditions: "./tests/testdata/check_yaml/income_conditions.csv"

@@ -8,7 +8,7 @@ from .probability import (
     ContinuousProbabilityClass,
     DiscreteProbabilityClass,
     ProbabilityClass,
-    check_comb_conditionals,
+    check_comb_conditions,
     order_probab_objects,
 )
 from .yamlutils import find_yamls, load_yamls
@@ -134,7 +134,7 @@ class PopulationClass:
     def get_conditional_population(self, property_name, cond_index):
         """
         Gets the population corresponding to the conditions supplied by the
-        conditional index for a certain property.
+        condition index for a certain property.
 
         Parameters
         ----------
@@ -144,10 +144,10 @@ class PopulationClass:
             Index of one of the conditions defined for the property.
         """
         prob_obj = self.prob_objects[property_name]
-        # - Get the corresponding conditional from prob_obj.conditionals
-        conds = prob_obj.conditionals.query("conditional_index == @cond_index")
+        # - Get the corresponding condition from prob_obj.conditions
+        conds = prob_obj.conditions.query("condition_index == @cond_index")
         # - Get the corr. segment of the population
-        # There can be multiple conditionals.
+        # There can be multiple conditions.
         # Combine them all in one query string
         query_list = []
         for index, row in conds.iterrows():
@@ -244,7 +244,7 @@ def generate_population(popsize, yaml_folder, rand_seed=None):
     print("Defined properties:")
     print([obj.property_name for obj in probab_objects])
 
-    check_comb_conditionals(probab_objects)
+    check_comb_conditions(probab_objects)
 
     probab_objects = order_probab_objects(probab_objects)
 
@@ -261,7 +261,7 @@ def generate_population(popsize, yaml_folder, rand_seed=None):
 def construct_query_string(property_name, option, relation):
     """
     Construct query string for Pandas .query for the relations defined
-    in the conditionals file.
+    in the conditions file.
     """
     if relation == "eq":
         relation_string = "=="

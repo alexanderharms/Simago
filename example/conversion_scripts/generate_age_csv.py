@@ -14,12 +14,12 @@ age_list = [x for x in range(data_frame['Age1'].min(),
 data_export = pd.DataFrame(
         data={"option": age_list,
               "label": age_list},
-        columns=['option', 'value', 'label', 'conditional_index'])
+        columns=['option', 'value', 'label', 'condition_index'])
 
 data_export_male = data_export.copy()
-data_export_male['conditional_index'] = 0
+data_export_male['condition_index'] = 0
 data_export_female = data_export.copy()
-data_export_female['conditional_index'] = 1
+data_export_female['condition_index'] = 1
 
 for idx, row in data_frame.iterrows():
     # Per row, select the value for the males or females.

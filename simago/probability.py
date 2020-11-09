@@ -21,40 +21,38 @@ class ProbabilityClass(ABC):
     ----------
     property_name : string
     data_type : string
-    conditionals : DataFrame
+    conditions : DataFrame
 
     """
     def __init__(self, yaml_object):
         self.property_name = yaml_object["property_name"]
         self.data_type = yaml_object["data_type"]
 
-        if yaml_object["conditionals"] is None:
-            self.conditionals = None
+        if yaml_object["conditions"] is None:
+            self.conditions = None
         else:
-            self.read_conditionals(yaml_object["conditionals"])
+            self.read_conditions(yaml_object["conditions"])
 
-    def read_conditionals(self, conditionals_file):
+    def read_conditions(self, conditions_file):
         """
-        Reads and checks the conditionals file from a CSV file.
+        Reads and checks the conditions file from a CSV file.
 
         Parameters
         ----------
-        conditionals_file : string
+        conditions_file : string
             Filename for the CSV file.
         """
-        # Read CSV
-        # Assign data to self.conditionals
-        self.conditionals = pd.read_csv(conditionals_file)
-        assert sorted(self.conditionals.columns.tolist()) == sorted(
+        self.conditions = pd.read_csv(conditions_file)
+        assert sorted(self.conditions.columns.tolist()) == sorted(
             [
-                "conditional_index",
+                "condition_index",
                 "property_name",
                 "option",
                 "relation",
             ]
         ), (
             str(self.property_name) + ", "
-            "Conditionals file does not contain the necessary columns"
+            "Conditions file does not contain the necessary columns"
         )
 
 
@@ -79,7 +77,7 @@ class DiscreteProbabilityClass(ProbabilityClass):
                 "option",
                 "value",
                 "label",
-                "conditional_index",
+                "condition_index",
             ]
         ), "Data file does not contain the necessary columns"
         # Define list of labels; conversion between index and label name
@@ -109,7 +107,7 @@ class DiscreteProbabilityClass(ProbabilityClass):
 
         # Assign the data to self.data
         self.data = (
-            data_frame[["option", "value", "conditional_index"]]
+            data_frame[["option", "value", "condition_index"]]
             .drop_duplicates(inplace=False)
             .reset_index(drop=True)
         )
@@ -119,13 +117,13 @@ class DiscreteProbabilityClass(ProbabilityClass):
         # From the data generate the probabilities
         self.probabs = self.data.copy()
         sum_values = (
-            self.probabs[["value", "conditional_index"]]
-            .groupby("conditional_index")
+            self.probabs[["value", "condition_index"]]
+            .groupby("condition_index")
             .sum()
             .rename(columns={"value": "value_sum"})
         )
         self.probabs = pd.merge(
-            self.probabs, sum_values, on="conditional_index"
+            self.probabs, sum_values, on="condition_index"
         )
         self.probabs["value"] = (
             self.probabs["value"] / self.probabs["value_sum"]
@@ -148,25 +146,25 @@ class DiscreteProbabilityClass(ProbabilityClass):
         """
         population = pop_obj.population
 
-        if self.conditionals is None:
+        if self.conditions is None:
             population[
                 self.property_name
             ] = draw_from_disc_distribution(
                 self.probabs, pop_obj.population.shape[0], pop_obj.random_seed
             )
-        # Iterate over the various conditionals.
+        # Iterate over the various conditions.
         else:
-            for cond_index in self.conditionals.conditional_index.unique():
-                # For every conditional:
-                # - Get the corresponding conditional from
-                #     self.conditionals
+            for cond_index in self.conditions.condition_index.unique():
+                # For every condition:
+                # - Get the corresponding condition from
+                #     self.conditions
                 # - Get the corr. segment of the population
                 # - Draw the values
                 # - Write the values in a list to the correct places
 
                 # - Get the corr. conditional probabilities from self.probabs
                 probabs_df = self.probabs.query(
-                    "conditional_index == @cond_index"
+                    "condition_index == @cond_index"
                 )
                 # - Get the corr. segment of the population
                 population_cond = pop_obj.get_conditional_population(
@@ -258,7 +256,7 @@ class ContinuousProbabilityClass(ProbabilityClass):
         """
         population = pop_obj.population
 
-        if self.conditionals is None:
+        if self.conditions is None:
             population[self.property_name] = draw_from_cont_distribution(
                 self.pdf,
                 self.pdf_parameters[0],
@@ -266,8 +264,8 @@ class ContinuousProbabilityClass(ProbabilityClass):
                 pop_obj.random_seed,
             )
         else:
-            for cond_index in self.conditionals.conditional_index.unique():
-                # For every conditional:
+            for cond_index in self.conditions.condition_index.unique():
+                # For every condition:
                 # - Get the corr. segment of the population
                 # - Draw the values
                 # - Write the values in a list to the correct places
@@ -343,16 +341,16 @@ def order_probab_objects(probab_objects):
     Orders ProbabilityClass objects so all properties that do not depend on
     others are handled first.
     """
-    # There should be at least one property without conditionals.
+    # There should be at least one property without conditions.
     cond_bool = [
-        True if x.conditionals is None else False for x in probab_objects
+        True if x.conditions is None else False for x in probab_objects
     ]
     assert any(
         cond_bool
-    ), "There should be at least one property without conditionals"
+    ), "There should be at least one property without conditions"
 
     # Start ordering the list of probab_objects with all the properties with
-    # obj.conditionals is None.
+    # obj.conditions is None.
     probab_none = [probab_objects[i] for i, x in enumerate(cond_bool) if x]
     # probab_none_prop = [obj.property_name for obj in probab_none]
 
@@ -364,7 +362,7 @@ def order_probab_objects(probab_objects):
     return probab_objects
 
 
-def check_comb_conditionals(probab_objects):
+def check_comb_conditions(probab_objects):
     """
     Checks the ProbabilityClass objects for impossible situations, e.g.
     properties that are dependent on non-defined properties.
@@ -374,31 +372,31 @@ def check_comb_conditionals(probab_objects):
         properties.append(obj.property_name)
 
     for obj in probab_objects:
-        if obj.conditionals is not None:
-            assert obj.conditionals.property_name.values.all() in properties, (
+        if obj.conditions is not None:
+            assert obj.conditions.property_name.values.all() in properties, (
                 obj.property_name
-                + ", conditionals references undefined "
+                + ", conditions references undefined "
                 + "properties"
             )
             if obj.data_type == "continuous":
                 assert len(
-                    np.unique(obj.conditionals.conditional_index)
+                    np.unique(obj.conditions.condition_index)
                 ) == len(obj.pdf_parameters), (
                     obj.property_name
                     + ", not enough PDF parameters for "
-                    + "the amount of conditionals"
+                    + "the amount of conditions"
                 )
 
-    # There should be at least one property without conditionals.
+    # There should be at least one property without conditions.
     cond_bool = [
-        True if x.conditionals is None else False for x in probab_objects
+        True if x.conditions is None else False for x in probab_objects
     ]
     assert any(cond_bool), (
-        "At least one of the properties should be without" + " conditionals."
+        "At least one of the properties should be without conditions."
     )
 
     # # Start ordering the list of probab_objects with all the properties with
-    # # obj.conditionals is None.
+    # # obj.conditions is None.
     # probab_none = [probab_objects[i] for i, x in enumerate(cond_bool) if x]
     # probab_none_prop = [obj.property_name for obj in probab_none]
 
@@ -412,10 +410,10 @@ def check_comb_conditionals(probab_objects):
     #  probab_graph = dict()
     #  for obj in probab_cond:
     #      probab_graph[obj.property_name] = \
-    #              np.unique(obj.conditionals.property_name).tolist()
+    #              np.unique(obj.conditions.property_name).tolist()
 
     #  for key in probab_graph.keys():
-    #      # If all the values of probab_graph are have no conditionals,
+    #      # If all the values of probab_graph are have no conditions,
     #      # the graph cannot be simplified further.
     #      probab_graph_values = probab_graph[key]
     #      while not all(item in probab_none_prop for item in

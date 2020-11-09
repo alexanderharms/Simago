@@ -4,4 +4,4 @@ data_type: "categorical"
 
 data_file: "./tests/testdata/check_yamls/noexist.csv"
 
-conditionals: null # null if no conditionals
+conditions: null

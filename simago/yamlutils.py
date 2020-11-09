@@ -109,16 +109,16 @@ def check_yaml(yaml_object):
             print(fname + ', pdf file can not be executed')
             quit()
 
-    if 'conditionals' not in yaml_object.keys():
-        yaml_object['conditionals'] = None
+    if 'conditions' not in yaml_object.keys():
+        yaml_object['conditions'] = None
     else:
-        if yaml_object['conditionals'] is not None:
-            assert isinstance(yaml_object['conditionals'], str),\
-                fname + ', conditionals not None or a string'
-            assert os.path.isfile(yaml_object['conditionals']),\
-                fname + ', conditionals file does not exist'
-            assert yaml_object['conditionals'].endswith('.csv'),\
-                fname + ', conditionals files is not a csv'
+        if yaml_object['conditions'] is not None:
+            assert isinstance(yaml_object['conditions'], str),\
+                fname + ', conditions not None or a string'
+            assert os.path.isfile(yaml_object['conditions']),\
+                fname + ', conditions file does not exist'
+            assert yaml_object['conditions'].endswith('.csv'),\
+                fname + ', conditions files is not a csv'
 
     return yaml_object
 
