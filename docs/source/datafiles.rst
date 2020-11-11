@@ -29,8 +29,9 @@ syntax and the extenstions ``.yml`` or ``.yaml``.
   for the continuous probability distribution.
 * ``pdf`` (essential if ``data_type`` is ``continuous``): String
   of the function name defined in ``pdf_file`` that produces the PDF for
-  the continuous property. This function should return a
-  ``scipy.stats.rvs_continuous`` object.
+  the continuous property. This function should return a 'frozen'
+  ``scipy.stats.rv_continuous`` object. This object becomes frozen when it is
+  initialized with specified parameters for its probability distribution.
 * ``pdf_parameters`` (essential if ``data_type`` is ``continuous``):
   A list of parameters for the PDF function. Each position in the list
   corresponds to the equivalent condition index in the conditions file.

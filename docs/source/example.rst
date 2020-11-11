@@ -167,11 +167,13 @@ a look at the settings file in this example:
 
     conditions: "./data/income_conditions.csv"
 
-For each continuous variable a continuous
-probability density function in the form of an ``rvs_continuous`` object from the
-``scipy.stats`` package needs to be supplied. The name of the function for this
-probability density function is in this case ``pdf_lognorm`` in the file mentioned
-under ``pdf_file``. Ths file looks as follows:
+For each continuous variable a continuous probability density function in the
+form of an 'frozen' ``rv_continuous`` object from the ``scipy.stats`` package
+needs to be supplied. An ``rv_continuous`` object becomes frozen when it is
+initiated with the parameters for the probability distribution specified. The
+name of the function for this probability density function is in this case
+``pdf_lognorm`` in the file mentioned under ``pdf_file``. Ths file looks as
+follows:
 
 .. code-block:: python
 

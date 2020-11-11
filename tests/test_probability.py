@@ -2,25 +2,12 @@
 import pandas as pd
 import pytest
 
-# from simago.probability import (
-#     ContinuousProbabilityClass,
-#     DiscreteProbabilityClass,
-#     check_comb_conditions,
-# )
-from simago.probability import DiscreteProbabilityClass, check_comb_conditions
+from simago.probability import (
+    ContinuousProbabilityClass,
+    DiscreteProbabilityClass,
+    check_comb_conditions,
+)
 from simago.yamlutils import load_yamls
-
-
-# def test_order_probab():
-# def test_check_comb_conditions():
-#     yaml_folder =
-#     yaml_filenames = find_yamls(args.yaml_folder)
-#     yaml_objects = load_yamls(yaml_filenames)
-#
-#     # Based on the yaml_objects, create a list of ProbabilityClass instances.
-#     probab_objects = []
-#     for y_obj in yaml_objects:
-#         probab_objects.append(ProbabilityClass(y_obj))
 
 
 def test_ProbClass_read_data():
@@ -55,8 +42,24 @@ def test_ProbClass_read_data():
     assert prob_object.labels == test_labels
 
 
-# TODO: Test importing PDF function and PDF parameters for a continuous
-# variable.
+def test_ContProbClass_import_pdf():
+    """
+    If a ContinuousProbabilityClass object is intialized, it must be
+    checked that the defined PDF returns a frozen rv_continuous object.
+    """
+    test_yaml = "./tests/testdata/ProbabilityClass/pdf_no_rv.yml"
+
+    yaml_object = load_yamls([test_yaml])
+    with pytest.raises(AssertionError):
+        prob_objects = [ContinuousProbabilityClass(yaml_object[0])]
+        del prob_objects
+
+    test_yaml = "./tests/testdata/ProbabilityClass/pdf_no_frozen_rv.yml"
+
+    yaml_object = load_yamls([test_yaml])
+    with pytest.raises(AssertionError):
+        prob_objects = [ContinuousProbabilityClass(yaml_object[0])]
+        del prob_objects
 
 
 def test_ProbClass_gen_probabs():
@@ -110,6 +113,19 @@ def test_ProbClass_read_conditions():
     assert prob_object.conditions.equals(test_conditions)
 
 
+def test_check_comb_conditions_undefinedprop():
+    """
+    Function check_comb_conditions() returns an AssertionError when
+    the conditions of a new property reference an undefined property.
+    """
+    # Conditionals reference undefined property
+    test_yaml = "./tests/testdata/ProbabilityClass/age.yml"
+
+    yaml_object = load_yamls([test_yaml])
+    prob_objects = [DiscreteProbabilityClass(yaml_object[0])]
+    with pytest.raises(AssertionError):
+        check_comb_conditions(prob_objects)
+
 # def test_check_data():
 #    test_yaml = "./tests/testdata/ProbabilityClass/sex.yml"
 #    yaml_object = load_yamls([test_yaml])
@@ -124,21 +140,6 @@ def test_ProbClass_read_conditions():
 #    # - there are duplicate condition indices with different values for
 #    #   option, value or label.
 
-
-def test_check_comb_conditions_undefinedprop():
-    """
-    Function check_comb_conditions() returns an AssertionError when
-    the conditions of a new property reference an undefined property.
-    """
-    # Conditionals reference undefined property
-    test_yaml = "./tests/testdata/ProbabilityClass/age.yml"
-
-    yaml_object = load_yamls([test_yaml])
-    prob_objects = [DiscreteProbabilityClass(yaml_object[0])]
-    with pytest.raises(AssertionError):
-        check_comb_conditions(prob_objects)
-
-
 # def test_check_comb_conditions_amountparams():
 #     # TODO: Check that a continuous variable has enough PDF parameters for
 #     # the amount of conditions.
@@ -152,6 +153,3 @@ def test_check_comb_conditions_undefinedprop():
 
 # def test_order_probab_objects():
 #     # TODO: Test if the ProbabilityClass objects are ordered correctly.
-
-# TODO: Check that get_conditional_population gets the correct conditional
-# population.

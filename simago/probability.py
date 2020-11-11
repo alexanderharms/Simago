@@ -199,34 +199,6 @@ class DiscreteProbabilityClass(ProbabilityClass):
         return population
 
 
-def draw_from_disc_distribution(probabs, size, random_seed):
-    """
-    Draw from a discrete distribution.
-
-    Parameters
-    ----------
-    probabs : Pandas DataFrame
-        DataFrame containing the discrete probability distribution.
-    size : int
-        Number of values drawn from distribution.
-    random_seed : int
-        Seed for random number generation.
-
-    Returns
-    -------
-    drawn_values : list
-        List of drawn values.
-
-    """
-
-    sample_rv = stats.rv_discrete(
-        name="sample_rv", values=(probabs.option, probabs.probab)
-    )
-    sample_num = sample_rv.rvs(size=size)
-    drawn_values = probabs.option.values[sample_num]
-    return drawn_values
-
-
 class ContinuousProbabilityClass(ProbabilityClass):
     """
     ContinuousProbabilityClass contains attributes and methods surrounding the
@@ -241,6 +213,11 @@ class ContinuousProbabilityClass(ProbabilityClass):
         imported_pdfs = importlib.import_module(module_name)
         pdf_function = getattr(imported_pdfs, yaml_object["pdf"])
         self.pdf = pdf_function
+        # Check that self.pdf returns a frozen rv_continuous object.
+        pdf_return = self.pdf(self.pdf_parameters[0])
+        assert isinstance(pdf_return,
+                          stats._distn_infrastructure.rv_frozen), \
+            self.property_name + ", pdf does not return frozen rv_continuous"
 
     def draw_values(self, pop_obj):
         """
@@ -302,6 +279,34 @@ class ContinuousProbabilityClass(ProbabilityClass):
         return population
 
 
+def draw_from_disc_distribution(probabs, size, random_seed):
+    """
+    Draw from a discrete distribution.
+
+    Parameters
+    ----------
+    probabs : Pandas DataFrame
+        DataFrame containing the discrete probability distribution.
+    size : int
+        Number of values drawn from distribution.
+    random_seed : int
+        Seed for random number generation.
+
+    Returns
+    -------
+    drawn_values : list
+        List of drawn values.
+
+    """
+
+    sample_rv = stats.rv_discrete(
+        name="sample_rv", values=(probabs.option, probabs.probab)
+    )
+    sample_num = sample_rv.rvs(size=size)
+    drawn_values = probabs.option.values[sample_num]
+    return drawn_values
+
+
 def draw_from_cont_distribution(pdf, parameters, size, random_seed):
     """
     Draw from a continuous distribution.
@@ -309,7 +314,7 @@ def draw_from_cont_distribution(pdf, parameters, size, random_seed):
     Parameters
     ----------
     pdf : function
-        Probability distribution function.
+        Function that returns an ``rv_continuous`` object.
     parameters : list
         List of parameters for the probability distribution function.
     size : int
