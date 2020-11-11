@@ -13,7 +13,7 @@ __uri__ = "https://github.com/alexanderharms/simago"
 __doc__ = __description__ + " <" + __uri__ + ">"
 
 __author__ = "Alexander Harms"
-__email__ = "a.g.j.harms@gmail.com"
+__email__ = "a.g.j.harms@protonmail.com"
 
 __license__ = "GPL v3"
 __copyright__ = "Copyright (c) 2020 Alexander Harms"

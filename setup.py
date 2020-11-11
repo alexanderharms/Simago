@@ -37,7 +37,7 @@ META_PATH = os.path.join("simago", "__init__.py")
 KEYWORDS = ["simulation", "open data"]
 PROJECT_URLS = {
     "Documentation": "https://simago.readthedocs.io/en/latest",
-    "Source Code": "https://github.com/alexanderharms/Simago/"
+    "Source Code": "https://github.com/alexanderharms/simago/"
 }
 CLASSIFIERS = [
     "Development Status :: 4 - Beta",
