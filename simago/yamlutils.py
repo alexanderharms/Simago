@@ -127,8 +127,8 @@ def load_yamls(yaml_filenames):
     """Load YAML files.
 
     Loads the YAML configuration files and converts them to dictionaries
-    using `yaml` package. Checks if the imported YAML files contain
-    the correct information using the function `check_yaml`.
+    using ``yaml`` package. Checks if the imported YAML files contain
+    the correct information using the function ``check_yaml``.
 
     Parameters
     ----------

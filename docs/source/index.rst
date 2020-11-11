@@ -9,6 +9,7 @@ Release v\ |release|.
 
 .. include:: ../../README.rst
    :start-after: title-string
+   :end-before: end-general-intro
 
 Contents
 --------
@@ -18,8 +19,8 @@ Contents
    example
    simago
    datafiles
-   .../../CONTIRBUTING
-   ../../CHANGELOG
+   contributing
+   changelog
 
 
 Indices and tables

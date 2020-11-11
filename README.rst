@@ -17,7 +17,7 @@ on (publicly availabled) aggregated data.
 These populations can then for example be used for experimentation in the field
 of machine learning or simulation studies.
 
-The `simago` package is available on `PyPI <https://pypi.org/project/simago/>`_,
+The ``simago`` package is available on `PyPI <https://pypi.org/project/simago/>`_,
 the source code on `Github <https://github.com/alexanderharms/Simago>`_ and
 the documentation on `ReadTheDocs <https://simago.readthedocs.io/en/latest/>`_.
 The package is released under the GPLv3 licence and tested for Python 3.7 and up.
@@ -40,11 +40,14 @@ in the documentation.
 How to contribute
 ^^^^^^^^^^^^^^^^^
 If you would like to contribute to this project, please check out the
-`contributing guidelines<https://simago.readthedocs.io/en/latest/CONTRIBUTING.html>`_.
+`contributing guidelines <https://simago.readthedocs.io/en/latest/contributing.html>`_.
 
+.. end-general-intro
 
 Changelog
 ---------
-.. include:: ./CHANGELOG.rst
+This is the changelog for latest version. For the complete changelog, click
+`here <https://simago.readthedocs.io/en/latest/changelog.rst>`_.
+.. include:: ../../CHANGELOG.rst
    :start-after: last-version-start
    :end-before: last-version-end
