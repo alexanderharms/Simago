@@ -25,7 +25,7 @@ repos:
       - id: interrogate
         additional_dependencies: [toml]
         exclude: tests/testdata/check_yaml/incorrect_pdf.py
-#        args: [--quiet, --fail-under=95]
+        args: [--fail-under=95]
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v2.4.0

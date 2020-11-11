@@ -1,0 +1,9 @@
+# Income
+property_name: "income"
+data_type: "continuous"
+
+pdf_parameters: [[1000, 1]]
+pdf_file: "./tests/testdata/ProbabilityClass/pdf_no_rv.py"
+pdf: "pdf_no_rv"
+
+conditions: null

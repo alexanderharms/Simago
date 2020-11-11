@@ -13,7 +13,7 @@ data_export = pd.DataFrame(
         data={"option": [0, 1],
               "value": [male_value, female_value],
               "label": ["male", "female"],
-              "conditional_index": 0})
+              "condition_index": 0})
 print(data_export)
 
 data_export.to_csv("./data/example/sex.csv", index=False)

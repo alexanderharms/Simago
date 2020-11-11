@@ -1,4 +1,4 @@
-conditional_index,property_name,option,relation
+condition_index,property_name,option,relation
 0,sex,0,eq
 0,age,18,geq
 0,age,50,leq

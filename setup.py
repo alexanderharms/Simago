@@ -8,28 +8,6 @@ import re
 from setuptools import find_packages, setup
 
 
-###################################################################
-
-NAME = "simago"
-PACKAGES = find_packages(where="simago")
-META_PATH = os.path.join("simago", "__init__.py")
-KEYWORDS = ["simulation", "open data"]
-CLASSIFIERS = [
-    "Development Status :: 5 - Production/Stable",
-    "Natural Language :: English",
-    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
-    "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8",
-]
-INSTALL_REQUIRES = ["wheel", "numpy", "scipy", "pandas", "pyYAML"]
-
-###################################################################
-
-HERE = os.path.abspath(os.path.dirname(__file__))
-
-
 def read(*parts):
     """
     Build an absolute path from *parts* and and return the contents of the
@@ -37,9 +15,6 @@ def read(*parts):
     """
     with codecs.open(os.path.join(HERE, *parts), "rb", "utf-8") as f:
         return f.read()
-
-
-META_FILE = read(META_PATH)
 
 
 def find_meta(meta):
@@ -54,12 +29,40 @@ def find_meta(meta):
     raise RuntimeError("Unable to find __{meta}__ string.".format(meta=meta))
 
 
+###################################################################
+
+NAME = "simago"
+PACKAGES = find_packages(where="simago")
+META_PATH = os.path.join("simago", "__init__.py")
+KEYWORDS = ["simulation", "open data"]
+PROJECT_URLS = {
+    "Documentation": "https://simago.readthedocs.io/en/latest",
+    "Source Code": "https://github.com/alexanderharms/Simago/"
+}
+CLASSIFIERS = [
+    "Development Status :: 4 - Beta",
+    "Natural Language :: English",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Topic :: Scientific/Engineering"
+]
+INSTALL_REQUIRES = ["wheel", "numpy", "scipy", "pandas", "pyYAML"]
+
+###################################################################
+
+HERE = os.path.abspath(os.path.dirname(__file__))
+META_FILE = read(META_PATH)
+
+
 if __name__ == "__main__":
     setup(
         name=NAME,
         description=find_meta("description"),
         license=find_meta("license"),
         url=find_meta("uri"),
+        project_urls=PROJECT_URLS,
         version=find_meta("version"),
         author=find_meta("author"),
         author_email=find_meta("email"),

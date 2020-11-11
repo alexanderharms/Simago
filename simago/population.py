@@ -8,7 +8,7 @@ from .probability import (
     ContinuousProbabilityClass,
     DiscreteProbabilityClass,
     ProbabilityClass,
-    check_comb_conditionals,
+    check_comb_conditions,
     order_probab_objects,
 )
 from .yamlutils import find_yamls, load_yamls
@@ -18,6 +18,13 @@ class PopulationClass:
     """
     Class for the population.
 
+
+    Parameters
+    ----------
+    popsize : int
+        Size of population.
+    random_seed : int
+        Seed for random number generation. Defaults to None.
 
     Attributes
     ----------
@@ -33,16 +40,6 @@ class PopulationClass:
     """
 
     def __init__(self, popsize, random_seed=None):
-        """
-        Parameters
-        ----------
-        popsize : int
-            Size of population.
-        random_seed : int
-            Seed for random number generation. Defaults to None.
-
-        """
-
         # Set up random seed
         self.random_seed = random_seed
 
@@ -118,7 +115,6 @@ class PopulationClass:
             Name of property to be updated. Defaults to 'all' which updates
             all of the properties defined for in the PopulationClass instance.
         """
-        # TODO: Expand functionality for more control over update
         if property_name == "all":
             for prob_obj in self.prob_objects.values():
                 self.population = prob_obj.draw_values(self)
@@ -134,7 +130,7 @@ class PopulationClass:
     def get_conditional_population(self, property_name, cond_index):
         """
         Gets the population corresponding to the conditions supplied by the
-        conditional index for a certain property.
+        condition index for a certain property.
 
         Parameters
         ----------
@@ -142,12 +138,17 @@ class PopulationClass:
             Name of property to be considered.
         cond_index : int
             Index of one of the conditions defined for the property.
+
+        Returns
+        -------
+        population_cond : DataFrame
+            DataFrame of the population that satisfies the condition.
         """
         prob_obj = self.prob_objects[property_name]
-        # - Get the corresponding conditional from prob_obj.conditionals
-        conds = prob_obj.conditionals.query("conditional_index == @cond_index")
+        # - Get the corresponding condition from prob_obj.conditions
+        conds = prob_obj.conditions.query("condition_index == @cond_index")
         # - Get the corr. segment of the population
-        # There can be multiple conditionals.
+        # There can be multiple conditions.
         # Combine them all in one query string
         query_list = []
         for index, row in conds.iterrows():
@@ -244,7 +245,7 @@ def generate_population(popsize, yaml_folder, rand_seed=None):
     print("Defined properties:")
     print([obj.property_name for obj in probab_objects])
 
-    check_comb_conditionals(probab_objects)
+    check_comb_conditions(probab_objects)
 
     probab_objects = order_probab_objects(probab_objects)
 
@@ -261,7 +262,20 @@ def generate_population(popsize, yaml_folder, rand_seed=None):
 def construct_query_string(property_name, option, relation):
     """
     Construct query string for Pandas .query for the relations defined
-    in the conditionals file.
+    in the conditions file. For more information on the conditions file
+    see the 'File Properties' section in the documentation.
+
+    Parameters
+    ----------
+    property_name : str
+    option : int
+    relation : str
+
+    Returns
+    -------
+    query_string : str
+        String to be used in the Pandas .query function.
+
     """
     if relation == "eq":
         relation_string = "=="

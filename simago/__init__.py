@@ -1,13 +1,13 @@
 """
-Simago: Randomly generate populations
+Simago: Randomly generate populations.
 
 """
 
 
-__version__ = "0.3.0.dev0"
+__version__ = "0.3.0"
 
 __title__ = "simago"
-__description__ = "Randomly generate populations"
+__description__ = "Randomly generate populations."
 __url__ = "https://github.com/alexanderharms/simago"
 __uri__ = "https://github.com/alexanderharms/simago"
 __doc__ = __description__ + " <" + __uri__ + ">"

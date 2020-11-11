@@ -1,0 +1,7 @@
+condition_index,property_name,option,relation
+0,sex,0,eq
+0,age,18,geq
+0,age,50,leq
+1,sex,1,eq
+1,age,18,geq
+1,age,65,leq

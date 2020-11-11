@@ -4,4 +4,4 @@ data_type: "ordinal"
 
 data_file: "./tests/testdata/check_yaml/age.csv"
 
-conditionals: 0
+conditions: 0

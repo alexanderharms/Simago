@@ -59,7 +59,7 @@ def test_check_yaml():
         "incorrect_data_file.yml",
         "no_data_file_exists.yml",
         "data_not_csv.yml",
-        "incorrect_conditionals_type.yml",
+        "incorrect_conditions_type.yml",
         "cond_not_exist.yml",
         "cond_not_csv.yml",
         "no_parameters_defined.yml",
@@ -79,15 +79,15 @@ def test_check_yaml():
             del yaml_objects
 
 
-def test_undefined_conditionals():
+def test_undefined_conditions():
     """
-    If no conditionals are defined, yaml_object['conditionals'] should be set
+    If no conditions are defined, yaml_object['conditions'] should be set
     to None.
     """
     testfile = ["./tests/testdata/check_yaml/undefined_cond.yml"]
     yaml_objects = load_yamls(testfile)
     yaml_object = yaml_objects[0]
-    assert yaml_object['conditionals'] is None
+    assert yaml_object['conditions'] is None
 
 
 def test_incorrect_pdf_syntax():
