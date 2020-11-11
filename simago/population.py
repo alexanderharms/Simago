@@ -19,6 +19,13 @@ class PopulationClass:
     Class for the population.
 
 
+    Parameters
+    ----------
+    popsize : int
+        Size of population.
+    random_seed : int
+        Seed for random number generation. Defaults to None.
+
     Attributes
     ----------
     random_seed : int
@@ -33,16 +40,6 @@ class PopulationClass:
     """
 
     def __init__(self, popsize, random_seed=None):
-        """
-        Parameters
-        ----------
-        popsize : int
-            Size of population.
-        random_seed : int
-            Seed for random number generation. Defaults to None.
-
-        """
-
         # Set up random seed
         self.random_seed = random_seed
 
@@ -118,7 +115,6 @@ class PopulationClass:
             Name of property to be updated. Defaults to 'all' which updates
             all of the properties defined for in the PopulationClass instance.
         """
-        # TODO: Expand functionality for more control over update
         if property_name == "all":
             for prob_obj in self.prob_objects.values():
                 self.population = prob_obj.draw_values(self)
@@ -142,6 +138,11 @@ class PopulationClass:
             Name of property to be considered.
         cond_index : int
             Index of one of the conditions defined for the property.
+
+        Returns
+        -------
+        population_cond : DataFrame
+            DataFrame of the population that satisfies the condition.
         """
         prob_obj = self.prob_objects[property_name]
         # - Get the corresponding condition from prob_obj.conditions
@@ -261,7 +262,20 @@ def generate_population(popsize, yaml_folder, rand_seed=None):
 def construct_query_string(property_name, option, relation):
     """
     Construct query string for Pandas .query for the relations defined
-    in the conditions file.
+    in the conditions file. For more information on the conditions file
+    see the 'File Properties' section in the documentation.
+
+    Parameters
+    ----------
+    property_name : str
+    option : int
+    relation : str
+
+    Returns
+    -------
+    query_string : str
+        String to be used in the Pandas .query function.
+
     """
     if relation == "eq":
         relation_string = "=="

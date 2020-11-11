@@ -23,9 +23,9 @@ from simago.yamlutils import find_yamls, load_yamls
 
 def test_PopClass_init():
     """
-    Test that PopulationClass is initialized properly.
-    - Test with reasonable population size and defined random seed.
-    - Test with reasonable population size and undefined random seed.
+    PopulationClass is initialized properly for
+    - Reasonable population size and defined random seed.
+    - Reasonable population size and undefined random seed.
     """
     popsize = 100
     random_seed = 100
@@ -48,7 +48,10 @@ def test_PopClass_init():
 
 def test_PopClass_popsize_edge():
     """
-    Test handling of edge cases for initializing a PopulationClass.
+    Edge cases for initializing a PopulationClass should be handled
+    properly.
+    - Popsize is 0; AssertionError must be raised.
+    - Popsize is 1; regular execution.
     """
     # Test if AssertionError is triggered if popsize is 0.
     popsize = 0
@@ -67,7 +70,7 @@ def test_PopClass_popsize_edge():
 
 def test_PopClass_eq():
     """
-    Tests of the equality method of the PopulationClass class
+    The PopulationClass.__eq__ method must correctly compare two objects.
     """
     popsize = 100
     random_seed = 100
@@ -83,10 +86,12 @@ def test_PopClass_eq():
 
 def test_PopClass_add_property():
     """
-    Test adding a property with PopulationClass.add_property.
-    - Test in case of correct input; a ProbabilityClass object .
-    - Test if a non-ProbabilityClass object is entered.
-    - Test if the property is already defined.
+    Adding a property with PopulationClass.add_property must work correcly if
+    the input is correct, a ProbabilityClass is entered as a parameter and
+    it does not yet exist.
+    An AssertionError must be raised if
+    - a non-ProbabilityClass object is entered.
+    - the property is already defined.
     """
     # Define test population
     popsize = 100
@@ -123,10 +128,11 @@ def test_PopClass_add_property():
 
 def test_PopClass_remove_property():
     """
-    Test removing a property with PopulationClass.remove_property.
-    - Test for a regular, defined, property name.
-    - Test if the property name does not exist.
-    - Test if a string is not entered.
+    Removing a property with PopulationClass.remove_property must work
+    correcly if the name of an existing property is entered.
+    An AssertionError must be raised if
+    - the entered argument is not a string
+    - the property is not defined.
     """
     # Define test population
     popsize = 100
@@ -161,9 +167,8 @@ def test_PopClass_remove_property():
 
 def test_PopClass_get_conditional_population():
     """
-    Test get_conditional_population method.
-    - Get conditional population for the conditions for the property
-        'age'.
+    The get_conditional_population() method should return the correct
+    population when supplied with a certain conditions file.
     """
     # Define test population
     popsize = 100
@@ -195,11 +200,11 @@ def test_PopClass_get_conditional_population():
 
 def test_PopClass_update():
     """
-    Test the workings of the update method.
-    First update each property step by step.
+    When updating the PopulationClass a new column of each
+    property should be added on the first time updating that
+    property. Any subsequent times the columns should remain the same.
+
     The age column should be completely filled.
-    There should not be double columns as a consequence of joining in
-    the update process with conditions.
     """
     popsize = 10
     random_seed = 100
@@ -218,6 +223,9 @@ def test_PopClass_update():
     # No properties yet filled with drawn values
     assert sorted(pop_class.population.columns.values) == \
         ['person_id']
+    pop_class.update(property_name="sex")
+    assert sorted(pop_class.population.columns.values) == \
+        ['person_id', 'sex']
     pop_class.update(property_name="sex")
     assert sorted(pop_class.population.columns.values) == \
         ['person_id', 'sex']

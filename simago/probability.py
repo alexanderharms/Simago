@@ -17,9 +17,15 @@ class ProbabilityClass(ABC):
     and methods surrounding the properties of the population and their
     stochastic behaviour.
 
+    Parameters
+    ----------
+    yaml_object : dict
+        Dictionary containing the checked information from a settings file.
+
     Attributes
     ----------
     property_name : string
+        Unique name of property.
     data_type : string
     conditions : DataFrame
 
@@ -68,9 +74,13 @@ class DiscreteProbabilityClass(ProbabilityClass):
         self.generate_probabilities()
 
     def read_data(self, data_file):
-        """Read in data for discrete probability distributions."""
-        # Only if self.data_type is categorical or ordinal
-        # Read CSV
+        """Read in data for discrete probability distributions.
+
+        Parameters
+        ----------
+        data_file : string
+            Filename for the CSV file.
+        """
         data_frame = pd.read_csv(data_file)
         assert sorted(data_frame.columns.tolist()) == sorted(
             [
@@ -92,18 +102,6 @@ class DiscreteProbabilityClass(ProbabilityClass):
             self.labels[options_labels.at[idx, "option"]] = options_labels.at[
                 idx, "label"
             ]
-        # if "label" not in data_frame.columns.values:
-        #     # Replace "option" column with an integer, add corresponding
-        #     # label to self.labels
-        #     pass
-        # else:
-        #     options_labels = data_frame[['option', 'label']]\
-        #             .drop_duplicates(inplace=False)\
-        #             .reset_index(drop=True)
-        #     self.labels = [None] * (options_labels.option.max() + 1)
-        #     for idx in range(options_labels.shape[0]):
-        #         self.labels[options_labels.at[idx, 'option']] =\
-        #                 options_labels.at[idx, 'label']
 
         # Assign the data to self.data
         self.data = (
@@ -113,7 +111,7 @@ class DiscreteProbabilityClass(ProbabilityClass):
         )
 
     def generate_probabilities(self):
-        """Generate probabilities through normalization of the data."""
+        """Convert the data to a discrete probability distribution."""
         # From the data generate the probabilities
         self.probabs = self.data.copy()
         sum_values = (
@@ -141,7 +139,9 @@ class DiscreteProbabilityClass(ProbabilityClass):
 
         Returns
         -------
-        DataFrame
+        population: DataFrame
+            DataFrame containing (new) column for the property with
+            newly drawn values.
 
         """
         population = pop_obj.population
@@ -206,6 +206,7 @@ def draw_from_disc_distribution(probabs, size, random_seed):
     Parameters
     ----------
     probabs : Pandas DataFrame
+        DataFrame containing the discrete probability distribution.
     size : int
         Number of values drawn from distribution.
     random_seed : int
@@ -213,7 +214,7 @@ def draw_from_disc_distribution(probabs, size, random_seed):
 
     Returns
     -------
-    list
+    drawn_values : list
         List of drawn values.
 
     """
@@ -251,7 +252,9 @@ class ContinuousProbabilityClass(ProbabilityClass):
 
         Returns
         -------
-        DataFrame
+        population: DataFrame
+            DataFrame containing (new) column for the property with
+            newly drawn values.
 
         """
         population = pop_obj.population
@@ -316,7 +319,7 @@ def draw_from_cont_distribution(pdf, parameters, size, random_seed):
 
     Returns
     -------
-    list
+    drawn_values : list
         List of values drawn from the probability distribution function.
 
     """
@@ -340,6 +343,16 @@ def order_probab_objects(probab_objects):
     """
     Orders ProbabilityClass objects so all properties that do not depend on
     others are handled first.
+
+    Parameters
+    ----------
+    probab_objects : list of ProbabilityClass objects
+        List of objects to be ordered.
+
+    Returns
+    -------
+    probab_objects : list of ProbabilityClass objects
+        Ordered list of objects.
     """
     # There should be at least one property without conditions.
     cond_bool = [
@@ -366,6 +379,11 @@ def check_comb_conditions(probab_objects):
     """
     Checks the ProbabilityClass objects for impossible situations, e.g.
     properties that are dependent on non-defined properties.
+
+    Parameters
+    ----------
+    probab_objects : list of ProbabilityClass objects
+        List of objects to be checked.
     """
     properties = []
     for obj in probab_objects:
