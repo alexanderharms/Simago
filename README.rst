@@ -17,10 +17,10 @@ on (publicly availabled) aggregated data.
 These populations can then for example be used for experimentation in the field
 of machine learning or simulation studies.
 
-The package is available for Python 3 on `PyPI <https://pypi.org/project/simago/>`_,
+The `simago` package is available on `PyPI <https://pypi.org/project/simago/>`_,
 the source code on `Github <https://github.com/alexanderharms/Simago>`_ and
 the documentation on `ReadTheDocs <https://simago.readthedocs.io/en/latest/>`_.
-The package is tested for Python 3.7 and up.
+The package is released under the GPLv3 licence and tested for Python 3.7 and up.
 
 Usage
 -----
@@ -38,8 +38,10 @@ For more guidance see the `example <https://simago.readthedocs.io/en/latest/exam
 in the documentation.
 
 How to contribute
------------------
-In order to contribute either leave a message in the Issues section or open a pull request.
+^^^^^^^^^^^^^^^^^
+If you would like to contribute to this project, please check out the
+`contributing guidelines<https://simago.readthedocs.io/en/latest/CONTRIBUTING.html>`_.
+
 
 Changelog
 ---------

@@ -16,7 +16,9 @@ Guidelines
 - For pull requests into the ``master`` branch a CI pipeline in GitHub Actions
   is used. See in the CI section below for a description of the tests the
   code should pass. To make sure that the tests pass everytime it is handy to
-  replicate the same setup when developing.
+  replicate the same setup when developing. The
+  `blog post <https://hynek.me/talks/python-foss/>`_ written by Hynek
+  Schlawack was a huge help for me.
 
 Continuous integration (CI)
 ---------------------------
