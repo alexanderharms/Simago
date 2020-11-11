@@ -35,14 +35,18 @@ NAME = "simago"
 PACKAGES = find_packages(where="simago")
 META_PATH = os.path.join("simago", "__init__.py")
 KEYWORDS = ["simulation", "open data"]
+PROJECT_URLS = {
+    "Documentation": "https://simago.readthedocs.io/en/latest",
+    "Source Code": "https://github.com/alexanderharms/Simago/"
+}
 CLASSIFIERS = [
-    "Development Status :: 5 - Production/Stable",
+    "Development Status :: 4 - Beta",
     "Natural Language :: English",
     "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8",
+    "Topic :: Scientific/Engineering"
 ]
 INSTALL_REQUIRES = ["wheel", "numpy", "scipy", "pandas", "pyYAML"]
 
@@ -58,6 +62,7 @@ if __name__ == "__main__":
         description=find_meta("description"),
         license=find_meta("license"),
         url=find_meta("uri"),
+        project_urls=PROJECT_URLS,
         version=find_meta("version"),
         author=find_meta("author"),
         author_email=find_meta("email"),
