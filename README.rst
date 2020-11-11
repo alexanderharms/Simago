@@ -49,6 +49,6 @@ Changelog
 This is the changelog for latest version. For the complete changelog, click
 `here <https://simago.readthedocs.io/en/latest/changelog.rst>`_.
 
-.. include:: ../../CHANGELOG.rst
+.. include:: ./CHANGELOG.rst
    :start-after: last-version-start
    :end-before: last-version-end
