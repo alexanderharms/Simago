@@ -57,12 +57,28 @@ check_install_sdist:
 	python3 -m venv venv-sdist
 	venv-sdist/bin/pip install dist/simago-*.tar.gz
 	venv-sdist/bin/python -c "import simago; print(simago.__version__)"
+	rm -rf venv-sdist
 
 check_install_wheel:
 	rm -rf venv-wheel
 	python3 -m venv venv-wheel
 	venv-wheel/bin/pip install dist/simago-*.whl
 	venv-wheel/bin/python -c "import simago; print(simago.__version__)"
+	rm -rf venv-wheel
+
+check_install_pypi_test:
+	rm -rf venv-pypi-test
+	python3 -m venv venv-pypi-test
+	venv-pypi-test/bin/pip install -i https://test.pypi.org/simple/ simago
+	venv-pypi-test/bin/python -c "import simago; print(simago.__version__)"
+	rm -rf venv-pypi-test
+
+check_install_pypi:
+	rm -rf venv-pypi
+	python3 -m venv venv-pypi
+	venv-pypi/bin/pip install simago
+	venv-pypi/bin/python -c "import simago; print(simago.__version__)"
+	rm -rf venv-pypi
 
 upload_pypi_test:
 	@echo "To be implemented"
@@ -84,3 +100,5 @@ clean:
 	rm -rf make_env
 	rm -rf venv-sdist
 	rm -rf venv-wheel
+	rm -rf venv-pypi-test
+	rm -rf venv-pypi

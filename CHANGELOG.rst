@@ -3,6 +3,9 @@ Changelog
 
 .. last-version-start
 
+v0.3.2dev0
+^^^^^^^^^^
+
 v0.3.1
 ^^^^^^
 
