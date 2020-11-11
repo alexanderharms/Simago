@@ -22,6 +22,8 @@ the source code on `Github <https://github.com/alexanderharms/Simago>`_ and
 the documentation on `ReadTheDocs <https://simago.readthedocs.io/en/latest/>`_.
 The package is released under the GPLv3 licence and tested for Python 3.7 and up.
 
+See the changes in the `changelog <https://simago.readthedocs.io/en/latest/changelog>`_.
+
 Usage
 -----
 The easiest way to get started, after installing the package with ``pip install simago``,
@@ -43,12 +45,3 @@ If you would like to contribute to this project, please check out the
 `contributing guidelines <https://simago.readthedocs.io/en/latest/contributing.html>`_.
 
 .. end-general-intro
-
-Changelog
----------
-This is the changelog for latest version. For the complete changelog, click
-`here <https://simago.readthedocs.io/en/latest/changelog.rst>`_.
-
-.. include:: ./CHANGELOG.rst
-   :start-after: last-version-start
-   :end-before: last-version-end
