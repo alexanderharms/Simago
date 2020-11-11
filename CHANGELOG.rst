@@ -3,6 +3,11 @@ Changelog
 
 .. last-version-start
 
+v0.3.1
+^^^^^^
+
+* Small changes to metadata.
+
 v0.3.0
 ^^^^^^
 
