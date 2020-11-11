@@ -6,6 +6,9 @@ Changelog
 v0.3.0
 ^^^^^^
 
+* Adds assertion to ``ContinuousProbabilityClass`` that checks that the
+  specified function for the probability density function returns a frozen
+  ``scipy.stats.rv_continuous`` object.
 * Converts ``ProbabilityClass`` into an abstract base class and implements
   ``DiscreteProbabilityClass`` and ``ContinuousProbabilityClass``.
 * Adds File Properties (``datafiles.rst``) to the documentation.
