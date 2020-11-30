@@ -1,5 +1,5 @@
-Simago: Population simulation
-=============================
+Simago: Data for developers
+===========================
 
 .. title-string
 
