@@ -6,8 +6,8 @@ Changelog
 v0.3.2dev0
 ^^^^^^^^^^
 
-* 
-* Due to a (rather embarrasing) mistake in ``setup.py`` the actual code of 
+*
+* Due to a (rather embarrasing) mistake in ``setup.py`` the actual code of
   the package was not put in the package on PyPI. That is fixed now.
 
 .. last-version-end
@@ -32,4 +32,3 @@ v0.3.0
   ``flake8``, ``isort``, ``pre-commit`` and ``interrogate``.
 * Sets up documentation on ReadTheDocs and CI pipeline in Github Actions.
 * Starts a changelog.
-
