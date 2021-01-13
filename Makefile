@@ -23,7 +23,7 @@ package: pre_build build_package post_build clean
 
 build_package: pre_build
 	rm -rf build dist
-	python3 -m pep517.build --source --binary .
+	make_env/bin/python -m pep517.build --source --binary .
 	ls -l dist
 
 setup_makefile:
@@ -46,8 +46,7 @@ check_changelog:
 	@echo "Is the changelog updated?"
 
 build_docs: setup_makefile
-	bash ./make_env/bin/activate; \
-	sphinx-build -W -b html -d docs/doctrees docs/source docs/_build/html
+	make_env/bin/python make_env/bin/sphinx-build -W -b html -d docs/doctrees docs/source docs/_build/html
 
 twine_check: setup_makefile
 	make_env/bin/python -m twine check dist/*

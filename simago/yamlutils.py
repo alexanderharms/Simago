@@ -123,6 +123,23 @@ def check_yaml(yaml_object):
     return yaml_object
 
 
+def adjust_filenames(yaml_object):
+    """Adjust filenames of the data files.
+
+    Parameters
+    ----------
+    yaml_object : dict
+        Dictionary with the information from the YAML file.
+
+    Returns
+    -------
+    yaml_object : dict
+        Dictionary with the changed filename paths.
+    """
+    #
+    return yaml_object
+
+
 def load_yamls(yaml_filenames):
     """Load YAML files.
 
