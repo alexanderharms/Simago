@@ -88,13 +88,13 @@ upload_pypi_prod:
 generate_example:
 	rm -rf example_env
 	python3 -m venv example_env
-	example_env/bin/pip install -e .
-	cd example; \
-	../example_env/bin/python gen_population.py -p 1000 \
-	--yaml_folder ./data-yaml/ -o ./output/population.csv \
+	example_env/bin/pip install ./dist/simago-*.whl
+	example_env/bin/python -m simago -p 1000 \
+	--yaml_folder ./example/data-yaml/ \
+	-o ./example/output/population.csv \
 	--rand_seed 100
 	rm -rf example_env
-
+	
 clean:
 	rm -rf make_env
 	rm -rf venv-sdist
