@@ -33,7 +33,7 @@ setup_makefile:
 
 pre_build: run_tests check_version_number check_changelog build_docs
 
-post_build: twine_check check_install_sdist check_install_wheel
+post_build: twine_check check_install_sdist check_install_wheel generate_example
 
 run_tests: setup_makefile
 	make_env/bin/python -m tox
