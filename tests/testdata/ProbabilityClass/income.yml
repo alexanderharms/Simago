@@ -3,7 +3,7 @@ property_name: "income"
 data_type: "continuous"
 
 pdf_parameters: [[1000, 1], [2000, 1]]
-pdf_file: "./tests/testdata/ProbabilityClass/pdf.py"
+pdf_file: "./pdf.py"
 pdf: "pdf_lognorm"
 
-conditions: "./tests/testdata/ProbabilityClass/income_conditions.csv"
+conditions: "./income_conditions.csv"

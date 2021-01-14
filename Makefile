@@ -94,7 +94,7 @@ generate_example:
 	-o ./example/output/population.csv \
 	--rand_seed 100
 	rm -rf example_env
-	
+
 clean:
 	rm -rf make_env
 	rm -rf venv-sdist
