@@ -123,6 +123,37 @@ def check_yaml(yaml_object):
     return yaml_object
 
 
+def adjust_filenames(yaml_object):
+    """Adjust filenames of the data files.
+
+    Parameters
+    ----------
+    yaml_object : dict
+        Dictionary with the information from the YAML file.
+
+    Returns
+    -------
+    yaml_object : dict
+        Dictionary with the changed filename paths.
+    """
+    # Check if path names are defined
+    # Check if the paths are relative
+    # If they are relative, prepend them with the folder
+    # of the YAML
+    key_list = ['data_file', 'conditions', 'pdf_file']
+    for key in key_list:
+        if (key in yaml_object.keys()) \
+                and (yaml_object[key] is not None) \
+                and (isinstance(yaml_object[key], str)) \
+                and (not os.path.isabs(yaml_object[key])):
+            yaml_object[key] = os.path.join(
+                    os.path.dirname(yaml_object['yaml_filename']),
+                    yaml_object[key])
+            yaml_object[key] = os.path.normpath(yaml_object[key])
+
+    return yaml_object
+
+
 def load_yamls(yaml_filenames):
     """Load YAML files.
 
@@ -150,6 +181,7 @@ def load_yamls(yaml_filenames):
         yaml_object['yaml_filename'] = yaml_filename
         yaml_objects.append(yaml_object)
 
+    yaml_objects = [adjust_filenames(obj) for obj in yaml_objects]
     yaml_objects = [check_yaml(obj) for obj in yaml_objects]
     yaml_properties = [obj['property_name'] for obj in yaml_objects]
     assert len(yaml_properties) == len(set(yaml_properties)),\

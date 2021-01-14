@@ -32,7 +32,7 @@ def find_meta(meta):
 ###################################################################
 
 NAME = "simago"
-PACKAGES = find_packages(where="simago")
+PACKAGES = find_packages()
 META_PATH = os.path.join("simago", "__init__.py")
 KEYWORDS = ["simulation", "open data"]
 PROJECT_URLS = {

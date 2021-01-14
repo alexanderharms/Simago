@@ -2,6 +2,7 @@
 Classes and functions surrounding the ProbabilityClass objects.
 """
 import importlib
+import os
 
 from abc import ABC
 
@@ -209,7 +210,8 @@ class ContinuousProbabilityClass(ProbabilityClass):
 
         self.pdf_parameters = yaml_object["pdf_parameters"]
         # Execute the pdf file to define the pdf function
-        module_name = yaml_object["pdf_file"][2:-3].replace("/", ".")
+        pdf_relpath = os.path.relpath(yaml_object["pdf_file"])
+        module_name = pdf_relpath[:-3].replace("/", ".")
         imported_pdfs = importlib.import_module(module_name)
         pdf_function = getattr(imported_pdfs, yaml_object["pdf"])
         self.pdf = pdf_function

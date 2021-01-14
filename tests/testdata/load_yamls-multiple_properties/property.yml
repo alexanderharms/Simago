@@ -2,6 +2,6 @@
 property_name: "sex"
 data_type: "categorical"
 
-data_file: "./tests/testdata/load_yaml-multiple_properties/sex.csv"
+data_file: "sex.csv"
 
 conditions: null # null if no conditions

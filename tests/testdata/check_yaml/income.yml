@@ -3,7 +3,7 @@ property_name: "income"
 data_type: "continuous"
 
 pdf_parameters: [[1000, 1], [2000, 1]]
-pdf_file: "./test/testdata/check_yaml/pdf.py"
+pdf_file: "pdf.py"
 pdf: "pdf_lognorm"
 
-conditions: "./test/testdata/check_yaml/income_conditions.csv" # null if no conditions
+conditions: "income_conditions.csv" # null if no conditions

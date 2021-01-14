@@ -2,6 +2,6 @@
 property_name: "sex"
 data_type: "categorical"
 
-data_file: "./tests/testdata/check_yamls/sex.txt"
+data_file: "sex.txt"
 
 conditions: null # null if no conditions

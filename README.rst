@@ -1,5 +1,5 @@
-Simago: Population simulation
-=============================
+Simago: Data for developers
+===========================
 
 .. title-string
 
@@ -11,7 +11,7 @@ Simago: Population simulation
     :target: https://simago.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
-This package can be used to generate random populations, sets of microdata, based
+This package can be used to generate random populations based
 on (publicly availabled) aggregated data.
 
 These populations can then for example be used for experimentation in the field

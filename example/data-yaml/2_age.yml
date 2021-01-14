@@ -2,6 +2,6 @@
 property_name: "age"
 data_type: "ordinal"
 
-data_file: "./data/age.csv"
+data_file: "../data/age.csv"
 
-conditions: "./data/age_conditions.csv"
+conditions: "../data/age_conditions.csv"

@@ -11,7 +11,9 @@ Settings (YAML) file
 In this section the possible variables of the settings (YAML) files can
 are discussed. The validity of these rules are checked by the function
 ``simago.yamlutils.check_yaml``. The settings files should have a valid YAML
-syntax and the extenstions ``.yml`` or ``.yaml``.
+syntax and the extenstions ``.yml`` or ``.yaml``. All file paths in the
+settings files should be either absolute paths or relative paths to the
+settings file.
 
 * ``property_name`` (essential): Name of the (random) property of the persons.
   Entries for ``property_name`` should be unique strings.
